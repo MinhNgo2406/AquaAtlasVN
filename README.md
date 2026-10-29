@@ -7,10 +7,17 @@ AquaAtlas Vietnam là website tiếng Việt dành cho người yêu cá cảnh.
 - Trang chủ với video nền đại dương.
 - Danh mục sáu loài cá nước ngọt mẫu, có thể tìm theo tên và lọc theo nhóm nhiệt đới/nước mát hoặc độ khó chăm sóc.
 - Trang hồ sơ riêng cho mỗi loài, gồm thông số tham khảo, thức ăn, cách nuôi theo nhóm, gợi ý bạn cùng bể và nguồn đọc thêm.
-- Các khu vực giới thiệu chăm sóc cá, sức khỏe cá và tìm cửa hàng.
+- Hướng dẫn nhận biết một số dấu hiệu cá bất thường, kèm lưu ý kiểm tra chất lượng nước và tìm hỗ trợ chuyên môn.
+- Danh sách cửa hàng tham khảo tại TP. Hồ Chí Minh, Hà Nội, Đà Nẵng và Cần Thơ, có liên kết bản đồ và nguồn thông tin.
+- Dashboard admin demo để thêm, sửa, xóa hồ sơ cá. Dữ liệu được lưu trong trình duyệt bằng localStorage.
+- Màn hình đăng nhập chung cho khách và admin; khách có thể tạo tài khoản demo, admin được đưa đến dashboard.
 - Giao diện thích ứng với màn hình máy tính và điện thoại.
 
-Danh sách hiện là mẫu ban đầu, chưa có tài khoản người dùng hay cơ sở dữ liệu. Danh sách cửa hàng chưa tra cứu địa điểm thật và biểu mẫu email chưa gửi thư. Website hiện tập trung vào cá nước ngọt; các thông số trong hồ sơ là hướng dẫn tham khảo, cần đối chiếu với nguồn cụ thể trước khi áp dụng.
+Danh sách cá và cửa hàng là dữ liệu mẫu. Thông tin cửa hàng có thể thay đổi, hãy xác nhận trước khi đến. Dashboard đăng nhập chỉ là bản minh họa phía trình duyệt, không phải bảo mật thật; dữ liệu chỉ lưu trên thiết bị hiện tại và chưa đồng bộ qua cơ sở dữ liệu. Không dùng tài khoản demo trên website công khai. Hướng dẫn sức khỏe không thay thế chẩn đoán thú y. Website hiện tập trung vào cá nước ngọt; thông số trong hồ sơ là hướng dẫn tham khảo, cần đối chiếu với nguồn cụ thể trước khi áp dụng.
+
+## Mở dashboard admin demo
+
+Chạy website bằng `npm run dev`, sau đó bấm **Đăng nhập** trên thanh điều hướng hoặc mở `http://localhost:5173/?auth=1`. Khách có thể đăng ký tài khoản trên trình duyệt; tài khoản admin demo là `admin`, mật khẩu `aqua-demo`. Admin được chuyển tới `?admin=1`, khách được chuyển về trang chủ. Dữ liệu tài khoản và cá chỉ lưu cục bộ, chưa đồng bộ. Đây chỉ là bước học giao diện; muốn dùng thật cần backend, cơ sở dữ liệu và đăng nhập được xác thực ở máy chủ.
 
 ## Chạy website trên máy
 

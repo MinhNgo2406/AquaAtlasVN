@@ -13,7 +13,7 @@ const links = [
   ['Tìm cửa hàng', '#shops'],
 ];
 
-export default function SiteHeader({ compact = false, onHome }) {
+export default function SiteHeader({ compact = false, onHome, user, onLogin, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   function closeMenu() {
@@ -44,9 +44,13 @@ export default function SiteHeader({ compact = false, onHome }) {
         )}
 
         {compact ? (
-          <Button className="detail-back" onClick={onHome}>← Về danh mục cá</Button>
+          <div className="header-account-actions">
+            <Button className="detail-back" onClick={onHome}>← Về danh mục cá</Button>
+            {user ? <Button className="account-action" onClick={onLogout}>Đăng xuất</Button> : <Button className="account-action" onClick={onLogin}>Đăng nhập</Button>}
+          </div>
         ) : (
           <>
+            {user ? <div className="header-account-actions"><span className="account-greeting">Xin chào, {user.name}</span><Button className="account-action" onClick={onLogout}>Đăng xuất</Button></div> : <Button className="account-action" onClick={onLogin}>Đăng nhập</Button>}
             <Button className="nav-cta" component="a" href="#species" endIcon={<span>↗</span>}>
               Bắt đầu khám phá
             </Button>
