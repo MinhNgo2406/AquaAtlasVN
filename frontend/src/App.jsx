@@ -20,11 +20,19 @@ export default function App() {
   const [isAdminPage, setIsAdminPage] = useState(() => new URLSearchParams(window.location.search).get('admin') === '1');
   const [isAuthPage, setIsAuthPage] = useState(() => new URLSearchParams(window.location.search).get('auth') === '1');
   const [user, setUser] = useState(loadSession);
+  const [favorites, setFavorites] = useState(() => loadFavorites(loadSession()));
+  const [showFavorites, setShowFavorites] = useState(false);
   const activeFish = fish.find((item) => item.id === activeFishId);
 
   useEffect(() => {
     localStorage.setItem('aqua-atlas-fish', JSON.stringify(fish));
   }, [fish]);
+
+  useEffect(() => {
+    if (user?.role === 'customer') {
+      localStorage.setItem(favoritesKey(user), JSON.stringify(favorites));
+    }
+  }, [favorites, user]);
 
   useEffect(() => {
     function syncFishFromUrl() {
@@ -52,7 +60,8 @@ export default function App() {
     const matchesName = !normalizedQuery || normalize(`${item.name} ${item.scientificName}`).includes(normalizedQuery);
     const matchesGroup = group === 'all' || item.group === group;
     const matchesLevel = level === 'all' || item.level === level;
-    return matchesName && matchesGroup && matchesLevel;
+    const matchesFavorite = !showFavorites || favorites.includes(item.id);
+    return matchesName && matchesGroup && matchesLevel && matchesFavorite;
   });
 
   function openFish(fish) {
@@ -80,6 +89,14 @@ export default function App() {
     sessionStorage.setItem('aqua-atlas-session', JSON.stringify(nextUser));
     setUser(nextUser);
     const adminLogin = nextUser.role === 'admin';
+    let nextFavorites = loadFavorites(nextUser);
+    const pendingFishId = sessionStorage.getItem('aqua-atlas-pending-favorite');
+    if (nextUser.role === 'customer' && pendingFishId && !nextFavorites.includes(pendingFishId)) {
+      nextFavorites = [...nextFavorites, pendingFishId];
+    }
+    sessionStorage.removeItem('aqua-atlas-pending-favorite');
+    setFavorites(nextFavorites);
+    setShowFavorites(false);
     window.history.pushState({}, '', adminLogin ? '?admin=1' : window.location.pathname);
     setIsAdminPage(adminLogin);
     setIsAuthPage(false);
@@ -90,7 +107,27 @@ export default function App() {
   function logout() {
     sessionStorage.removeItem('aqua-atlas-session');
     setUser(null);
+    setFavorites([]);
+    setShowFavorites(false);
     showLogin();
+  }
+
+  function toggleFavorite(id) {
+    if (user?.role !== 'customer') {
+      sessionStorage.setItem('aqua-atlas-pending-favorite', id);
+      showLogin();
+      return;
+    }
+    setFavorites((current) => current.includes(id)
+      ? current.filter((favoriteId) => favoriteId !== id)
+      : [...current, id]);
+  }
+
+  function toggleFavoritesView() {
+    setQuery('');
+    setGroup('all');
+    setLevel('all');
+    setShowFavorites((current) => !current);
   }
 
   function saveFish(updatedFish) {
@@ -128,7 +165,15 @@ export default function App() {
             onGroupChange={setGroup}
             onLevelChange={setLevel}
           />
-          <SpeciesSection fish={visibleFish} onSelectFish={openFish} />
+          <SpeciesSection
+            fish={visibleFish}
+            user={user}
+            favorites={favorites}
+            showFavorites={showFavorites}
+            onSelectFish={openFish}
+            onToggleFavorite={toggleFavorite}
+            onToggleFavoriteView={toggleFavoritesView}
+          />
           <CareSection />
           <HealthAndShops />
         </main>
@@ -152,6 +197,20 @@ function loadSession() {
     return JSON.parse(sessionStorage.getItem('aqua-atlas-session'));
   } catch {
     return null;
+  }
+}
+
+function favoritesKey(user) {
+  return `aqua-atlas-favorites:${user.email}`;
+}
+
+function loadFavorites(user) {
+  if (user?.role !== 'customer') return [];
+  try {
+    const saved = JSON.parse(localStorage.getItem(favoritesKey(user)));
+    return Array.isArray(saved) ? saved : [];
+  } catch {
+    return [];
   }
 }
 

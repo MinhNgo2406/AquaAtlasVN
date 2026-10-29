@@ -404,6 +404,35 @@ p {
   line-height: 1.8;
 }
 
+.species-actions {
+  max-width: 340px;
+  margin-left: 20px;
+  display: grid;
+  justify-items: end;
+  gap: 12px;
+}
+
+.species-actions > p {
+  margin: 0;
+  color: #78877f;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.favorite-filter.MuiButton-root {
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  color: var(--ink);
+  font-size: 10px;
+}
+
+.favorite-filter.MuiButton-root.active { border-color: #9ebf45; background: #eff7dd; }
+
+@media (max-width: 720px) {
+  .species-actions { margin: 14px 0 0; justify-items: start; }
+}
+
 .species-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -453,6 +482,8 @@ p {
 .heart.MuiIconButton-root:hover {
   background: white;
 }
+
+.heart.MuiIconButton-root.saved { color: #c74c62; }
 
 .fish-info {
   padding: 16px 16px 12px;
@@ -896,6 +927,12 @@ p {
   margin-left: 12px;
   color: #9aa59e;
   font-size: 9px;
+}
+
+.api-status {
+  color: #87948c;
+  font-size: 9px;
+  white-space: nowrap;
 }
 
 @media (max-width: 1000px) {

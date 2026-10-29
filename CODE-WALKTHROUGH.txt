@@ -5,74 +5,90 @@ Tệp này dùng để học code và ghi lại các đợt cập nhật. README
 website và cách chạy dự án.
 
 
-1. CÁC TỆP QUAN TRỌNG
+1. CẤU TRÚC THƯ MỤC VÀ CÁC TỆP QUAN TRỌNG
 ---------------------
 
-index.html
+docker-compose.yml
+  Cấu hình để Docker khởi động frontend và backend thành hai container riêng,
+  đồng thời cho frontend gọi API backend.
+
+backend/server.js
+  API Node.js. Hiện có GET /api/health để kiểm tra backend đang chạy.
+
+backend/Dockerfile
+  Chỉ dẫn đóng gói backend thành image Docker.
+
+frontend/index.html
   Khung HTML tối giản. React sẽ gắn website vào phần tử có id="root".
 
-src/main.jsx
+frontend/src/main.jsx
   Điểm bắt đầu của ứng dụng React. Tệp này nạp giao diện, theme MUI và CSS.
 
-src/App.jsx
+frontend/src/App.jsx
   Ghép các trang, quản lý bộ lọc, định tuyến query string và dữ liệu cá lưu cục bộ.
 
-src/components/SiteHeader.jsx
+frontend/src/components/SiteHeader.jsx
   Thanh điều hướng. useState điều khiển menu mở/đóng trên điện thoại.
 
-src/components/HeroSection.jsx
+frontend/src/components/HeroSection.jsx
   Ảnh bìa, video nền và các nút dẫn tới nội dung.
 
-src/components/QuickSearch.jsx
+frontend/src/components/QuickSearch.jsx
   Ô tìm tên và hai lựa chọn MUI cho nhóm nước ngọt (nhiệt đới/nước mát) cùng
   mức chăm sóc. Gửi các lựa chọn về App.jsx.
 
-src/components/SpeciesSection.jsx
+frontend/src/components/SpeciesSection.jsx
   Lưới cá. Mỗi FishCard hiển thị một loài, có nút yêu thích và nút mở hồ sơ.
+  Người chưa đăng nhập bấm tim sẽ được chuyển tới màn đăng nhập.
 
-src/components/FishDetailPage.jsx
+frontend/src/components/FishDetailPage.jsx
   Trang chi tiết: thông số tham khảo, cách nuôi theo nhóm, thức ăn, bạn cùng bể
   và liên kết nguồn.
 
-src/components/CareSection.jsx
+frontend/src/components/CareSection.jsx
   Hướng dẫn dựng bể và các thẻ kiến thức chăm sóc.
 
-src/components/HealthAndShops.jsx
+frontend/src/components/HealthAndShops.jsx
   Dấu hiệu sức khỏe cần theo dõi, danh sách cửa hàng có lọc thành phố, và đăng ký
   email minh họa.
 
-src/components/AdminDashboard.jsx
+frontend/src/components/AdminDashboard.jsx
   Dashboard admin có thể tạo, đọc, sửa và xóa hồ sơ cá.
 
-src/components/AuthPage.jsx
+frontend/src/components/AuthPage.jsx
   Màn hình đăng nhập chung và tạo tài khoản khách; phân luồng khách/admin.
 
-src/components/SiteFooter.jsx
+frontend/src/components/SiteFooter.jsx
   Chân trang và các liên kết tới khu vực khác.
 
-src/data/fish.js
+frontend/src/data/fish.js
   Lưu sáu loài cá nước ngọt mẫu, thông tin chăm sóc và nguồn tham khảo.
 
-src/data/shops.js
+frontend/src/data/shops.js
   Lưu cửa hàng mẫu theo thành phố, địa chỉ, nguồn thông tin và liên kết bản đồ.
 
-src/theme.js
+frontend/src/theme.js
   Đặt màu và kiểu mặc định cho các component Material UI.
 
-src/styles.css
+frontend/src/styles.css
   Chứa kiểu dáng riêng của AquaAtlas, bao gồm bố cục responsive cho điện thoại.
 
 .gitignore
   Nói cho Git bỏ qua node_modules, dist và tệp hệ thống macOS.
 
-package-lock.json
+frontend/package-lock.json
   Ghi lại chính xác phiên bản thư viện đã cài để các máy khác cài cùng phiên bản.
 
-package.json
+frontend/package.json
   Khai báo thư viện và lệnh npm để chạy hoặc tạo bản dựng website.
 
-vite.config.js
-  Kết nối Vite với plugin React để phát triển và đóng gói ứng dụng.
+frontend/vite.config.js
+  Kết nối Vite với plugin React; khi chạy local, Vite proxy đường dẫn /api tới
+  backend ở localhost:3000.
+
+frontend/Dockerfile và frontend/nginx.conf
+  Dockerfile build React rồi giao diện Nginx phục vụ tệp tĩnh; Nginx proxy /api
+  đến service backend trong mạng Docker.
 
 
 2. REACT HOẠT ĐỘNG NHƯ THẾ NÀO?
@@ -82,7 +98,7 @@ Component là một phần giao diện có thể đặt tên và tái sử dụn
 SiteHeader là thanh điều hướng, HeroSection là ảnh bìa, SpeciesSection hiển thị
 loài cá, còn SiteFooter là chân trang.
 
-src/App.jsx đặt các component cạnh nhau để tạo trang. Ví dụ:
+frontend/src/App.jsx đặt các component cạnh nhau để tạo trang. Ví dụ:
 
   <SiteHeader />
   <HeroSection />
@@ -118,16 +134,16 @@ MUI là thư viện component giao diện cho React. Dự án dùng Button cho n
 Select/MenuItem cho lựa chọn, Card cho thẻ cá, Chip cho nhãn độ khó, TextField
 cho ô email và IconButton cho nút menu/yêu thích.
 
-src/theme.js tạo theme chung. Theme đặt màu chính, màu nhấn, font, góc vuông và
+frontend/src/theme.js tạo theme chung. Theme đặt màu chính, màu nhấn, font, góc vuông và
 kiểu mặc định cho nút. Khi muốn đổi màu hoặc cách hiển thị mặc định của MUI,
-bắt đầu từ tệp này. src/styles.css tinh chỉnh để các component MUI khớp thiết kế
+bắt đầu từ tệp này. frontend/src/styles.css tinh chỉnh để các component MUI khớp thiết kế
 riêng của website.
 
 
 4. DỮ LIỆU, BỘ LỌC VÀ HỒ SƠ CÁ
 ------------------------------
 
-src/data/fish.js xuất một mảng các loài cá nước ngọt. Mỗi loài có id, tên thường
+frontend/src/data/fish.js xuất một mảng các loài cá nước ngọt. Mỗi loài có id, tên thường
 gọi, tên khoa học, nhóm cá, mức chăm sóc, thông số, ảnh và liên kết nguồn. Tách
 dữ liệu khỏi giao diện giúp thêm cá mà không phải viết lại component.
 
@@ -135,7 +151,7 @@ Trong App.jsx, filter() tìm theo tên thường gọi hoặc tên khoa học r�
 lọc nhóm cá và độ khó. filter() không sửa mảng gốc; nó tạo danh sách kết quả mới
 và truyền xuống SpeciesSection.
 
-Để thêm cá, thêm một đối tượng mới vào src/data/fish.js và đặt id duy nhất. group
+Để thêm cá, thêm một đối tượng mới vào frontend/src/data/fish.js và đặt id duy nhất. group
 phải là tropical hoặc coldwater; level phải khớp với các giá trị trong lựa chọn
 bộ lọc. Thêm nguồn để người đọc kiểm tra thông tin.
 
@@ -147,7 +163,7 @@ Back của trình duyệt cũng đọc URL và đưa giao diện về đúng tra
 5. GIAO DIỆN VÀ RESPONSIVE
 --------------------------
 
-src/styles.css dùng className trong JSX để định dạng. Trong React, thuộc tính
+frontend/src/styles.css dùng className trong JSX để định dạng. Trong React, thuộc tính
 className tương đương thuộc tính class trong HTML.
 
 Các biến màu trong :root như --ink, --green và --lime giữ màu dùng chung. Đổi
@@ -166,18 +182,29 @@ các component MUI.
 
 Sau khi cài Node.js, mở Terminal tại thư mục dự án và chạy:
 
+  Terminal 1:
+  cd backend
+  npm start
+
+  Terminal 2:
+  cd frontend
   npm install
   npm run dev
 
-npm install tải các thư viện được khai báo trong package.json. npm run dev khởi
-động máy chủ phát triển Vite; mở địa chỉ localhost mà Terminal in ra để xem web.
+npm start khởi động API. npm install tải thư viện React được khai báo trong
+frontend/package.json. npm run dev khởi động Vite; mở địa chỉ localhost mà
+Terminal in ra để xem website. Vite chuyển tiếp yêu cầu /api đến cổng 3000.
 
-Khi cần tạo phiên bản triển khai, chạy:
+Để chạy hai phần bằng Docker, mở Docker Desktop rồi từ thư mục gốc chạy:
 
-  npm run build
+  docker compose up --build
 
-Vite sẽ đóng gói các tệp cần thiết vào thư mục dist/. Thư mục node_modules/ và
-dist/ được bỏ qua bởi Git qua .gitignore; không cần đưa chúng lên GitHub.
+Mở http://localhost:8080. Docker build frontend thành tệp tĩnh, Nginx phục vụ
+trang và chuyển tiếp /api/ tới backend. GET /api/health trả trạng thái API.
+Nhấn Ctrl+C để dừng; `docker compose down` xóa container và network.
+
+Để chỉ build frontend, chạy `npm run build` bên trong frontend/. Tệp đầu ra nằm
+trong frontend/dist/. node_modules/, dist/ và .env bị bỏ qua bởi Git.
 
 
 7. NHẬT KÝ CÁC ĐỢT CẬP NHẬT
@@ -193,7 +220,7 @@ BẢN 1 — TRANG HTML TĨNH — 29/10/2026 (PHIÊN BẢN CŨ)
 Code liên quan:
   - Khi đó toàn bộ nội dung nằm trong index.html, styles.css và script.js.
   - Đây là ghi chép lịch sử; styles.css và script.js ở thư mục gốc đã được thay
-    bằng src/styles.css và các component React. Git vẫn giữ lịch sử bản cũ.
+    bằng frontend/src/styles.css và các component React. Git vẫn giữ lịch sử bản cũ.
   - Dữ liệu và hành vi khi ấy được viết trực tiếp, chưa có cơ sở dữ liệu.
 
 BẢN 2 — CHUYỂN SANG REACT + MUI — 29/10/2026
@@ -202,7 +229,7 @@ BẢN 2 — CHUYỂN SANG REACT + MUI — 29/10/2026
   - Chuyển trang HTML thành ứng dụng React chạy bằng Vite.
   - Tách header, hero, tìm kiếm, danh sách cá, chăm sóc, sức khỏe/cửa hàng và
     footer thành các component riêng.
-  - Chuyển dữ liệu cá sang src/data/fish.js; bộ lọc đọc dữ liệu này và cập nhật
+  - Chuyển dữ liệu cá sang frontend/src/data/fish.js; bộ lọc đọc dữ liệu này và cập nhật
     danh sách hiển thị khi lựa chọn thay đổi.
   - Dùng MUI cho Button, Select, Card, Chip, TextField và các nút biểu tượng.
   - Tạo theme màu chung và định dạng responsive dễ đọc hơn.
@@ -211,11 +238,11 @@ BẢN 2 — CHUYỂN SANG REACT + MUI — 29/10/2026
   - Tạo bản dựng production thành công bằng npm run build.
 
 Code liên quan:
-  - src/main.jsx khởi chạy React và bọc ứng dụng bằng theme MUI.
-  - src/App.jsx giữ trạng thái bộ lọc và kết hợp các component.
-  - src/components/ chứa các phần giao diện nhỏ.
-  - src/data/fish.js giữ danh sách cá mẫu.
-  - src/theme.js và src/styles.css lần lượt định dạng component MUI và giao diện
+  - frontend/src/main.jsx khởi chạy React và bọc ứng dụng bằng theme MUI.
+  - frontend/src/App.jsx giữ trạng thái bộ lọc và kết hợp các component.
+  - frontend/src/components/ chứa các phần giao diện nhỏ.
+  - frontend/src/data/fish.js giữ danh sách cá mẫu.
+  - frontend/src/theme.js và frontend/src/styles.css lần lượt định dạng component MUI và giao diện
     riêng của website.
   - MUI components được import theo nhu cầu trong từng component. Vite có thể
     đóng gói phần thư viện được dùng cùng ứng dụng thay vì nạp cả CDN.
@@ -240,11 +267,11 @@ BẢN 3 — DANH MỤC CÁ NƯỚC NGỌT — 29/10/2026
     URL hồ sơ.
 
 Code liên quan:
-  - src/data/fish.js chứa sáu hồ sơ cá và các liên kết nguồn.
-  - src/App.jsx tìm/lọc cá, mở hồ sơ và đồng bộ trang đang xem với URL.
+  - frontend/src/data/fish.js chứa sáu hồ sơ cá và các liên kết nguồn.
+  - frontend/src/App.jsx tìm/lọc cá, mở hồ sơ và đồng bộ trang đang xem với URL.
   - QuickSearch.jsx nhận từ khóa/bộ lọc; SpeciesSection.jsx hiển thị kết quả;
     FishDetailPage.jsx trình bày hồ sơ của loài được chọn.
-  - src/styles.css định dạng danh mục và trang chi tiết trên máy tính/điện thoại.
+  - frontend/src/styles.css định dạng danh mục và trang chi tiết trên máy tính/điện thoại.
 
 Cách hoạt động:
   - Khi nhập từ khóa hoặc đổi bộ lọc, App.jsx lọc mảng cá và gửi kết quả cho
@@ -272,17 +299,17 @@ BẢN 4 — CỬA HÀNG, SỨC KHỎE VÀ DASHBOARD ADMIN — 29/10/2026
     cập nhật ngay trên trang và được lưu vào localStorage của trình duyệt.
 
 Code liên quan:
-  - src/data/shops.js chứa dữ liệu cửa hàng, thành phố và liên kết nguồn.
+  - frontend/src/data/shops.js chứa dữ liệu cửa hàng, thành phố và liên kết nguồn.
   - HealthAndShops.jsx hiển thị cửa hàng đã lọc và hướng dẫn theo dõi dấu hiệu.
   - AdminDashboard.jsx hiển thị form đăng nhập demo, danh sách cá và biểu mẫu CRUD.
   - App.jsx lưu trạng thái cá dùng chung, đồng bộ URL ?admin=1 và đọc/ghi
     localStorage dưới khóa aqua-atlas-fish.
-  - SiteFooter.jsx có liên kết mở dashboard; src/styles.css định dạng admin và
+  - SiteFooter.jsx có liên kết mở dashboard; frontend/src/styles.css định dạng admin và
     thẻ cửa hàng trên máy tính/điện thoại.
 
 Cách hoạt động:
   - Khi App khởi động, hàm loadFish() đọc localStorage. Nếu chưa có dữ liệu lưu,
-    app dùng danh sách mẫu từ src/data/fish.js.
+    app dùng danh sách mẫu từ frontend/src/data/fish.js.
   - Dashboard gọi onSaveFish hoặc onDeleteFish. Hai hàm này cập nhật state cá ở
     App.jsx; useEffect sau đó lưu mảng mới vào localStorage.
   - Đăng nhập demo chỉ đặt cờ trong sessionStorage để giữ trạng thái đến khi đóng
@@ -315,8 +342,8 @@ BẢN 5 — ĐĂNG NHẬP CHUNG CHO KHÁCH VÀ ADMIN — 29/10/2026
   - Thêm đăng xuất cho khách và admin. Phiên đăng nhập được lưu trong sessionStorage.
 
 Code liên quan:
-  - src/components/AuthPage.jsx xử lý đăng nhập, tạo tài khoản khách và chọn vai trò.
-  - src/App.jsx lưu người đang đăng nhập trong state, phân trang ?auth=1 / ?admin=1
+  - frontend/src/components/AuthPage.jsx xử lý đăng nhập, tạo tài khoản khách và chọn vai trò.
+  - frontend/src/App.jsx lưu người đang đăng nhập trong state, phân trang ?auth=1 / ?admin=1
     và chuyển khách/admin tới đúng màn hình.
   - SiteHeader.jsx hiển thị nút đăng nhập hoặc tên khách + đăng xuất.
   - AdminDashboard.jsx chỉ còn phần dashboard; App chỉ render nó với role admin.
@@ -336,6 +363,77 @@ Cách hoạt động:
     Hash mật khẩu và role check ở trình duyệt không đủ bảo vệ hệ thống công khai.
   - Muốn vận hành thật, cần máy chủ quản lý tài khoản, lưu dữ liệu trong database,
     xác thực phiên/token phía server và kiểm tra role trên từng API.
+
+
+BẢN 6 — LƯU CÁ YÊU THÍCH THEO TÀI KHOẢN — 29/10/2026
+
+Đã làm:
+  - Khách đã đăng nhập có thể bấm trái tim trên thẻ cá để lưu hoặc bỏ lưu.
+  - Thêm nút “Cá yêu thích” để chỉ xem những loài đã lưu; nút hiển thị số lượng.
+  - Nếu khách chưa đăng nhập bấm trái tim, app mở màn đăng nhập và ghi nhớ loài
+    đang muốn lưu. Sau khi đăng nhập/tạo tài khoản khách, loài đó được lưu tự động.
+  - Danh sách yêu thích tách theo email tài khoản trong localStorage của trình duyệt.
+
+Code liên quan:
+  - frontend/src/components/SpeciesSection.jsx nhận `favorites`, trạng thái đăng nhập và
+    các hàm thao tác từ App; component hiển thị tim và nút lọc yêu thích.
+  - frontend/src/App.jsx quản lý danh sách ID yêu thích, lưu vào localStorage và lọc cá.
+  - frontend/src/components/AuthPage.jsx không đổi giao diện đăng nhập; App giữ lại ID cá
+    chờ lưu trong sessionStorage nếu người dùng cần đăng nhập trước.
+  - frontend/src/styles.css đổi màu trái tim đã lưu và định dạng nút yêu thích.
+
+Cách hoạt động:
+  - Mỗi hồ sơ cá có id ổn định. Danh sách yêu thích chỉ cần lưu các id này, ví dụ
+    ["betta", "guppy"], thay vì sao chép cả hồ sơ cá vào tài khoản.
+  - App dùng khóa dạng aqua-atlas-favorites:<email> để lưu riêng từng khách.
+    Khi khách đăng nhập lại trên cùng trình duyệt, app đọc danh sách đó và tô tim.
+  - Bật nút “Cá yêu thích” thì bộ lọc chỉ giữ hồ sơ có id nằm trong danh sách.
+    Nếu bỏ tim khi đang xem danh sách này, cá sẽ biến khỏi kết quả ngay lập tức.
+
+Điều cần hiểu / giới hạn:
+  - Dữ liệu chỉ lưu trên trình duyệt hiện tại; tài khoản và yêu thích chưa đồng bộ
+    sang máy khác vì chưa có backend/database.
+  - Khách chưa đăng nhập vẫn xem được toàn bộ danh mục; chỉ thao tác lưu cần tài khoản.
+  - Build đã chạy bằng npm run build.
+
+
+BẢN 7 — TÁCH FRONTEND/BACKEND VÀ DOCKER — 29/10/2026
+
+Đã làm:
+  - Chuyển ứng dụng React, package.json, package-lock.json, Vite config và src/
+    vào frontend/.
+  - Tạo backend/ bằng Node.js thuần, hiện có endpoint GET /api/health.
+  - Thêm Dockerfile riêng cho hai phần. Frontend build bằng Node rồi chạy trên
+    Nginx; backend chạy trong container Node độc lập.
+  - Thêm docker-compose.yml để build/chạy cả hai dịch vụ bằng một lệnh.
+  - Nginx trong frontend chuyển tiếp /api/ đến backend; Vite cũng proxy API khi
+    phát triển local.
+  - Chân trang gọi API health và báo trạng thái kết nối.
+  - Viết lại README.md với cấu trúc thư mục, lệnh Docker và cách chạy dev riêng.
+
+Code liên quan:
+  - backend/server.js xử lý yêu cầu HTTP health check và trả JSON.
+  - frontend/Dockerfile tạo bản build React rồi chép vào image Nginx.
+  - frontend/nginx.conf phục vụ ứng dụng và proxy API nội bộ.
+  - docker-compose.yml nối frontend và backend trong mạng Docker; chỉ frontend
+    mở cổng 8080 ra máy chủ.
+  - frontend/vite.config.js proxy /api tới backend khi chạy Vite local.
+
+Cách hoạt động:
+  - `docker compose up --build` đọc Compose, build từng Dockerfile và khởi động
+    hai container. Trình duyệt vào localhost:8080.
+  - Khi giao diện gọi /api/health, Nginx nhận yêu cầu và gửi nó nội bộ đến
+    backend:3000. Backend trả {"status":"ok", ...}; footer hiện đã kết nối.
+  - Tên `backend` là DNS nội bộ do Compose cung cấp. Frontend không cần biết IP
+    container thay đổi sau mỗi lần chạy.
+
+Điều cần hiểu / giới hạn:
+  - Backend hiện chỉ là khung API health; đăng nhập, cá, yêu thích, cửa hàng và
+    dashboard vẫn chạy bằng dữ liệu phía trình duyệt, chưa gọi API.
+  - Chưa có database hay volume dữ liệu. Restart container không ảnh hưởng dữ
+    liệu localStorage của trình duyệt, nhưng dữ liệu đó không đồng bộ.
+  - Docker cần được cài và chạy trên máy. Nếu cổng 8080 đang bận, đổi phần host
+    trong `ports` của docker-compose.yml, ví dụ `8081:80`.
 
 
 8. MẪU CHO CÁC BẢN TIẾP THEO

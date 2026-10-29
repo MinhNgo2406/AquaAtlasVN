@@ -1,36 +1,62 @@
 # AquaAtlas Vietnam
 
-AquaAtlas Vietnam là website tiếng Việt dành cho người yêu cá cảnh. Website giới thiệu các loài cá, kiến thức chăm sóc, sức khỏe cá và địa điểm mua cá tại Việt Nam. Giao diện được xây dựng bằng React, Vite và Material UI (MUI).
+AquaAtlas Vietnam là website tiếng Việt dành cho người yêu cá cảnh. Trang web cung cấp thông tin về cá nước ngọt, chăm sóc, sức khỏe cá và một số địa điểm mua cá tại Việt Nam.
 
-## Website có gì?
+## Tính năng hiện có
 
-- Trang chủ với video nền đại dương.
-- Danh mục sáu loài cá nước ngọt mẫu, có thể tìm theo tên và lọc theo nhóm nhiệt đới/nước mát hoặc độ khó chăm sóc.
-- Trang hồ sơ riêng cho mỗi loài, gồm thông số tham khảo, thức ăn, cách nuôi theo nhóm, gợi ý bạn cùng bể và nguồn đọc thêm.
-- Hướng dẫn nhận biết một số dấu hiệu cá bất thường, kèm lưu ý kiểm tra chất lượng nước và tìm hỗ trợ chuyên môn.
-- Danh sách cửa hàng tham khảo tại TP. Hồ Chí Minh, Hà Nội, Đà Nẵng và Cần Thơ, có liên kết bản đồ và nguồn thông tin.
-- Dashboard admin demo để thêm, sửa, xóa hồ sơ cá. Dữ liệu được lưu trong trình duyệt bằng localStorage.
-- Màn hình đăng nhập chung cho khách và admin; khách có thể tạo tài khoản demo, admin được đưa đến dashboard.
-- Giao diện thích ứng với màn hình máy tính và điện thoại.
+- Danh mục sáu loài cá nước ngọt mẫu, tìm kiếm và lọc theo nhóm nước hoặc độ khó.
+- Hồ sơ từng loài với điều kiện bể, thức ăn, cách nuôi theo nhóm, gợi ý cá sống chung và nguồn đọc thêm.
+- Hướng dẫn theo dõi các dấu hiệu sức khỏe bất thường.
+- Danh sách cửa hàng tham khảo ở TP. Hồ Chí Minh, Hà Nội, Đà Nẵng và Cần Thơ.
+- Đăng nhập demo chung cho khách/admin; khách có thể tạo tài khoản và lưu cá yêu thích.
+- Dashboard demo để admin thêm, sửa và xóa hồ sơ cá.
 
-Danh sách cá và cửa hàng là dữ liệu mẫu. Thông tin cửa hàng có thể thay đổi, hãy xác nhận trước khi đến. Dashboard đăng nhập chỉ là bản minh họa phía trình duyệt, không phải bảo mật thật; dữ liệu chỉ lưu trên thiết bị hiện tại và chưa đồng bộ qua cơ sở dữ liệu. Không dùng tài khoản demo trên website công khai. Hướng dẫn sức khỏe không thay thế chẩn đoán thú y. Website hiện tập trung vào cá nước ngọt; thông số trong hồ sơ là hướng dẫn tham khảo, cần đối chiếu với nguồn cụ thể trước khi áp dụng.
+Thông tin cá và cửa hàng là dữ liệu mẫu; hãy kiểm tra nguồn và xác nhận cửa hàng trước khi đến. Đăng nhập, dashboard và dữ liệu cá/yêu thích hiện vẫn là demo phía trình duyệt, chưa được nối với API hoặc cơ sở dữ liệu. Không dùng mật khẩu thật. Hướng dẫn sức khỏe không thay thế chẩn đoán thú y.
 
-## Mở dashboard admin demo
+## Chạy toàn bộ bằng Docker
 
-Chạy website bằng `npm run dev`, sau đó bấm **Đăng nhập** trên thanh điều hướng hoặc mở `http://localhost:5173/?auth=1`. Khách có thể đăng ký tài khoản trên trình duyệt; tài khoản admin demo là `admin`, mật khẩu `aqua-demo`. Admin được chuyển tới `?admin=1`, khách được chuyển về trang chủ. Dữ liệu tài khoản và cá chỉ lưu cục bộ, chưa đồng bộ. Đây chỉ là bước học giao diện; muốn dùng thật cần backend, cơ sở dữ liệu và đăng nhập được xác thực ở máy chủ.
-
-## Chạy website trên máy
-
-Yêu cầu Node.js và npm. Trong thư mục dự án, chạy:
+Cài Docker Desktop, mở ứng dụng đó, rồi mở Terminal ở thư mục dự án và chạy:
 
 ```bash
+docker compose up --build
+```
+
+Khi quá trình khởi động hoàn tất, mở [http://localhost:8080](http://localhost:8080). Frontend chạy trong Nginx; yêu cầu `/api/` được chuyển tiếp tới backend. Chân trang hiển thị trạng thái kết nối API. Để dừng, nhấn `Ctrl+C`; sau đó có thể chạy `docker compose down`.
+
+Backend hiện cung cấp endpoint kiểm tra trạng thái:
+
+```text
+http://localhost:8080/api/health
+```
+
+Kết quả thành công có dạng `{"status":"ok","service":"aqua-atlas-backend"}`. Hiện backend chưa xử lý đăng nhập, tài khoản, hồ sơ cá hoặc cơ sở dữ liệu; các phần đó vẫn là bản demo lưu trên trình duyệt.
+
+## Cấu trúc dự án
+
+- `frontend/` — ứng dụng React + Vite + Material UI; Docker build thành trang tĩnh bằng Nginx.
+- `backend/` — API Node.js tối giản.
+- `docker-compose.yml` — khởi động và nối hai dịch vụ.
+- `README.md` — giới thiệu website và cách chạy.
+- `CODE-WALKTHROUGH.txt` — ghi chú học code và lịch sử từng đợt cập nhật.
+
+## Chạy riêng để phát triển
+
+Mở hai Terminal. Terminal thứ nhất chạy backend:
+
+```bash
+cd backend
+npm start
+```
+
+Terminal thứ hai chạy frontend:
+
+```bash
+cd frontend
 npm install
 npm run dev
 ```
 
-Mở địa chỉ mà Vite hiển thị trong Terminal. Để tạo bản tĩnh có thể triển khai, chạy `npm run build`; các tệp đầu ra được tạo trong `dist/`.
-
-Ảnh, video và font được tải từ Internet.
+Vite chuyển tiếp `/api` tới `http://localhost:3000`; mở địa chỉ frontend mà Vite in ra. Để tạo bản build frontend, chạy `npm run build` bên trong `frontend/`.
 
 ## Nguồn hình ảnh và video
 
