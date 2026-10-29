@@ -1,0 +1,40 @@
+const fish = [
+  {
+    id: 'betta',
+    name: 'Cá betta',
+    description: 'Rực rỡ · Cá tính độc lập',
+    water: 'fresh',
+    level: 'easy',
+    category: 'NƯỚC NGỌT',
+    difficulty: 'Dễ nuôi',
+    lifespan: '2–5 năm',
+    tank: 'Bể từ 20L',
+    image: 'https://images.unsplash.com/photo-1524704654690-b56c05c78a00?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    id: 'neon',
+    name: 'Cá neon',
+    description: 'Nhỏ xinh · Bơi theo đàn',
+    water: 'fresh',
+    level: 'easy',
+    category: 'NƯỚC NGỌT',
+    difficulty: 'Dễ nuôi',
+    lifespan: '3–5 năm',
+    tank: 'Bể từ 40L',
+    image: 'https://images.unsplash.com/photo-1535591273668-578e31182c4f?auto=format&fit=crop&w=900&q=85',
+  },
+  {
+    id: 'clownfish',
+    name: 'Cá hề',
+    description: 'Thân thiện · Sống cùng hải quỳ',
+    water: 'salt',
+    level: 'medium',
+    category: 'NƯỚC MẶN',
+    difficulty: 'Trung bình',
+    lifespan: '6–10 năm',
+    tank: 'Bể từ 100L',
+    image: 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&w=900&q=85',
+  },
+];
+
+export default fish;

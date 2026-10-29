@@ -1,0 +1,1232 @@
+:root {
+  --ink: #16382f;
+  --green: #204c40;
+  --deep: #102e27;
+  --lime: #d2f277;
+  --paper: #f5f8f4;
+  --muted: #73827b;
+  --line: #dfe7df;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 92px;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Be Vietnam Pro', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.site-header.MuiAppBar-root {
+  z-index: 10;
+  height: 82px;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.header-inner {
+  width: 100%;
+  height: 100%;
+  padding: 0 7.2%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -1.1px;
+  white-space: nowrap;
+}
+
+.brand-mark {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--lime);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.brand-dot {
+  color: #9ebf45;
+}
+
+.main-nav {
+  display: flex;
+  gap: 35px;
+  margin-left: 30px;
+}
+
+.main-nav a,
+.footer-links a {
+  color: #607169;
+  font-size: 12px;
+  transition: color 0.2s;
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.nav-cta.MuiButton-root {
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.menu-toggle.MuiIconButton-root {
+  display: none;
+  color: var(--ink);
+}
+
+.hero {
+  height: min(700px, 70vw);
+  min-height: 570px;
+  position: relative;
+  overflow: hidden;
+  color: white;
+  background: #173d37;
+}
+
+.hero-image,
+.hero-video,
+.hero-shade {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-image {
+  background: url('https://images.unsplash.com/photo-1530053969600-caed2596d242?auto=format&fit=crop&w=2200&q=90') center 48% / cover;
+  transform: scale(1.02);
+}
+
+.hero-video {
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 48%;
+  transform: scale(1.02);
+}
+
+.hero-shade {
+  z-index: 2;
+  background:
+    linear-gradient(90deg, rgb(7 32 31 / 78%), rgb(8 34 32 / 53%) 42%, rgb(7 33 30 / 8%)),
+    linear-gradient(0deg, rgb(4 25 25 / 30%), transparent 38%);
+}
+
+.hero-content,
+.hero-caption,
+.hero-scroll {
+  z-index: 3;
+}
+
+.hero-content {
+  position: absolute;
+  top: 16.8%;
+  left: 12.2%;
+  max-width: 550px;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #6b8176;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.45px;
+}
+
+.eyebrow > span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #9fca51;
+}
+
+.eyebrow.light {
+  color: rgb(255 255 255 / 75%);
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+.hero h1 {
+  margin: 27px 0 19px;
+  font-size: clamp(54px, 6vw, 79px);
+  font-weight: 600;
+  line-height: 1.03;
+  letter-spacing: -4.4px;
+}
+
+.hero h1 em,
+.section h2 em,
+.care-copy h2 em,
+.health-copy h2 em,
+.shop-copy h2 em,
+.newsletter h2 em {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -2px;
+}
+
+.hero-content > p {
+  max-width: 410px;
+  margin-bottom: 25px;
+  color: rgb(255 255 255 / 82%);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.button.MuiButton-root {
+  min-height: 46px;
+  padding: 0 20px;
+  gap: 12px;
+  border-radius: 0;
+  font-size: 11px;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.button.MuiButton-root:hover {
+  transform: translateY(-2px);
+}
+
+.button-lime.MuiButton-root {
+  color: var(--deep);
+  background: var(--lime);
+}
+
+.button-lime.MuiButton-root:hover {
+  background: #c4e96c;
+}
+
+.button-dark.MuiButton-root {
+  color: white;
+  background: var(--deep);
+}
+
+.button-dark.MuiButton-root:hover {
+  background: #245441;
+}
+
+.text-link {
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.light-link {
+  color: white;
+}
+
+.play {
+  width: 28px;
+  height: 28px;
+  display: inline-grid;
+  place-items: center;
+  margin-right: 8px;
+  border: 1px solid rgb(255 255 255 / 50%);
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+.play .MuiSvgIcon-root {
+  font-size: 15px;
+}
+
+.hero-note {
+  position: absolute;
+  top: 290px;
+  left: 460px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgb(255 255 255 / 76%);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.note-icon {
+  color: var(--lime);
+  font-size: 28px;
+}
+
+.hero-caption,
+.hero-scroll {
+  position: absolute;
+  bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  color: rgb(255 255 255 / 76%);
+  font-size: 8px;
+  letter-spacing: 1.3px;
+}
+
+.hero-caption {
+  left: 7.2%;
+}
+
+.caption-line {
+  width: 48px;
+  height: 1px;
+  background: var(--lime);
+}
+
+.hero-scroll {
+  right: 7.2%;
+  letter-spacing: 1.2px;
+}
+
+.hero-scroll span {
+  margin-left: 4px;
+  font-size: 14px;
+}
+
+.quick-search {
+  position: relative;
+  z-index: 4;
+  width: min(1050px, 86%);
+  margin: -1px auto 0;
+  padding: 22px 27px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: white;
+  box-shadow: 0 15px 45px rgb(35 62 50 / 6%);
+}
+
+.search-intro {
+  width: 30%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-icon {
+  color: #87ad46;
+  font-size: 27px;
+}
+
+.search-intro strong,
+.search-intro small {
+  display: block;
+}
+
+.search-intro strong {
+  font-size: 12px;
+}
+
+.search-intro small {
+  margin-top: 4px;
+  color: #89968f;
+  font-size: 10px;
+}
+
+.search-field.MuiFormControl-root {
+  min-width: 0;
+  flex: 1;
+}
+
+.search-field .MuiOutlinedInput-root {
+  border-radius: 0;
+  font-size: 11px;
+}
+
+.search-field .MuiInputLabel-root {
+  font-size: 12px;
+}
+
+.section {
+  padding: 110px 12.2%;
+}
+
+.species-section {
+  padding-bottom: 102px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 36px;
+}
+
+.section h2,
+.care-copy h2,
+.health-copy h2,
+.shop-copy h2,
+.newsletter h2 {
+  margin: 17px 0 0;
+  font-size: 43px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -2.1px;
+}
+
+.section-heading > p {
+  max-width: 320px;
+  margin: 0 2px 5px 20px;
+  color: #78877f;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.species-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.fish-card.MuiCard-root {
+  padding-bottom: 15px;
+  overflow: visible;
+  background: white;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.fish-card.MuiCard-root:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgb(25 61 48 / 7%);
+}
+
+.fish-image {
+  height: 235px;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+
+.card-tag {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 7px 9px;
+  background: rgb(255 255 255 / 87%);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.heart.MuiIconButton-root {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  color: var(--ink);
+  background: rgb(255 255 255 / 87%);
+}
+
+.heart.MuiIconButton-root:hover {
+  background: white;
+}
+
+.fish-info {
+  padding: 16px 16px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.fish-info h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.fish-info p {
+  margin: 0;
+  color: #819087;
+  font-size: 10px;
+}
+
+.difficulty.MuiChip-root {
+  height: 25px;
+  font-size: 9px;
+}
+
+.difficulty.easy.MuiChip-root {
+  color: #607b31;
+  background: #eef7dd;
+}
+
+.difficulty.medium.MuiChip-root {
+  color: #9e7131;
+  background: #fff2d8;
+}
+
+.fish-meta {
+  padding: 12px 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  border-top: 1px solid #eef1ed;
+  color: #829087;
+  font-size: 9px;
+}
+
+.fish-meta a {
+  margin-left: auto;
+  color: #315b45;
+  font-size: 15px;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 30px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.center-link {
+  margin-top: 31px;
+  text-align: center;
+}
+
+.center-link .MuiButton-root {
+  border-bottom: 1px solid #cdd7cb;
+  border-radius: 0;
+  font-size: 11px;
+}
+
+.care-band {
+  min-height: 460px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  color: white;
+  background: var(--deep);
+}
+
+.care-photo {
+  min-height: 420px;
+  background: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=85') center / cover;
+}
+
+.care-copy {
+  position: relative;
+  padding: 78px 12% 35px;
+}
+
+.care-copy h2 {
+  margin: 20px 0 16px;
+}
+
+.care-copy > p,
+.shop-copy > p,
+.health-copy > p {
+  max-width: 390px;
+  color: #c1d0c8;
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+.care-copy .button {
+  margin-top: 10px;
+}
+
+.care-foot {
+  position: absolute;
+  right: 12%;
+  bottom: 26px;
+  left: 12%;
+  padding-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgb(255 255 255 / 15%);
+  color: #a8bcb0;
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+
+.essentials {
+  padding-top: 100px;
+  padding-bottom: 108px;
+}
+
+.section-heading.compact {
+  align-items: flex-end;
+  margin: 16px 0 34px;
+}
+
+.section-heading.compact h2 {
+  margin: 0;
+}
+
+.section-heading.compact p {
+  max-width: 280px;
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.tip-card {
+  min-height: 205px;
+  padding: 22px 18px 22px 0;
+  border-right: 1px solid var(--line);
+}
+
+.tip-card:not(:first-child) {
+  padding-left: 20px;
+}
+
+.tip-card:last-child {
+  border: 0;
+}
+
+.tip-number {
+  color: #9ca99f;
+  font-size: 9px;
+}
+
+.tip-icon {
+  display: block;
+  margin: 20px 0 10px;
+  color: #88aa4c;
+  font-size: 22px;
+}
+
+.tip-card h3 {
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.tip-card p {
+  min-height: 37px;
+  max-width: 210px;
+  color: #7d8b83;
+  font-size: 10px;
+  line-height: 1.75;
+}
+
+.tip-card > a {
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.tip-card > a span {
+  margin-left: 7px;
+}
+
+.health-section {
+  padding: 75px 14%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 6%;
+  background: #eaf1e6;
+}
+
+.health-art {
+  height: 300px;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.health-orbit {
+  position: absolute;
+  border: 1px solid #c6d7b8;
+  border-radius: 50%;
+  transform: rotate(-22deg);
+}
+
+.orbit-one {
+  width: 300px;
+  height: 130px;
+}
+
+.orbit-two {
+  width: 255px;
+  height: 255px;
+}
+
+.health-center {
+  width: 140px;
+  height: 140px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #63853e;
+  background: #d6e9bc;
+  box-shadow: 0 20px 60px rgb(41 84 62 / 13%);
+  font-size: 60px;
+}
+
+.bubble {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #648246;
+  background: #f7fbf3;
+  box-shadow: 0 8px 28px rgb(54 83 56 / 9%);
+}
+
+.bubble-a {
+  top: 30px;
+  left: 24%;
+  width: 50px;
+  height: 50px;
+}
+
+.bubble-b {
+  right: 20%;
+  bottom: 35px;
+  width: 44px;
+  height: 44px;
+}
+
+.bubble-c {
+  top: 56%;
+  right: 11%;
+  width: 38px;
+  height: 38px;
+}
+
+.health-copy h2 {
+  margin: 17px 0;
+}
+
+.health-copy > p {
+  max-width: 370px;
+  color: #6e7c73;
+}
+
+.health-copy .button {
+  margin: 10px 0 14px;
+}
+
+.health-copy small,
+.shop-copy small {
+  display: block;
+  color: #809087;
+  font-size: 9px;
+}
+
+.shop-section {
+  min-height: 400px;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  color: white;
+  background: var(--green);
+}
+
+.shop-copy {
+  padding: 72px 12% 48px 20%;
+}
+
+.shop-copy h2 {
+  margin: 19px 0 15px;
+}
+
+.shop-search {
+  max-width: 370px;
+  margin-top: 25px;
+}
+
+.shop-search label {
+  color: #c1d0c8;
+  font-size: 9px;
+}
+
+.shop-search-controls {
+  margin-top: 8px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  background: white;
+}
+
+.shop-search-controls .MuiOutlinedInput-root {
+  border: 0;
+  border-radius: 0;
+  font-size: 11px;
+}
+
+.shop-search-controls .MuiOutlinedInput-notchedOutline {
+  border: 0;
+}
+
+.shop-search-controls .MuiButton-root {
+  min-width: 37px;
+  height: 37px;
+  border-radius: 0;
+  color: var(--ink);
+  background: var(--lime);
+  font-size: 17px;
+}
+
+.shop-copy small {
+  margin-top: 12px;
+  color: #b4c5bc;
+}
+
+.shop-image {
+  min-height: 350px;
+  background: url('https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&w=1100&q=85') center / cover;
+}
+
+.newsletter {
+  padding: 72px 12.2%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  background: #f8faf6;
+}
+
+.newsletter h2 {
+  margin-top: 14px;
+  font-size: 34px;
+}
+
+.newsletter form {
+  width: min(390px, 45%);
+}
+
+.newsletter label {
+  color: #74847a;
+  font-size: 10px;
+}
+
+.email-field {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #afc0b1;
+}
+
+.email-field .MuiInputBase-root {
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.email-field .MuiInputBase-input {
+  padding: 13px 0;
+}
+
+.email-field .MuiButton-root {
+  min-width: 40px;
+  color: var(--ink);
+  font-size: 20px;
+}
+
+.newsletter form small {
+  display: block;
+  margin-top: 10px;
+  color: #89958d;
+  font-size: 9px;
+}
+
+.site-footer {
+  padding: 32px 7.2% 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.footer-brand {
+  font-size: 16px;
+}
+
+.footer-brand .brand-mark {
+  width: 25px;
+  height: 25px;
+  font-size: 18px;
+}
+
+.site-footer > p {
+  margin: 0;
+  color: #849087;
+  font-size: 10px;
+}
+
+.footer-links {
+  margin-left: auto;
+  display: flex;
+  gap: 20px;
+}
+
+.footer-links a {
+  font-size: 10px;
+}
+
+.copyright {
+  margin-left: 12px;
+  color: #9aa59e;
+  font-size: 9px;
+}
+
+@media (max-width: 1000px) {
+  .header-inner {
+    padding-right: 5%;
+    padding-left: 5%;
+  }
+
+  .main-nav {
+    gap: 18px;
+  }
+
+  .hero-content {
+    left: 8%;
+  }
+
+  .section {
+    padding-right: 8%;
+    padding-left: 8%;
+  }
+
+  .shop-copy {
+    padding-left: 13%;
+  }
+
+  .health-section {
+    padding-right: 9%;
+    padding-left: 9%;
+  }
+
+  .quick-search {
+    width: 92%;
+  }
+
+  .hero-note {
+    left: 400px;
+  }
+}
+
+@media (max-width: 720px) {
+  .site-header.MuiAppBar-root {
+    height: 68px;
+  }
+
+  .header-inner {
+    padding: 0 6%;
+  }
+
+  .menu-toggle.MuiIconButton-root {
+    display: inline-flex;
+  }
+
+  .nav-cta.MuiButton-root {
+    display: none;
+  }
+
+  .main-nav {
+    position: absolute;
+    top: 68px;
+    right: 0;
+    left: 0;
+    z-index: 10;
+    margin: 0;
+    padding: 12px 6% 20px;
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    background: var(--paper);
+    box-shadow: 0 14px 20px rgb(20 51 41 / 8%);
+  }
+
+  .main-nav.open {
+    display: flex;
+  }
+
+  .main-nav a {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hero {
+    height: 680px;
+    min-height: 0;
+  }
+
+  .hero-image {
+    background-position: 58% center;
+  }
+
+  .hero-shade {
+    background: linear-gradient(90deg, rgb(11 38 36 / 79%), rgb(11 38 36 / 47%) 72%, rgb(11 38 36 / 16%));
+  }
+
+  .hero-content {
+    top: 17%;
+    right: 7%;
+    left: 7%;
+  }
+
+  .hero h1 {
+    font-size: 58px;
+    letter-spacing: -3px;
+  }
+
+  .hero-content > p {
+    max-width: 340px;
+    font-size: 13px;
+  }
+
+  .hero-actions {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 17px;
+  }
+
+  .hero-note {
+    top: auto;
+    right: 0;
+    bottom: -132px;
+    left: auto;
+  }
+
+  .hero-caption {
+    bottom: 23px;
+    left: 7%;
+  }
+
+  .hero-caption span:last-child {
+    font-size: 7px;
+  }
+
+  .hero-scroll {
+    right: 7%;
+    bottom: 22px;
+    font-size: 0;
+  }
+
+  .quick-search {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 17px;
+  }
+
+  .search-intro {
+    width: auto;
+    grid-column: 1 / -1;
+  }
+
+  .search-field.MuiFormControl-root {
+    width: 100%;
+  }
+
+  .quick-search > .button {
+    min-height: 42px;
+    grid-column: 1 / -1;
+  }
+
+  .section {
+    padding: 76px 7%;
+  }
+
+  .section-heading {
+    display: block;
+  }
+
+  .section h2,
+  .care-copy h2,
+  .health-copy h2,
+  .shop-copy h2 {
+    font-size: 37px;
+  }
+
+  .section-heading > p {
+    max-width: 420px;
+    margin: 15px 0 0;
+  }
+
+  .species-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .fish-image {
+    height: 250px;
+  }
+
+  .fish-info h3 {
+    font-size: 17px;
+  }
+
+  .care-band {
+    grid-template-columns: 1fr;
+  }
+
+  .care-photo {
+    min-height: 270px;
+  }
+
+  .care-copy {
+    padding: 48px 8% 88px;
+  }
+
+  .care-foot {
+    right: 8%;
+    left: 8%;
+  }
+
+  .essentials {
+    padding-top: 70px;
+  }
+
+  .section-heading.compact {
+    display: block;
+  }
+
+  .tips-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tip-card {
+    min-height: 200px;
+    padding: 18px 12px 18px 0;
+  }
+
+  .tip-card:not(:first-child) {
+    padding-left: 13px;
+  }
+
+  .tip-card:nth-child(2) {
+    border-right: 0;
+  }
+
+  .tip-card:nth-child(3),
+  .tip-card:nth-child(4) {
+    border-top: 1px solid var(--line);
+  }
+
+  .tip-card p {
+    min-height: 52px;
+  }
+
+  .health-section {
+    padding: 45px 8% 60px;
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .health-art {
+    height: 230px;
+  }
+
+  .health-center {
+    width: 110px;
+    height: 110px;
+  }
+
+  .orbit-one {
+    width: 250px;
+    height: 110px;
+  }
+
+  .orbit-two {
+    width: 205px;
+    height: 205px;
+  }
+
+  .health-copy {
+    padding: 0 3%;
+  }
+
+  .shop-section {
+    grid-template-columns: 1fr;
+  }
+
+  .shop-copy {
+    padding: 55px 8% 43px;
+  }
+
+  .shop-image {
+    min-height: 265px;
+  }
+
+  .newsletter {
+    padding: 54px 8%;
+    display: block;
+  }
+
+  .newsletter h2 {
+    font-size: 31px;
+  }
+
+  .newsletter form {
+    width: 100%;
+    margin-top: 30px;
+  }
+
+  .site-footer {
+    padding: 28px 7%;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .site-footer > p {
+    width: calc(100% - 160px);
+  }
+
+  .footer-links {
+    order: 3;
+    width: 100%;
+    margin: 12px 0 3px;
+    flex-wrap: wrap;
+  }
+
+  .copyright {
+    margin: 0 0 0 auto;
+    font-size: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

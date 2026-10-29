@@ -1,167 +1,197 @@
 AQUAATLAS VIETNAM — GHI CHÚ HỌC CODE
 =====================================
 
-Tệp này dành cho việc học code và ghi lại các đợt cập nhật dự án.
-README.md chỉ giới thiệu website; phần giải thích kỹ thuật để ở đây.
+Tệp này dùng để học code và ghi lại các đợt cập nhật. README.md chỉ giới thiệu
+website và cách chạy dự án.
 
 
-1. CÁC TỆP CHÍNH
-----------------
+1. CÁC TỆP QUAN TRỌNG
+---------------------
 
 index.html
-  Chứa cấu trúc và nội dung mà người dùng nhìn thấy trên trang.
+  Khung HTML tối giản. React sẽ gắn website vào phần tử có id="root".
 
-styles.css
-  Quy định màu sắc, font, kích thước, khoảng cách và cách sắp xếp các phần tử.
+src/main.jsx
+  Điểm bắt đầu của ứng dụng React. Tệp này nạp giao diện, theme MUI và CSS.
 
-script.js
-  Tạo hành vi tương tác khi người dùng bấm nút hoặc thay đổi lựa chọn.
+src/App.jsx
+  Ghép các component thành trang hoàn chỉnh và quản lý trạng thái bộ lọc cá.
 
-README.md
-  Giới thiệu website, tính năng, cách mở và nguồn media.
+src/components/
+  Mỗi tệp chứa một phần giao diện riêng như thanh điều hướng, ảnh bìa hoặc thẻ cá.
 
+src/data/fish.js
+  Lưu dữ liệu các loài cá mẫu ở một nơi riêng, không trộn dữ liệu với giao diện.
 
-2. GIẢI THÍCH index.html
-------------------------
+src/theme.js
+  Đặt màu và kiểu mặc định cho các component Material UI.
 
-HTML là bộ khung của website. Các thẻ HTML mô tả loại nội dung:
+src/styles.css
+  Chứa kiểu dáng riêng của AquaAtlas, bao gồm bố cục responsive cho điện thoại.
 
-  <h1>, <h2>  Tiêu đề lớn và tiêu đề của từng phần.
-  <p>         Đoạn văn.
-  <a>         Liên kết hoặc nút điều hướng.
-  <section>   Một khu vực nội dung lớn, ví dụ phần loài cá.
-  <header>    Đầu trang và thanh điều hướng.
-  <main>      Nội dung chính của website.
-  <footer>    Phần cuối trang.
+package.json
+  Khai báo thư viện và lệnh npm để chạy hoặc tạo bản dựng website.
 
-Trong đường dẫn như href="#species", dấu # có nghĩa là đi tới phần tử có
-id="species" trong trang. id là tên riêng của một phần tử. class là tên nhóm;
-nhiều phần tử có thể dùng chung class để nhận cùng kiểu dáng trong CSS.
-
-Khu vực ảnh bìa có một thẻ <video> và một thẻ <source>. Các thuộc tính của
-video có ý nghĩa như sau:
-
-  autoplay    Yêu cầu trình duyệt tự phát video.
-  muted       Tắt tiếng để việc tự phát được hỗ trợ tốt hơn.
-  loop        Phát lại video khi đến cuối.
-  playsinline Phát trong trang trên điện thoại thay vì mở toàn màn hình.
-  poster      Ảnh hiển thị trong lúc video chưa phát hoặc chưa tải xong.
-
-Mỗi thẻ cá có data-water và data-level. Ví dụ data-water="fresh" ghi cá sống
-trong nước ngọt. Đây là dữ liệu để bộ lọc trong script.js biết thẻ nào cần giữ
-lại khi người dùng chọn bộ lọc.
+vite.config.js
+  Kết nối Vite với plugin React để phát triển và đóng gói ứng dụng.
 
 
-3. GIẢI THÍCH styles.css
-------------------------
+2. REACT HOẠT ĐỘNG NHƯ THẾ NÀO?
+-------------------------------
 
-CSS là các quy tắc trình bày. Dấu chấm chọn class, dấu # chọn id. Ví dụ:
+Component là một phần giao diện có thể đặt tên và tái sử dụng. Trong dự án,
+SiteHeader là thanh điều hướng, HeroSection là ảnh bìa, SpeciesSection hiển thị
+loài cá, còn SiteFooter là chân trang.
 
-  .hero { ... }
+src/App.jsx đặt các component cạnh nhau để tạo trang. Ví dụ:
 
-chọn phần tử có class="hero". Còn:
+  <SiteHeader />
+  <HeroSection />
+  <SpeciesSection fish={visibleFish} />
 
-  .hero h1 { ... }
+Tên component viết hoa để React nhận ra đây là component. Các component nhỏ giúp
+người học tìm đúng phần cần sửa, thay vì đọc một tệp chứa cả website.
 
-chọn tiêu đề h1 nằm bên trong khu vực hero.
+Props là dữ liệu component cha gửi cho component con. Trong ví dụ
+<SpeciesSection fish={visibleFish} />, danh sách visibleFish được gửi vào
+SpeciesSection bằng prop tên là fish.
 
-Trong :root có các biến màu như --ink, --green và --lime. Biến giúp dùng cùng
-một màu ở nhiều nơi. Nếu muốn đổi màu chủ đạo, có thể đổi giá trị biến thay vì
-tìm và sửa từng nút hoặc từng tiêu đề.
+useState lưu trạng thái có thể thay đổi khi người dùng thao tác. App.jsx lưu hai
+lựa chọn bộ lọc là water và level. FishCard lưu trạng thái trái tim của riêng
+mỗi thẻ. Khi state thay đổi, React tự cập nhật phần giao diện liên quan.
 
-Các quy tắc @media điều chỉnh bố cục theo màn hình:
+App.jsx dùng filter() trực tiếp để tính danh sách cá đang khớp với bộ lọc. Với
+danh sách mẫu nhỏ, cách viết thẳng giúp code dễ đọc; chỉ nên thêm useMemo khi
+việc tính toán thật sự nặng hoặc đã đo thấy ảnh hưởng hiệu năng.
 
-  @media (max-width: 720px)
-
-chứa các kiểu dành cho màn hình hẹp như điện thoại. Ví dụ, lưới cá từ ba cột
-chuyển thành một cột và menu điều hướng trở thành menu có nút mở.
-
-  @media (prefers-reduced-motion: reduce)
-
-giảm chuyển động cuộn và hiệu ứng chuyển cảnh nếu thiết bị bật tùy chọn giảm
-chuyển động.
-
-object-fit: cover giúp ảnh hoặc video lấp đầy khung mà không bị kéo méo. Khi tỷ
-lệ khung hình khác nhau, một phần ảnh/video sẽ bị cắt để vừa khung.
-
-
-4. GIẢI THÍCH script.js
------------------------
-
-document.querySelector(".ten-class") tìm phần tử đầu tiên có class tương ứng.
-document.querySelectorAll(".ten-class") tìm tất cả phần tử phù hợp.
-addEventListener("click", ...) đăng ký đoạn code sẽ chạy khi người dùng bấm.
-
-Menu điện thoại:
-  Khi bấm nút menu, JavaScript thêm hoặc bỏ class open trên thanh điều hướng.
-  CSS dùng class open để quyết định thanh điều hướng đang hiện hay ẩn.
-
-Bộ lọc cá:
-  Khi người dùng đổi lựa chọn, hàm filterFish() chạy. Hàm đọc giá trị bộ lọc,
-  so sánh với data-water và data-level trên mỗi thẻ cá, rồi ẩn các thẻ không
-  phù hợp. Thuộc tính hidden khiến trình duyệt không hiển thị thẻ đó.
-
-Nút trái tim:
-  Khi bấm, class saved được bật hoặc tắt, biểu tượng đổi từ ♡ sang ♥ và
-  aria-pressed được cập nhật để trình đọc màn hình biết trạng thái. Dữ liệu
-  yêu thích hiện chỉ tồn tại trong lúc trang đang mở; tải lại sẽ mất.
-
-Biểu mẫu email:
-  Trình duyệt kiểm tra trường email. Khi gửi, JavaScript ngăn trang tải lại và
-  thay dòng thông báo bằng lời cảm ơn. Chưa có máy chủ nhận email nên địa chỉ
-  không được gửi đi hay lưu lại.
-
-Video bìa:
-  Nếu video gặp lỗi tải, sự kiện error sẽ ẩn video. Ảnh nền phía sau video vẫn
-  còn để làm phương án dự phòng.
+map() lặp qua mảng và tạo một phần tử giao diện cho mỗi dữ liệu. Ví dụ,
+fish.map(...) tạo một FishCard cho mỗi loài. Thuộc tính key={item.id} giúp React
+nhận diện ổn định từng thẻ khi danh sách thay đổi.
 
 
-5. NHẬT KÝ CÁC ĐỢT CẬP NHẬT
+3. MATERIAL UI (MUI)
+--------------------
+
+MUI là thư viện component giao diện cho React. Dự án dùng Button cho nút,
+Select/MenuItem cho lựa chọn, Card cho thẻ cá, Chip cho nhãn độ khó, TextField
+cho ô email và IconButton cho nút menu/yêu thích.
+
+src/theme.js tạo theme chung. Theme đặt màu chính, màu nhấn, font, góc vuông và
+kiểu mặc định cho nút. Khi muốn đổi màu hoặc cách hiển thị mặc định của MUI,
+bắt đầu từ tệp này. src/styles.css tinh chỉnh để các component MUI khớp thiết kế
+riêng của website.
+
+
+4. DỮ LIỆU VÀ BỘ LỌC
+--------------------
+
+src/data/fish.js xuất một mảng các đối tượng cá. Mỗi đối tượng có id, tên, mô tả,
+môi trường sống (water), mức độ (level), tuổi thọ, kích thước bể và ảnh.
+
+Trong App.jsx, filter() giữ lại các loài khớp với lựa chọn của người dùng. Hàm
+này không sửa mảng dữ liệu gốc; nó tạo một danh sách kết quả mới. Danh sách mới
+được truyền xuống SpeciesSection để hiển thị.
+
+Để thêm cá mẫu, thêm một đối tượng mới vào mảng trong src/data/fish.js và đặt id
+duy nhất. Các giá trị water phải là fresh hoặc salt; level hiện dùng easy hoặc
+medium để khớp với các lựa chọn bộ lọc.
+
+
+5. GIAO DIỆN VÀ RESPONSIVE
+--------------------------
+
+src/styles.css dùng className trong JSX để định dạng. Trong React, thuộc tính
+className tương đương thuộc tính class trong HTML.
+
+Các biến màu trong :root như --ink, --green và --lime giữ màu dùng chung. Đổi
+giá trị biến để đổi màu ở nhiều khu vực cùng lúc.
+
+@media (max-width: 720px) chứa các điều chỉnh cho điện thoại: menu chuyển thành
+menu mở/đóng, lưới cá thành một cột và các khu vực xếp theo chiều dọc.
+
+Theme MUI xử lý kiểu mặc định cho component thư viện; CSS riêng xử lý bố cục
+thương hiệu. Tách hai phần này giúp tránh phải viết lại toàn bộ kiểu dáng của
+các component MUI.
+
+
+6. CHẠY DỰ ÁN
+-------------
+
+Sau khi cài Node.js, mở Terminal tại thư mục dự án và chạy:
+
+  npm install
+  npm run dev
+
+npm install tải các thư viện được khai báo trong package.json. npm run dev khởi
+động máy chủ phát triển Vite; mở địa chỉ localhost mà Terminal in ra để xem web.
+
+Khi cần tạo phiên bản triển khai, chạy:
+
+  npm run build
+
+Vite sẽ đóng gói các tệp cần thiết vào thư mục dist/. Thư mục node_modules/ và
+dist/ được bỏ qua bởi Git qua .gitignore; không cần đưa chúng lên GitHub.
+
+
+7. NHẬT KÝ CÁC ĐỢT CẬP NHẬT
 ---------------------------
 
-BẢN ĐẦU TIÊN — 29/10/2026
+BẢN 1 — TRANG HTML TĨNH — 29/10/2026
 
 Đã làm:
-  - Tạo trang chủ AquaAtlas Vietnam bằng tiếng Việt.
-  - Thêm thanh điều hướng, ảnh bìa, bộ lọc cá và ba thẻ loài cá mẫu.
-  - Thêm các khu vực chăm sóc, sức khỏe cá, tìm cửa hàng và đăng ký nhận tin.
-  - Thêm menu điện thoại, lọc cá, trạng thái yêu thích minh họa và thông báo
-    biểu mẫu.
-  - Chọn Be Vietnam Pro làm font để dấu tiếng Việt hiển thị đồng đều.
-  - Thêm video nền đại dương và ảnh dự phòng.
-  - Tạo bố cục thích ứng với màn hình lớn và màn hình điện thoại.
+  - Tạo trang chủ AquaAtlas Vietnam tiếng Việt với các khu vực chính của cẩm nang.
+  - Thêm bộ lọc mẫu, thẻ cá, menu điện thoại và các tương tác minh họa.
+  - Chọn Be Vietnam Pro, thêm video nền và bố cục responsive.
 
 Code liên quan:
-  - index.html chứa các khu vực và dữ liệu mẫu hiển thị.
-  - styles.css quy định cách các khu vực hiển thị và đổi bố cục trên điện thoại.
-  - script.js điều khiển menu, bộ lọc, nút trái tim và thông báo biểu mẫu.
+  - Toàn bộ nội dung nằm trong index.html, styles.css và script.js.
+  - Dữ liệu và hành vi được viết trực tiếp, chưa có cơ sở dữ liệu.
 
-Điều chưa kết nối:
-  - Danh sách cá và hướng dẫn là nội dung minh họa, chưa lấy từ cơ sở dữ liệu.
-  - Bộ chọn tỉnh/thành chưa tìm cửa hàng thật.
-  - Biểu mẫu chưa gửi email.
-  - Trạng thái yêu thích không được lưu sau khi tải lại trang.
-  - Ảnh, video và font tải từ dịch vụ bên ngoài, cần Internet.
-
-
-6. MẪU GHI THÊM MỘT ĐỢT CẬP NHẬT
---------------------------------
-
-Sau mỗi lần website được cập nhật, thêm mục mới lên đầu phần nhật ký, theo mẫu:
-
-BẢN X — ngày/tháng/năm
+BẢN 2 — CHUYỂN SANG REACT + MUI — 29/10/2026
 
 Đã làm:
-  - Mô tả điều người dùng nhìn thấy hoặc có thể thao tác.
+  - Chuyển trang HTML thành ứng dụng React chạy bằng Vite.
+  - Tách header, hero, tìm kiếm, danh sách cá, chăm sóc, sức khỏe/cửa hàng và
+    footer thành các component riêng.
+  - Chuyển dữ liệu cá sang src/data/fish.js; bộ lọc đọc dữ liệu này và cập nhật
+    danh sách hiển thị khi lựa chọn thay đổi.
+  - Dùng MUI cho Button, Select, Card, Chip, TextField và các nút biểu tượng.
+  - Tạo theme màu chung và định dạng responsive dễ đọc hơn.
+  - Thêm package.json, cấu hình Vite và .gitignore cho node_modules/dist.
+  - Cập nhật README.md để hướng dẫn chạy ứng dụng React.
+  - Tạo bản dựng production thành công bằng npm run build.
 
 Code liên quan:
-  - ten-tep.ext: nói rõ tệp này thay đổi phần nào.
+  - src/main.jsx khởi chạy React và bọc ứng dụng bằng theme MUI.
+  - src/App.jsx giữ trạng thái bộ lọc và kết hợp các component.
+  - src/components/ chứa các phần giao diện nhỏ.
+  - src/data/fish.js giữ danh sách cá mẫu.
+  - src/theme.js và src/styles.css lần lượt định dạng component MUI và giao diện
+    riêng của website.
+
+Điều cần hiểu / giới hạn:
+  - Danh sách cá vẫn là dữ liệu mẫu trong JavaScript, chưa có cơ sở dữ liệu.
+  - Chọn tỉnh/thành chưa tra cứu cửa hàng thật; biểu mẫu email chưa gửi thư.
+  - Ảnh, video và font tải từ các dịch vụ bên ngoài và cần Internet.
+  - Chạy ứng dụng bằng npm run dev; không mở index.html trực tiếp như bản tĩnh.
+
+
+8. MẪU CHO CÁC BẢN TIẾP THEO
+----------------------------
+
+Thêm bản cập nhật mới ngay phía trên các bản cũ. Ghi điều người dùng nhìn thấy,
+tệp thay đổi, cách code hoạt động và những giới hạn còn lại.
+
+BẢN X — tên thay đổi — ngày/tháng/năm
+
+Đã làm:
+  - Mô tả tính năng hoặc thay đổi giao diện.
+
+Code liên quan:
+  - đường/dẫn/tệp.jsx: nêu vai trò của tệp và phần code đã sửa.
 
 Cách hoạt động:
-  - Giải thích bằng lời đơn giản code mới chạy như thế nào.
+  - Giải thích đơn giản cách dữ liệu hoặc thao tác đi qua các component.
 
-Điều cần hiểu hoặc chưa kết nối:
-  - Ghi giới hạn, dữ liệu mẫu hoặc bước cần làm tiếp.
-
-Mục tiêu là để một người mới mở dự án vẫn hiểu từng lần thay đổi có tác dụng
-gì và có thể tìm đúng tệp để tự đọc hoặc thử sửa.
+Điều cần hiểu / giới hạn:
+  - Ghi nội dung mẫu, dịch vụ chưa kết nối hoặc bước cần làm tiếp.

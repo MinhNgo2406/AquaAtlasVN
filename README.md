@@ -1,6 +1,6 @@
 # AquaAtlas Vietnam
 
-AquaAtlas Vietnam là website tiếng Việt dành cho người yêu cá cảnh. Website giới thiệu các loài cá, kiến thức chăm sóc, sức khỏe cá và địa điểm mua cá tại Việt Nam.
+AquaAtlas Vietnam là website tiếng Việt dành cho người yêu cá cảnh. Website giới thiệu các loài cá, kiến thức chăm sóc, sức khỏe cá và địa điểm mua cá tại Việt Nam. Giao diện được xây dựng bằng React, Vite và Material UI (MUI).
 
 ## Tính năng hiện có
 
@@ -11,13 +11,21 @@ AquaAtlas Vietnam là website tiếng Việt dành cho người yêu cá cảnh.
 
 ## Mở website
 
-Tải dự án về máy, sau đó mở `index.html` bằng trình duyệt. Website dùng HTML, CSS và JavaScript thuần, không cần cài thêm thư viện. Ảnh, video và font được tải từ Internet.
+Yêu cầu Node.js và npm. Trong thư mục dự án, chạy:
+
+```bash
+npm install
+npm run dev
+```
+
+Mở địa chỉ mà Vite hiển thị trong Terminal. Để tạo bản tĩnh có thể triển khai, chạy `npm run build`; các tệp đầu ra được tạo trong `dist/`. Ảnh, video và font được tải từ Internet.
 
 ## Tệp trong dự án
 
-- `index.html` — nội dung website.
-- `styles.css` — giao diện và bố cục.
-- `script.js` — các tương tác của website.
+- `index.html` — phần tử gốc để React hiển thị ứng dụng.
+- `src/` — component React, dữ liệu cá, giao diện và logic tương tác.
+- `package.json` — lệnh chạy dự án và danh sách thư viện.
+- `vite.config.js` — cấu hình Vite.
 - `CODE-WALKTHROUGH.txt` — ghi chú học code và nhật ký các đợt cập nhật.
 
 ## Lưu ý
