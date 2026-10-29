@@ -1,0 +1,167 @@
+AQUAATLAS VIETNAM — GHI CHÚ HỌC CODE
+=====================================
+
+Tệp này dành cho việc học code và ghi lại các đợt cập nhật dự án.
+README.md chỉ giới thiệu website; phần giải thích kỹ thuật để ở đây.
+
+
+1. CÁC TỆP CHÍNH
+----------------
+
+index.html
+  Chứa cấu trúc và nội dung mà người dùng nhìn thấy trên trang.
+
+styles.css
+  Quy định màu sắc, font, kích thước, khoảng cách và cách sắp xếp các phần tử.
+
+script.js
+  Tạo hành vi tương tác khi người dùng bấm nút hoặc thay đổi lựa chọn.
+
+README.md
+  Giới thiệu website, tính năng, cách mở và nguồn media.
+
+
+2. GIẢI THÍCH index.html
+------------------------
+
+HTML là bộ khung của website. Các thẻ HTML mô tả loại nội dung:
+
+  <h1>, <h2>  Tiêu đề lớn và tiêu đề của từng phần.
+  <p>         Đoạn văn.
+  <a>         Liên kết hoặc nút điều hướng.
+  <section>   Một khu vực nội dung lớn, ví dụ phần loài cá.
+  <header>    Đầu trang và thanh điều hướng.
+  <main>      Nội dung chính của website.
+  <footer>    Phần cuối trang.
+
+Trong đường dẫn như href="#species", dấu # có nghĩa là đi tới phần tử có
+id="species" trong trang. id là tên riêng của một phần tử. class là tên nhóm;
+nhiều phần tử có thể dùng chung class để nhận cùng kiểu dáng trong CSS.
+
+Khu vực ảnh bìa có một thẻ <video> và một thẻ <source>. Các thuộc tính của
+video có ý nghĩa như sau:
+
+  autoplay    Yêu cầu trình duyệt tự phát video.
+  muted       Tắt tiếng để việc tự phát được hỗ trợ tốt hơn.
+  loop        Phát lại video khi đến cuối.
+  playsinline Phát trong trang trên điện thoại thay vì mở toàn màn hình.
+  poster      Ảnh hiển thị trong lúc video chưa phát hoặc chưa tải xong.
+
+Mỗi thẻ cá có data-water và data-level. Ví dụ data-water="fresh" ghi cá sống
+trong nước ngọt. Đây là dữ liệu để bộ lọc trong script.js biết thẻ nào cần giữ
+lại khi người dùng chọn bộ lọc.
+
+
+3. GIẢI THÍCH styles.css
+------------------------
+
+CSS là các quy tắc trình bày. Dấu chấm chọn class, dấu # chọn id. Ví dụ:
+
+  .hero { ... }
+
+chọn phần tử có class="hero". Còn:
+
+  .hero h1 { ... }
+
+chọn tiêu đề h1 nằm bên trong khu vực hero.
+
+Trong :root có các biến màu như --ink, --green và --lime. Biến giúp dùng cùng
+một màu ở nhiều nơi. Nếu muốn đổi màu chủ đạo, có thể đổi giá trị biến thay vì
+tìm và sửa từng nút hoặc từng tiêu đề.
+
+Các quy tắc @media điều chỉnh bố cục theo màn hình:
+
+  @media (max-width: 720px)
+
+chứa các kiểu dành cho màn hình hẹp như điện thoại. Ví dụ, lưới cá từ ba cột
+chuyển thành một cột và menu điều hướng trở thành menu có nút mở.
+
+  @media (prefers-reduced-motion: reduce)
+
+giảm chuyển động cuộn và hiệu ứng chuyển cảnh nếu thiết bị bật tùy chọn giảm
+chuyển động.
+
+object-fit: cover giúp ảnh hoặc video lấp đầy khung mà không bị kéo méo. Khi tỷ
+lệ khung hình khác nhau, một phần ảnh/video sẽ bị cắt để vừa khung.
+
+
+4. GIẢI THÍCH script.js
+-----------------------
+
+document.querySelector(".ten-class") tìm phần tử đầu tiên có class tương ứng.
+document.querySelectorAll(".ten-class") tìm tất cả phần tử phù hợp.
+addEventListener("click", ...) đăng ký đoạn code sẽ chạy khi người dùng bấm.
+
+Menu điện thoại:
+  Khi bấm nút menu, JavaScript thêm hoặc bỏ class open trên thanh điều hướng.
+  CSS dùng class open để quyết định thanh điều hướng đang hiện hay ẩn.
+
+Bộ lọc cá:
+  Khi người dùng đổi lựa chọn, hàm filterFish() chạy. Hàm đọc giá trị bộ lọc,
+  so sánh với data-water và data-level trên mỗi thẻ cá, rồi ẩn các thẻ không
+  phù hợp. Thuộc tính hidden khiến trình duyệt không hiển thị thẻ đó.
+
+Nút trái tim:
+  Khi bấm, class saved được bật hoặc tắt, biểu tượng đổi từ ♡ sang ♥ và
+  aria-pressed được cập nhật để trình đọc màn hình biết trạng thái. Dữ liệu
+  yêu thích hiện chỉ tồn tại trong lúc trang đang mở; tải lại sẽ mất.
+
+Biểu mẫu email:
+  Trình duyệt kiểm tra trường email. Khi gửi, JavaScript ngăn trang tải lại và
+  thay dòng thông báo bằng lời cảm ơn. Chưa có máy chủ nhận email nên địa chỉ
+  không được gửi đi hay lưu lại.
+
+Video bìa:
+  Nếu video gặp lỗi tải, sự kiện error sẽ ẩn video. Ảnh nền phía sau video vẫn
+  còn để làm phương án dự phòng.
+
+
+5. NHẬT KÝ CÁC ĐỢT CẬP NHẬT
+---------------------------
+
+BẢN ĐẦU TIÊN — 29/10/2026
+
+Đã làm:
+  - Tạo trang chủ AquaAtlas Vietnam bằng tiếng Việt.
+  - Thêm thanh điều hướng, ảnh bìa, bộ lọc cá và ba thẻ loài cá mẫu.
+  - Thêm các khu vực chăm sóc, sức khỏe cá, tìm cửa hàng và đăng ký nhận tin.
+  - Thêm menu điện thoại, lọc cá, trạng thái yêu thích minh họa và thông báo
+    biểu mẫu.
+  - Chọn Be Vietnam Pro làm font để dấu tiếng Việt hiển thị đồng đều.
+  - Thêm video nền đại dương và ảnh dự phòng.
+  - Tạo bố cục thích ứng với màn hình lớn và màn hình điện thoại.
+
+Code liên quan:
+  - index.html chứa các khu vực và dữ liệu mẫu hiển thị.
+  - styles.css quy định cách các khu vực hiển thị và đổi bố cục trên điện thoại.
+  - script.js điều khiển menu, bộ lọc, nút trái tim và thông báo biểu mẫu.
+
+Điều chưa kết nối:
+  - Danh sách cá và hướng dẫn là nội dung minh họa, chưa lấy từ cơ sở dữ liệu.
+  - Bộ chọn tỉnh/thành chưa tìm cửa hàng thật.
+  - Biểu mẫu chưa gửi email.
+  - Trạng thái yêu thích không được lưu sau khi tải lại trang.
+  - Ảnh, video và font tải từ dịch vụ bên ngoài, cần Internet.
+
+
+6. MẪU GHI THÊM MỘT ĐỢT CẬP NHẬT
+--------------------------------
+
+Sau mỗi lần website được cập nhật, thêm mục mới lên đầu phần nhật ký, theo mẫu:
+
+BẢN X — ngày/tháng/năm
+
+Đã làm:
+  - Mô tả điều người dùng nhìn thấy hoặc có thể thao tác.
+
+Code liên quan:
+  - ten-tep.ext: nói rõ tệp này thay đổi phần nào.
+
+Cách hoạt động:
+  - Giải thích bằng lời đơn giản code mới chạy như thế nào.
+
+Điều cần hiểu hoặc chưa kết nối:
+  - Ghi giới hạn, dữ liệu mẫu hoặc bước cần làm tiếp.
+
+Mục tiêu là để một người mới mở dự án vẫn hiểu từng lần thay đổi có tác dụng
+gì và có thể tìm đúng tệp để tự đọc hoặc thử sửa.
