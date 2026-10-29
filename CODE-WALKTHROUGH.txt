@@ -17,8 +17,26 @@ src/main.jsx
 src/App.jsx
   Ghép các component thành trang hoàn chỉnh và quản lý trạng thái bộ lọc cá.
 
-src/components/
-  Mỗi tệp chứa một phần giao diện riêng như thanh điều hướng, ảnh bìa hoặc thẻ cá.
+src/components/SiteHeader.jsx
+  Thanh điều hướng. useState điều khiển menu mở/đóng trên điện thoại.
+
+src/components/HeroSection.jsx
+  Ảnh bìa, video nền và các nút dẫn tới nội dung.
+
+src/components/QuickSearch.jsx
+  Hai lựa chọn MUI cho môi trường nước và mức chăm sóc. Gửi lựa chọn về App.jsx.
+
+src/components/SpeciesSection.jsx
+  Lưới cá. Mỗi FishCard hiển thị một loài và có state riêng cho nút yêu thích.
+
+src/components/CareSection.jsx
+  Hướng dẫn dựng bể và các thẻ kiến thức chăm sóc.
+
+src/components/HealthAndShops.jsx
+  Ba khu vực: sức khỏe, chọn tỉnh/thành và đăng ký email minh họa.
+
+src/components/SiteFooter.jsx
+  Chân trang và các liên kết tới khu vực khác.
 
 src/data/fish.js
   Lưu dữ liệu các loài cá mẫu ở một nơi riêng, không trộn dữ liệu với giao diện.
@@ -28,6 +46,12 @@ src/theme.js
 
 src/styles.css
   Chứa kiểu dáng riêng của AquaAtlas, bao gồm bố cục responsive cho điện thoại.
+
+.gitignore
+  Nói cho Git bỏ qua node_modules, dist và tệp hệ thống macOS.
+
+package-lock.json
+  Ghi lại chính xác phiên bản thư viện đã cài để các máy khác cài cùng phiên bản.
 
 package.json
   Khai báo thư viện và lệnh npm để chạy hoặc tạo bản dựng website.
@@ -136,7 +160,7 @@ dist/ được bỏ qua bởi Git qua .gitignore; không cần đưa chúng lên
 7. NHẬT KÝ CÁC ĐỢT CẬP NHẬT
 ---------------------------
 
-BẢN 1 — TRANG HTML TĨNH — 29/10/2026
+BẢN 1 — TRANG HTML TĨNH — 29/10/2026 (PHIÊN BẢN CŨ)
 
 Đã làm:
   - Tạo trang chủ AquaAtlas Vietnam tiếng Việt với các khu vực chính của cẩm nang.
@@ -144,8 +168,10 @@ BẢN 1 — TRANG HTML TĨNH — 29/10/2026
   - Chọn Be Vietnam Pro, thêm video nền và bố cục responsive.
 
 Code liên quan:
-  - Toàn bộ nội dung nằm trong index.html, styles.css và script.js.
-  - Dữ liệu và hành vi được viết trực tiếp, chưa có cơ sở dữ liệu.
+  - Khi đó toàn bộ nội dung nằm trong index.html, styles.css và script.js.
+  - Đây là ghi chép lịch sử; styles.css và script.js ở thư mục gốc đã được thay
+    bằng src/styles.css và các component React. Git vẫn giữ lịch sử bản cũ.
+  - Dữ liệu và hành vi khi ấy được viết trực tiếp, chưa có cơ sở dữ liệu.
 
 BẢN 2 — CHUYỂN SANG REACT + MUI — 29/10/2026
 
@@ -168,12 +194,15 @@ Code liên quan:
   - src/data/fish.js giữ danh sách cá mẫu.
   - src/theme.js và src/styles.css lần lượt định dạng component MUI và giao diện
     riêng của website.
+  - MUI components được import theo nhu cầu trong từng component. Vite có thể
+    đóng gói phần thư viện được dùng cùng ứng dụng thay vì nạp cả CDN.
 
 Điều cần hiểu / giới hạn:
   - Danh sách cá vẫn là dữ liệu mẫu trong JavaScript, chưa có cơ sở dữ liệu.
   - Chọn tỉnh/thành chưa tra cứu cửa hàng thật; biểu mẫu email chưa gửi thư.
   - Ảnh, video và font tải từ các dịch vụ bên ngoài và cần Internet.
   - Chạy ứng dụng bằng npm run dev; không mở index.html trực tiếp như bản tĩnh.
+  - README.md chỉ mô tả website và cách chạy; ghi chú code nằm trong tệp này.
 
 
 8. MẪU CHO CÁC BẢN TIẾP THEO
