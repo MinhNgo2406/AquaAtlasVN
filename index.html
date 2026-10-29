@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f8f4">
+  <meta name="description" content="Cẩm nang cá cảnh Việt Nam: tìm hiểu loài cá, chăm sóc bể, nhận biết vấn đề sức khỏe và khám phá cửa hàng cá cảnh.">
+  <title>AquaAtlas Vietnam — Cẩm nang cá cảnh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="AquaAtlas Vietnam, về đầu trang"><span class="brand-mark">≈</span><span>AquaAtlas<span class="brand-dot">.</span></span></a>
+    <button class="menu-toggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+    <nav class="main-nav" aria-label="Điều hướng chính">
+      <a class="active" href="#home">Trang chủ</a><a href="#species">Khám phá cá</a><a href="#care">Chăm sóc</a><a href="#health">Sức khỏe</a><a href="#shops">Tìm cửa hàng</a>
+    </nav>
+    <a class="nav-cta" href="#species">Bắt đầu khám phá <span>↗</span></a>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="hero-image" role="img" aria-label="Đàn cá nhiệt đới bơi giữa rạn san hô"></div>
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="https://images.unsplash.com/photo-1530053969600-caed2596d242?auto=format&fit=crop&w=2200&q=90" aria-hidden="true">
+        <source src="https://videos.pexels.com/video-files/32613424/13907633_3840_2160_60fps.mp4" type="video/mp4">
+      </video>
+      <div class="hero-shade"></div>
+      <div class="hero-content">
+        <div class="eyebrow light"><span></span> CẨM NANG CÁ CẢNH VIỆT NAM</div>
+        <h1>Một thế giới<br>nhỏ <em>đầy sắc màu.</em></h1>
+        <p>Tìm hiểu về những người bạn dưới nước — từ chọn cá, dựng bể đến chăm sóc khỏe mạnh mỗi ngày.</p>
+        <div class="hero-actions"><a class="button button-lime" href="#species">Khám phá các loài <span>↗</span></a><a class="text-link light-link" href="#care"><span class="play">▶</span> Hướng dẫn cho người mới</a></div>
+        <div class="hero-note"><span class="note-icon">✳</span><span>Nuôi cá vui hơn khi<br>bạn hiểu điều cá cần.</span></div>
+      </div>
+      <div class="hero-caption"><span>01 — 04</span><span class="caption-line"></span><span>NHỮNG SẮC MÀU DƯỚI MẶT NƯỚC</span></div>
+      <div class="hero-scroll">CUỘN ĐỂ KHÁM PHÁ <span>↓</span></div>
+    </section>
+
+    <section class="quick-search" aria-label="Tìm cá nhanh">
+      <div class="search-intro"><span class="search-icon">⌕</span><div><strong>Bạn đang tìm người bạn nào?</strong><small>Khám phá theo sở thích của bạn</small></div></div>
+      <label class="search-field"><span>Loại cá</span><select id="water-filter"><option value="all">Tất cả môi trường</option><option value="fresh">Nước ngọt</option><option value="salt">Nước mặn</option></select></label>
+      <label class="search-field"><span>Mức độ chăm sóc</span><select id="level-filter"><option value="all">Mọi cấp độ</option><option value="easy">Dễ bắt đầu</option><option value="medium">Cần tìm hiểu thêm</option></select></label>
+      <a class="button button-dark" href="#species">Tìm hiểu <span>↗</span></a>
+    </section>
+
+    <section class="section species-section" id="species">
+      <div class="section-heading"><div><div class="eyebrow"><span></span> CHỌN BẠN ĐỒNG HÀNH</div><h2>Mỗi loài cá, một<br><em>cá tính riêng.</em></h2></div><p>Từ những người bạn dễ gần cho người mới đến các sắc màu đầy mê hoặc cho bể cá của bạn.</p></div>
+      <div class="species-grid" id="species-grid">
+        <article class="fish-card" data-water="fresh" data-level="easy"><a class="fish-image" href="#care" style="--fish-image:url('https://images.unsplash.com/photo-1524704654690-b56c05c78a00?auto=format&fit=crop&w=900&q=85')"><span class="card-tag">NƯỚC NGỌT</span><span class="heart" aria-label="Lưu cá">♡</span></a><div class="fish-info"><div><h3>Cá betta</h3><p>Rực rỡ · Cá tính độc lập</p></div><span class="difficulty easy">Dễ nuôi</span></div><div class="fish-meta"><span>◷ 2–5 năm</span><span>◉ Bể từ 20L</span><a href="#care" aria-label="Tìm hiểu cá betta">↗</a></div></article>
+        <article class="fish-card" data-water="fresh" data-level="easy"><a class="fish-image" href="#care" style="--fish-image:url('https://images.unsplash.com/photo-1535591273668-578e31182c4f?auto=format&fit=crop&w=900&q=85')"><span class="card-tag">NƯỚC NGỌT</span><span class="heart" aria-label="Lưu cá">♡</span></a><div class="fish-info"><div><h3>Cá neon</h3><p>Nhỏ xinh · Bơi theo đàn</p></div><span class="difficulty easy">Dễ nuôi</span></div><div class="fish-meta"><span>◷ 3–5 năm</span><span>◉ Bể từ 40L</span><a href="#care" aria-label="Tìm hiểu cá neon">↗</a></div></article>
+        <article class="fish-card" data-water="salt" data-level="medium"><a class="fish-image" href="#care" style="--fish-image:url('https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&w=900&q=85')"><span class="card-tag">NƯỚC MẶN</span><span class="heart" aria-label="Lưu cá">♡</span></a><div class="fish-info"><div><h3>Cá hề</h3><p>Thân thiện · Sống cùng hải quỳ</p></div><span class="difficulty medium">Trung bình</span></div><div class="fish-meta"><span>◷ 6–10 năm</span><span>◉ Bể từ 100L</span><a href="#care" aria-label="Tìm hiểu cá hề">↗</a></div></article>
+      </div>
+      <div class="center-link"><a class="text-link" href="#species">Xem tất cả loài cá <span>↗</span></a></div>
+    </section>
+
+    <section class="care-band" id="care"><div class="care-photo" role="img" aria-label="Bể cá thủy sinh xanh mát"></div><div class="care-copy"><div class="eyebrow light"><span></span> BẮT ĐẦU ĐÚNG CÁCH</div><h2>Một chiếc bể tốt<br>bắt đầu từ <em>hiểu biết.</em></h2><p>Chọn đúng kích thước bể, chuẩn bị nước và tạo môi trường ổn định trước khi đón cá về nhà.</p><a class="button button-lime" href="#starter">Xem hướng dẫn cho người mới <span>↗</span></a><div class="care-foot"><span>01 / DỰNG BỂ</span><span>02 / CHỌN CÁ</span><span>03 / CHĂM SÓC</span></div></div></section>
+
+    <section class="section essentials" id="starter"><div class="eyebrow"><span></span> KIẾN THỨC NỀN TẢNG</div><div class="section-heading compact"><h2>Chăm sóc tốt bắt đầu<br>từ những <em>điều nhỏ.</em></h2><p>Những điều căn bản giúp cá khỏe mạnh và bể luôn trong lành.</p></div><div class="tips-grid"><article class="tip-card"><span class="tip-number">01</span><span class="tip-icon">◌</span><h3>Nước ổn định</h3><p>Theo dõi nhiệt độ, pH và chất lượng nước phù hợp với từng loài.</p><a href="#health">Tìm hiểu thêm <span>↗</span></a></article><article class="tip-card"><span class="tip-number">02</span><span class="tip-icon">✳</span><h3>Cho ăn vừa đủ</h3><p>Chọn thức ăn phù hợp, cho lượng cá ăn hết trong vài phút.</p><a href="#health">Tìm hiểu thêm <span>↗</span></a></article><article class="tip-card"><span class="tip-number">03</span><span class="tip-icon">⌁</span><h3>Bể sạch, cá vui</h3><p>Thay một phần nước định kỳ và vệ sinh lọc đúng cách.</p><a href="#health">Tìm hiểu thêm <span>↗</span></a></article><article class="tip-card"><span class="tip-number">04</span><span class="tip-icon">♡</span><h3>Cách ly cá mới</h3><p>Quan sát cá mới trước khi thả chung để bảo vệ cả đàn.</p><a href="#health">Tìm hiểu thêm <span>↗</span></a></article></div></section>
+
+    <section class="health-section" id="health"><div class="health-art"><div class="health-orbit orbit-one"></div><div class="health-orbit orbit-two"></div><div class="health-center">✳</div><span class="bubble bubble-a">◌</span><span class="bubble bubble-b">✧</span><span class="bubble bubble-c">⌁</span></div><div class="health-copy"><div class="eyebrow"><span></span> SỨC KHỎE CÁ CẢNH</div><h2>Nhận ra sớm.<br>Chăm sóc <em>đúng cách.</em></h2><p>Cá bơi lờ đờ, bỏ ăn hay đổi màu? Tìm hiểu dấu hiệu thường gặp, cách theo dõi và thời điểm nên nhờ người có chuyên môn.</p><a class="button button-dark" href="#health-guide">Tìm hiểu sức khỏe cá <span>↗</span></a><small>Thông tin tham khảo, không thay thế chẩn đoán từ chuyên gia.</small></div></section>
+
+    <section class="shop-section" id="shops"><div class="shop-copy"><div class="eyebrow light"><span></span> KẾT NỐI NGƯỜI CHƠI</div><h2>Tìm nơi mua cá<br>gần <em>bạn.</em></h2><p>Khám phá cửa hàng và trại cá cảnh tại các tỉnh thành Việt Nam. Hãy kiểm tra tình trạng cá và điều kiện vận chuyển trước khi mua.</p><div class="shop-search"><label for="city">Tỉnh / thành phố</label><div><select id="city"><option value="">Chọn khu vực của bạn</option><option>TP. Hồ Chí Minh</option><option>Hà Nội</option><option>Đà Nẵng</option><option>Cần Thơ</option></select><button aria-label="Tìm cửa hàng">↗</button></div></div><small>Danh sách địa điểm sẽ được bổ sung và xác minh theo từng khu vực.</small></div><div class="shop-image" role="img" aria-label="Người chơi ngắm bể cá cảnh"></div></section>
+
+    <section class="newsletter"><div><div class="eyebrow"><span></span> MỖI TUẦN MỘT CHÚT KIẾN THỨC</div><h2>Để bể cá của bạn<br>luôn <em>tràn sức sống.</em></h2></div><form id="newsletter-form"><label for="email">Nhận mẹo chăm sóc cá và bài viết mới</label><div class="email-field"><input id="email" type="email" placeholder="Email của bạn" required><button type="submit" aria-label="Đăng ký nhận tin">↗</button></div><small id="form-message">Chỉ gửi nội dung hữu ích, bạn có thể hủy đăng ký bất cứ lúc nào.</small></form></section>
+  </main>
+  <footer class="site-footer"><a class="brand footer-brand" href="#home"><span class="brand-mark">≈</span><span>AquaAtlas<span class="brand-dot">.</span></span></a><p>Một góc nhỏ cho những người yêu thế giới dưới nước.</p><div class="footer-links"><a href="#species">Khám phá cá</a><a href="#care">Chăm sóc</a><a href="#shops">Cửa hàng</a><a href="#health">Về chúng tôi</a></div><span class="copyright">© 2026 AquaAtlas Vietnam · Làm bằng tình yêu với cá.</span></footer>
+  <script src="script.js"></script>
+</body>
+</html>
