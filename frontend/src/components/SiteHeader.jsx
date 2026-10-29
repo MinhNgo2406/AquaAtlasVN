@@ -51,9 +51,6 @@ export default function SiteHeader({ compact = false, onHome, user, onLogin, onL
         ) : (
           <>
             {user ? <div className="header-account-actions"><span className="account-greeting">Xin chào, {user.name}</span><Button className="account-action" onClick={onLogout}>Đăng xuất</Button></div> : <Button className="account-action" onClick={onLogin}>Đăng nhập</Button>}
-            <Button className="nav-cta" component="a" href="#species" endIcon={<span>↗</span>}>
-              Bắt đầu khám phá
-            </Button>
             <IconButton
               className="menu-toggle"
               aria-label={menuOpen ? 'Đóng menu' : 'Mở menu'}

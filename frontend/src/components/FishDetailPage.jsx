@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 
@@ -6,12 +7,40 @@ function Fact({ label, value }) {
 }
 
 export default function FishDetailPage({ fish, onBack }) {
+  const [isAnimated, setIsAnimated] = useState(Boolean(fish.video));
+
   return (
     <section className="fish-detail">
       <Button className="detail-back-inline" onClick={onBack}>← Quay lại danh mục cá</Button>
 
       <div className="detail-hero">
-        <img src={fish.image} alt={fish.name} />
+        <div className="detail-media">
+          <img className="detail-poster" src={fish.image} alt={fish.name} />
+          {fish.video && isAnimated && <video
+            className="detail-video"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={fish.image}
+            aria-label={`Video ${fish.name} đang bơi`}
+            onError={(event) => { event.currentTarget.style.display = 'none'; }}
+          >
+            <source src={fish.video} type={fish.videoType || 'video/mp4'} />
+          </video>}
+          {fish.video && <Button
+            className="detail-media-toggle"
+            size="small"
+            aria-pressed={isAnimated}
+            onClick={() => setIsAnimated((current) => !current)}
+          >
+            {isAnimated ? 'Ảnh động · Chuyển sang ảnh tĩnh' : 'Ảnh tĩnh · Chuyển sang ảnh động'}
+          </Button>}
+          {isAnimated && fish.videoSource && <a className="detail-video-credit" href={fish.videoSource} target="_blank" rel="noreferrer">
+            Video: {fish.videoCredit} ↗
+          </a>}
+        </div>
         <div className="detail-intro">
           <div className="eyebrow"><span /> {fish.category}</div>
           <h1>{fish.name}</h1>

@@ -9,11 +9,14 @@ website và cách chạy dự án.
 ---------------------
 
 docker-compose.yml
-  Cấu hình để Docker khởi động frontend và backend thành hai container riêng,
-  đồng thời cho frontend gọi API backend.
+  Cấu hình để Docker chạy frontend, backend và PostgreSQL; frontend gọi API
+  backend, backend có thông tin kết nối database.
 
 backend/server.js
   API Node.js. Hiện có GET /api/health để kiểm tra backend đang chạy.
+
+backend/db/init/001_create_users.sql
+  Schema PostgreSQL tạo bảng users khi database được khởi tạo lần đầu.
 
 backend/Dockerfile
   Chỉ dẫn đóng gói backend thành image Docker.
@@ -200,8 +203,10 @@ Terminal in ra để xem website. Vite chuyển tiếp yêu cầu /api đến c�
   docker compose up --build
 
 Mở http://localhost:8080. Docker build frontend thành tệp tĩnh, Nginx phục vụ
-trang và chuyển tiếp /api/ tới backend. GET /api/health trả trạng thái API.
-Nhấn Ctrl+C để dừng; `docker compose down` xóa container và network.
+trang và chuyển tiếp /api/ tới backend. PostgreSQL tạo bảng users và lưu dữ liệu
+trong named volume `aqua_atlas_db_data`. Nhấn Ctrl+C để dừng; `docker compose down`
+xóa container và network nhưng giữ volume dữ liệu. Chỉ dùng `docker compose down -v`
+khi chủ ý xóa database local.
 
 Để chỉ build frontend, chạy `npm run build` bên trong frontend/. Tệp đầu ra nằm
 trong frontend/dist/. node_modules/, dist/ và .env bị bỏ qua bởi Git.
@@ -434,6 +439,137 @@ Cách hoạt động:
     liệu localStorage của trình duyệt, nhưng dữ liệu đó không đồng bộ.
   - Docker cần được cài và chạy trên máy. Nếu cổng 8080 đang bận, đổi phần host
     trong `ports` của docker-compose.yml, ví dụ `8081:80`.
+
+
+BẢN 8 — POSTGRESQL VÀ BẢNG TÀI KHOẢN — 29/10/2026
+
+Đã làm:
+  - Thêm dịch vụ PostgreSQL 17 vào Docker Compose.
+  - Thêm health check `pg_isready`; backend chỉ khởi động sau khi database sẵn sàng.
+  - Tạo named volume `aqua_atlas_db_data` để database còn sau `docker compose down`.
+  - Thêm script SQL tạo bảng users với email, tên hiển thị, password_hash, vai trò,
+    thời gian tạo/cập nhật và các ràng buộc dữ liệu.
+  - Cấu hình backend nhận host, cổng, tên database, user và password từ môi trường.
+  - Cập nhật README.md và giải thích lệnh giữ/xóa volume.
+
+Code liên quan:
+  - backend/db/init/001_create_users.sql định nghĩa bảng và chỉ mục email duy nhất.
+  - docker-compose.yml chạy database, truyền cấu hình vào backend, đặt thứ tự khởi
+    động dựa trên health check và gắn volume bền vững.
+  - README.md hướng dẫn chạy, thay mật khẩu dev và phân biệt `down` với `down -v`.
+
+Cách hoạt động:
+  - Khi volume database rỗng, image PostgreSQL chạy các file SQL được mount vào
+    `/docker-entrypoint-initdb.d`; script tạo bảng users.
+  - Docker Compose đợi `pg_isready` báo database sẵn sàng trước khi khởi động backend.
+    Frontend tiếp tục đợi backend khỏe mạnh trước khi mở trang.
+  - Volume tách dữ liệu khỏi container. Rebuild container không xóa volume;
+    `docker compose down -v` sẽ xóa dữ liệu database local.
+
+Điều cần hiểu / giới hạn:
+  - Bước này chỉ tạo database và schema. Backend chưa có PostgreSQL driver và chưa
+    đọc/ghi bảng users; đăng nhập vẫn là demo frontend.
+  - Script init chỉ chạy tự động khi PostgreSQL khởi tạo volume rỗng. Thay schema
+    về sau cần migration riêng; không xóa volume có dữ liệu để chạy lại init.
+  - Mật khẩu mặc định trong Compose chỉ dùng local. Đổi mật khẩu trước khi chia sẻ
+    môi trường; database không publish cổng ra máy host.
+  - Docker chưa cài trong môi trường Codex này, nên chưa thể khởi động Compose.
+
+
+BẢN 11 — NÚT CHUYỂN ẢNH TĨNH / ẢNH ĐỘNG — 29/10/2026
+
+Đã làm:
+  - Thêm nút trong khung ảnh/video ở hồ sơ cá.
+  - Khi đang xem video, bấm nút để dừng video và xem ảnh tĩnh.
+  - Bấm lần nữa để phát video lặp lại. Loài chưa có video sẽ chỉ hiện ảnh và không
+    có nút chuyển.
+
+Code liên quan:
+  - frontend/src/components/FishDetailPage.jsx dùng state `isAnimated` để biết
+    người xem đang chọn video hay ảnh tĩnh. State ban đầu bật nếu loài có video.
+  - frontend/src/styles.css đặt nút ở góc trên khung media, giúp dùng được trên
+    cả màn hình lớn và điện thoại.
+
+Cách hoạt động:
+  - Khi `isAnimated` là true, React tạo thẻ video và phát tự động. Khi bấm nút,
+    setIsAnimated đổi state; React gỡ thẻ video khỏi trang và ảnh poster bên dưới
+    sẽ lấp đầy khung.
+  - Bấm nút ở chế độ ảnh tĩnh sẽ đặt state lại thành true, tạo video mới và phát
+    từ đầu. `aria-pressed` thông báo trạng thái nút cho công nghệ hỗ trợ.
+
+Điều cần hiểu / giới hạn:
+  - Chế độ ảnh động cần Internet và video từ máy chủ nguồn phải truy cập được.
+  - Mỗi lần bật lại video bắt đầu từ đầu; lựa chọn không được lưu sau khi tải lại
+    trang.
+
+
+BẢN 10 — VIDEO RIÊNG CHO TỪNG HỒ SƠ CÁ — 29/10/2026
+
+Đã làm:
+  - Khi mở hồ sơ một loài, ảnh đầu trang được thay bằng video loài đó bơi lặp lại.
+  - Thêm video cho sáu loài mẫu: betta, bảy màu, neon, mún, cá vàng và thần tiên.
+  - Dùng ảnh hồ sơ làm poster và ảnh dự phòng; nếu video lỗi, ảnh vẫn hiện.
+  - Thay ảnh poster betta cũ bằng ảnh betta đúng loài.
+  - Nâng cấp dữ liệu cá cũ trong localStorage để các loài đã lưu từ bản trước nhận
+    video mới mà vẫn giữ các thông tin admin đã sửa.
+  - Sửa poster bảy màu cũ vốn đang hiển thị ảnh cá betta.
+  - Gắn liên kết ghi công ở góc dưới của từng video; cập nhật nguồn trong README.md.
+
+Code liên quan:
+  - frontend/src/data/fish.js giữ địa chỉ video, loại tệp, người làm video và
+    trang nguồn theo từng đối tượng cá. Pexels cung cấp MP4; hai video Wikimedia
+    Commons dùng WebM VP9 kích thước 360p.
+  - frontend/src/components/FishDetailPage.jsx hiển thị poster, video và liên kết
+    ghi công. `autoPlay` tự chạy, `muted` tắt tiếng, `loop` phát lại, `playsInline`
+    giữ video trong trang trên điện thoại; `preload="metadata"` chỉ yêu cầu dữ
+    liệu ban đầu cần để phát.
+  - frontend/src/App.jsx trong loadFish() ghép dữ liệu đang lưu với hồ sơ mặc định
+    theo id. Các trường mới như video được bổ sung cho cá cũ; các trường đã chỉnh
+    như tên, chế độ chăm sóc vẫn lấy từ bản đã lưu. Riêng URL poster bảy màu cũ
+    được nhận diện và thay bằng ảnh guppy đúng loài.
+  - frontend/src/styles.css xếp video phủ poster, crop vừa khung và đặt dòng nguồn
+    trên video. Bố cục khung chuyển thấp hơn trên màn hình điện thoại.
+  - README.md ghi trang nguồn và giấy phép của clip Wikimedia Commons.
+
+Cách hoạt động:
+  - FishDetailPage nhận đối tượng `fish` từ App.jsx. `<source>` lấy URL video và
+    định dạng từ đối tượng đang chọn, nên cùng một component dùng được cho nhiều cá.
+  - Trình duyệt vẽ poster trước; khi video tải và phát, khung video phủ lên poster.
+    Nếu thẻ video gặp lỗi, onError ẩn video để poster phía sau lộ ra.
+  - `target="_blank"` mở trang nguồn video ở tab khác để người xem xem tác giả,
+    bản quyền và điều kiện giấy phép.
+
+Điều cần hiểu / giới hạn:
+  - Video được tải từ Pexels hoặc Wikimedia Commons nên cần Internet. Tốc độ mở
+    hồ sơ phụ thuộc mạng và dịch vụ bên ngoài; poster giúp trang có hình ngay.
+  - Dữ liệu admin tạo mới chưa có trường nhập video, nên cá mới thêm trong dashboard
+    sẽ hiển thị ảnh cho tới khi bổ sung URL và nguồn video.
+  - Video tự phát có thể bị trình duyệt hoặc chế độ tiết kiệm dữ liệu chặn. Khi đó
+    ảnh poster vẫn là phương án dự phòng.
+
+
+BẢN 9 — VIDEO CÁ BƠI Ở KHU VỰC CỬA HÀNG — 29/10/2026
+
+Đã làm:
+  - Thay ảnh tĩnh bên phải khu vực cửa hàng bằng video cá vàng bơi lặp lại.
+  - Giữ ảnh nền làm ảnh dự phòng nếu video không tải được.
+  - Tắt video khi thiết bị bật tùy chọn giảm chuyển động.
+
+Code liên quan:
+  - frontend/src/components/HealthAndShops.jsx thêm thẻ video vào khu vực shop.
+  - frontend/src/styles.css định kích thước, crop video theo khung và lớp phủ màu.
+  - README.md ghi thêm nguồn video Pexels.
+
+Cách hoạt động:
+  - Video dùng autoplay, muted, loop và playsInline để chạy nền không phát tiếng,
+    tự lặp và không ép iPhone chuyển sang chế độ toàn màn hình.
+  - Thuộc tính poster không bắt buộc; CSS ảnh nền vẫn hiện trước khi video tải hoặc
+    nếu thẻ video gặp lỗi. `object-fit: cover` lấp khung mà không làm méo hình.
+
+Điều cần hiểu / giới hạn:
+  - Video được tải từ Pexels nên cần Internet; nếu trình duyệt chặn autoplay hoặc
+    người dùng bật giảm chuyển động, ảnh nền tĩnh sẽ được giữ lại.
+  - Build frontend đã chạy thành công.
 
 
 8. MẪU CHO CÁC BẢN TIẾP THEO

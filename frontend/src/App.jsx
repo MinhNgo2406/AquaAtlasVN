@@ -186,7 +186,22 @@ export default function App() {
 function loadFish() {
   try {
     const savedFish = JSON.parse(localStorage.getItem('aqua-atlas-fish'));
-    return Array.isArray(savedFish) ? savedFish : fishList;
+    if (!Array.isArray(savedFish)) return fishList;
+
+    const previousImages = {
+      guppy: 'https://images.unsplash.com/photo-1534043464124-3be32fe000c9?auto=format&fit=crop&w=900&q=85',
+    };
+
+    return savedFish.map((savedItem) => {
+      const defaultFish = fishList.find((item) => item.id === savedItem.id);
+      if (!defaultFish) return savedItem;
+
+      return {
+        ...defaultFish,
+        ...savedItem,
+        image: savedItem.image === previousImages[savedItem.id] ? defaultFish.image : savedItem.image,
+      };
+    });
   } catch {
     return fishList;
   }

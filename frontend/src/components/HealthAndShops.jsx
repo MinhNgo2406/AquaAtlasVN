@@ -70,7 +70,21 @@ function ShopSection() {
         </div>
         <small>Thông tin có thể thay đổi; gọi hoặc nhắn cửa hàng trước khi đến.</small>
       </div>
-      <div className="shop-image" role="img" aria-label="Người chơi ngắm bể cá cảnh" />
+      <div className="shop-image shop-video-wrap" role="img" aria-label="Cá vàng bơi trong bể cá" >
+        <video
+          className="shop-video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+          onError={(event) => { event.currentTarget.hidden = true; }}
+        >
+          <source src="https://videos.pexels.com/video-files/34576303/14651866_3840_2160_25fps.mp4" type="video/mp4" />
+        </video>
+        <span className="shop-video-shade" aria-hidden="true" />
+      </div>
       <div className="shop-results" id="shop-results" aria-live="polite">
         <div className="eyebrow"><span /> {selectedCity?.name.toLocaleUpperCase('vi')}</div>
         <div className="shop-card-grid">
