@@ -24,10 +24,15 @@ src/components/HeroSection.jsx
   Ảnh bìa, video nền và các nút dẫn tới nội dung.
 
 src/components/QuickSearch.jsx
-  Hai lựa chọn MUI cho môi trường nước và mức chăm sóc. Gửi lựa chọn về App.jsx.
+  Ô tìm tên và hai lựa chọn MUI cho nhóm nước ngọt (nhiệt đới/nước mát) cùng
+  mức chăm sóc. Gửi các lựa chọn về App.jsx.
 
 src/components/SpeciesSection.jsx
-  Lưới cá. Mỗi FishCard hiển thị một loài và có state riêng cho nút yêu thích.
+  Lưới cá. Mỗi FishCard hiển thị một loài, có nút yêu thích và nút mở hồ sơ.
+
+src/components/FishDetailPage.jsx
+  Trang chi tiết: thông số tham khảo, cách nuôi theo nhóm, thức ăn, bạn cùng bể
+  và liên kết nguồn.
 
 src/components/CareSection.jsx
   Hướng dẫn dựng bể và các thẻ kiến thức chăm sóc.
@@ -39,7 +44,7 @@ src/components/SiteFooter.jsx
   Chân trang và các liên kết tới khu vực khác.
 
 src/data/fish.js
-  Lưu dữ liệu các loài cá mẫu ở một nơi riêng, không trộn dữ liệu với giao diện.
+  Lưu sáu loài cá nước ngọt mẫu, thông tin chăm sóc và nguồn tham khảo.
 
 src/theme.js
   Đặt màu và kiểu mặc định cho các component Material UI.
@@ -76,13 +81,13 @@ src/App.jsx đặt các component cạnh nhau để tạo trang. Ví dụ:
 Tên component viết hoa để React nhận ra đây là component. Các component nhỏ giúp
 người học tìm đúng phần cần sửa, thay vì đọc một tệp chứa cả website.
 
-Props là dữ liệu component cha gửi cho component con. Trong ví dụ
-<SpeciesSection fish={visibleFish} />, danh sách visibleFish được gửi vào
-SpeciesSection bằng prop tên là fish.
+Props là dữ liệu hoặc hàm component cha gửi cho component con. Ví dụ,
+<SpeciesSection fish={visibleFish} onSelectFish={openFish} /> gửi danh sách cá
+và hàm mở hồ sơ xuống component con.
 
-useState lưu trạng thái có thể thay đổi khi người dùng thao tác. App.jsx lưu hai
-lựa chọn bộ lọc là water và level. FishCard lưu trạng thái trái tim của riêng
-mỗi thẻ. Khi state thay đổi, React tự cập nhật phần giao diện liên quan.
+useState lưu trạng thái có thể thay đổi khi người dùng thao tác. App.jsx lưu từ
+khóa tìm kiếm, nhóm cá và độ khó đã chọn. FishCard lưu trạng thái yêu thích của
+riêng thẻ đó. Khi state thay đổi, React tự cập nhật phần giao diện liên quan.
 
 App.jsx dùng filter() trực tiếp để tính danh sách cá đang khớp với bộ lọc. Với
 danh sách mẫu nhỏ, cách viết thẳng giúp code dễ đọc; chỉ nên thêm useMemo khi
@@ -106,19 +111,24 @@ bắt đầu từ tệp này. src/styles.css tinh chỉnh để các component M
 riêng của website.
 
 
-4. DỮ LIỆU VÀ BỘ LỌC
---------------------
+4. DỮ LIỆU, BỘ LỌC VÀ HỒ SƠ CÁ
+------------------------------
 
-src/data/fish.js xuất một mảng các đối tượng cá. Mỗi đối tượng có id, tên, mô tả,
-môi trường sống (water), mức độ (level), tuổi thọ, kích thước bể và ảnh.
+src/data/fish.js xuất một mảng các loài cá nước ngọt. Mỗi loài có id, tên thường
+gọi, tên khoa học, nhóm cá, mức chăm sóc, thông số, ảnh và liên kết nguồn. Tách
+dữ liệu khỏi giao diện giúp thêm cá mà không phải viết lại component.
 
-Trong App.jsx, filter() giữ lại các loài khớp với lựa chọn của người dùng. Hàm
-này không sửa mảng dữ liệu gốc; nó tạo một danh sách kết quả mới. Danh sách mới
-được truyền xuống SpeciesSection để hiển thị.
+Trong App.jsx, filter() tìm theo tên thường gọi hoặc tên khoa học rồi áp dụng bộ
+lọc nhóm cá và độ khó. filter() không sửa mảng gốc; nó tạo danh sách kết quả mới
+và truyền xuống SpeciesSection.
 
-Để thêm cá mẫu, thêm một đối tượng mới vào mảng trong src/data/fish.js và đặt id
-duy nhất. Các giá trị water phải là fresh hoặc salt; level hiện dùng easy hoặc
-medium để khớp với các lựa chọn bộ lọc.
+Để thêm cá, thêm một đối tượng mới vào src/data/fish.js và đặt id duy nhất. group
+phải là tropical hoặc coldwater; level phải khớp với các giá trị trong lựa chọn
+bộ lọc. Thêm nguồn để người đọc kiểm tra thông tin.
+
+Khi người dùng mở hồ sơ, App.jsx thêm mã loài vào URL, ví dụ ?fish=betta, rồi
+hiển thị FishDetailPage. Người dùng có thể tải lại hoặc chia sẻ URL đó. Sự kiện
+Back của trình duyệt cũng đọc URL và đưa giao diện về đúng trang.
 
 
 5. GIAO DIỆN VÀ RESPONSIVE
@@ -203,6 +213,36 @@ Code liên quan:
   - Ảnh, video và font tải từ các dịch vụ bên ngoài và cần Internet.
   - Chạy ứng dụng bằng npm run dev; không mở index.html trực tiếp như bản tĩnh.
   - README.md chỉ mô tả website và cách chạy; ghi chú code nằm trong tệp này.
+
+
+BẢN 3 — DANH MỤC CÁ NƯỚC NGỌT — 29/10/2026
+
+Đã làm:
+  - Ưu tiên sáu loài cá nước ngọt: betta, bảy màu, neon, mún, vàng và thần tiên.
+  - Thêm tìm kiếm theo tên thường gọi/tên khoa học và bộ lọc nhóm nhiệt đới,
+    nước mát cùng độ khó chăm sóc.
+  - Thêm trang hồ sơ từng loài với điều kiện bể, thông số nước, thức ăn,
+    nuôi theo nhóm, tương thích và liên kết tới nguồn tham khảo.
+  - Gắn mã loài vào query string, ví dụ ?fish=betta, để mở trực tiếp hoặc chia sẻ
+    URL hồ sơ.
+
+Code liên quan:
+  - src/data/fish.js chứa sáu hồ sơ cá và các liên kết nguồn.
+  - src/App.jsx tìm/lọc cá, mở hồ sơ và đồng bộ trang đang xem với URL.
+  - QuickSearch.jsx nhận từ khóa/bộ lọc; SpeciesSection.jsx hiển thị kết quả;
+    FishDetailPage.jsx trình bày hồ sơ của loài được chọn.
+  - src/styles.css định dạng danh mục và trang chi tiết trên máy tính/điện thoại.
+
+Cách hoạt động:
+  - Khi nhập từ khóa hoặc đổi bộ lọc, App.jsx lọc mảng cá và gửi kết quả cho
+    SpeciesSection. Khi bấm một loài, App.jsx thêm mã cá vào URL và render
+    FishDetailPage. Nút quay lại và nút Back đồng bộ lại nội dung theo URL.
+
+Điều cần hiểu / giới hạn:
+  - Sáu loài là danh sách mẫu ban đầu; mỗi hồ sơ có nguồn để kiểm tra.
+  - Thông số là hướng dẫn tham khảo. Một số sheet OATA áp dụng cho cả nhóm cá,
+    vì vậy cần đối chiếu theo dòng cá và nơi bán cụ thể.
+  - Danh sách cửa hàng, biểu mẫu email và cơ sở dữ liệu vẫn chưa kết nối.
 
 
 8. MẪU CHO CÁC BẢN TIẾP THEO

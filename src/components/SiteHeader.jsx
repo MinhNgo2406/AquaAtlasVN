@@ -13,7 +13,7 @@ const links = [
   ['Tìm cửa hàng', '#shops'],
 ];
 
-export default function SiteHeader() {
+export default function SiteHeader({ compact = false, onHome }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   function closeMenu() {
@@ -23,30 +23,43 @@ export default function SiteHeader() {
   return (
     <AppBar className="site-header" position="relative" elevation={0} component="header">
       <div className="header-inner">
-        <a className="brand" href="#home" aria-label="AquaAtlas Vietnam, về đầu trang">
+        <a
+          className="brand"
+          href={compact ? '/' : '#home'}
+          aria-label="AquaAtlas Vietnam, về đầu trang"
+          onClick={compact ? (event) => { event.preventDefault(); onHome(); } : undefined}
+        >
           <span className="brand-mark">≈</span>
           <span>AquaAtlas<span className="brand-dot">.</span></span>
         </a>
 
-        <nav className={`main-nav ${menuOpen ? 'open' : ''}`} aria-label="Điều hướng chính">
-          {links.map(([label, href], index) => (
-            <a className={index === 0 ? 'active' : ''} href={href} key={href} onClick={closeMenu}>
-              {label}
-            </a>
-          ))}
-        </nav>
+        {!compact && (
+          <nav className={`main-nav ${menuOpen ? 'open' : ''}`} aria-label="Điều hướng chính">
+            {links.map(([label, href], index) => (
+              <a className={index === 0 ? 'active' : ''} href={href} key={href} onClick={closeMenu}>
+                {label}
+              </a>
+            ))}
+          </nav>
+        )}
 
-        <Button className="nav-cta" component="a" href="#species" endIcon={<span>↗</span>}>
-          Bắt đầu khám phá
-        </Button>
-        <IconButton
-          className="menu-toggle"
-          aria-label={menuOpen ? 'Đóng menu' : 'Mở menu'}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          {menuOpen ? <Close /> : <Menu />}
-        </IconButton>
+        {compact ? (
+          <Button className="detail-back" onClick={onHome}>← Về danh mục cá</Button>
+        ) : (
+          <>
+            <Button className="nav-cta" component="a" href="#species" endIcon={<span>↗</span>}>
+              Bắt đầu khám phá
+            </Button>
+            <IconButton
+              className="menu-toggle"
+              aria-label={menuOpen ? 'Đóng menu' : 'Mở menu'}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              {menuOpen ? <Close /> : <Menu />}
+            </IconButton>
+          </>
+        )}
       </div>
     </AppBar>
   );

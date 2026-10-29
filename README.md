@@ -5,11 +5,12 @@ AquaAtlas Vietnam là website tiếng Việt dành cho người yêu cá cảnh.
 ## Website có gì?
 
 - Trang chủ với video nền đại dương.
-- Một số thẻ cá mẫu, có thể lọc theo môi trường nước ngọt/nước mặn và độ khó chăm sóc.
+- Danh mục sáu loài cá nước ngọt mẫu, có thể tìm theo tên và lọc theo nhóm nhiệt đới/nước mát hoặc độ khó chăm sóc.
+- Trang hồ sơ riêng cho mỗi loài, gồm thông số tham khảo, thức ăn, cách nuôi theo nhóm, gợi ý bạn cùng bể và nguồn đọc thêm.
 - Các khu vực giới thiệu chăm sóc cá, sức khỏe cá và tìm cửa hàng.
 - Giao diện thích ứng với màn hình máy tính và điện thoại.
 
-Danh sách cá, nội dung chăm sóc và cửa hàng hiện là bản mẫu. Website chưa có tài khoản người dùng, cơ sở dữ liệu hay dịch vụ gửi email.
+Danh sách hiện là mẫu ban đầu, chưa có tài khoản người dùng hay cơ sở dữ liệu. Danh sách cửa hàng chưa tra cứu địa điểm thật và biểu mẫu email chưa gửi thư. Website hiện tập trung vào cá nước ngọt; các thông số trong hồ sơ là hướng dẫn tham khảo, cần đối chiếu với nguồn cụ thể trước khi áp dụng.
 
 ## Chạy website trên máy
 
