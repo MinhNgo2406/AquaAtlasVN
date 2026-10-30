@@ -38,7 +38,10 @@ export default function FishDetailPage({ fish, onBack }) {
             {isAnimated ? 'Ảnh động · Chuyển sang ảnh tĩnh' : 'Ảnh tĩnh · Chuyển sang ảnh động'}
           </Button>}
           {isAnimated && fish.videoSource && <a className="detail-video-credit" href={fish.videoSource} target="_blank" rel="noreferrer">
-            Video: {fish.videoCredit} ↗
+            Video: {fish.videoCredit || 'Nguồn video'} ↗
+          </a>}
+          {(!isAnimated || !fish.videoSource) && fish.imageSource && <a className="detail-video-credit" href={fish.imageSource} target="_blank" rel="noreferrer">
+            Ảnh: {fish.imageCredit || 'Nguồn ảnh'} ↗
           </a>}
         </div>
         <div className="detail-intro">

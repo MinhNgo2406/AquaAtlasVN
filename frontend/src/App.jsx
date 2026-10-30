@@ -13,26 +13,84 @@ import fishList from './data/fish.js';
 
 export default function App() {
   const [fish, setFish] = useState(loadFish);
+  const [apiReady, setApiReady] = useState(false);
   const [query, setQuery] = useState('');
   const [group, setGroup] = useState('all');
   const [level, setLevel] = useState('all');
   const [activeFishId, setActiveFishId] = useState(() => new URLSearchParams(window.location.search).get('fish'));
   const [isAdminPage, setIsAdminPage] = useState(() => new URLSearchParams(window.location.search).get('admin') === '1');
   const [isAuthPage, setIsAuthPage] = useState(() => new URLSearchParams(window.location.search).get('auth') === '1');
-  const [user, setUser] = useState(loadSession);
-  const [favorites, setFavorites] = useState(() => loadFavorites(loadSession()));
+  const [user, setUser] = useState(null);
+  const [favorites, setFavorites] = useState([]);
   const [showFavorites, setShowFavorites] = useState(false);
   const activeFish = fish.find((item) => item.id === activeFishId);
 
   useEffect(() => {
-    localStorage.setItem('aqua-atlas-fish', JSON.stringify(fish));
-  }, [fish]);
+    let active = true;
+    apiRequest('/api/fish')
+      .then((items) => {
+        if (active && Array.isArray(items)) setFish(items);
+      })
+      .catch(() => {
+        if (active) setFish(loadFish());
+      })
+      .finally(() => {
+        if (active) setApiReady(true);
+      });
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
-    if (user?.role === 'customer') {
-      localStorage.setItem(favoritesKey(user), JSON.stringify(favorites));
+    let active = true;
+    apiRequest('/api/auth/me')
+      .then(async ({ user: savedUser }) => {
+        if (!active) return;
+        setUser(savedUser);
+        if (savedUser.role !== 'customer') return;
+
+        try {
+          const { fishIds } = await apiRequest('/api/favorites');
+          if (active && fishIds.length) {
+            setFavorites(fishIds);
+            return;
+          }
+          const legacyFavorites = loadFavorites(savedUser);
+          if (legacyFavorites.length) {
+            await saveRemoteFavorites(legacyFavorites);
+            if (active) setFavorites(legacyFavorites);
+          }
+        } catch {
+          if (active) setFavorites(loadFavorites(savedUser));
+        }
+      })
+      .catch(() => {});
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    if (!apiReady || user?.role !== 'admin' || localStorage.getItem('aqua-atlas-fish-migrated')) return;
+    const savedFish = localStorage.getItem('aqua-atlas-fish');
+    if (!savedFish) return;
+
+    let legacyFish;
+    try {
+      legacyFish = JSON.parse(savedFish);
+    } catch {
+      return;
     }
-  }, [favorites, user]);
+    if (!Array.isArray(legacyFish) || !legacyFish.length) return;
+
+    apiRequest('/api/admin/fish/import', {
+      method: 'PUT',
+      body: JSON.stringify({ fish: legacyFish.map(mergeFishDefaults) }),
+    })
+      .then(() => apiRequest('/api/fish'))
+      .then((items) => {
+        setFish(items);
+        localStorage.setItem('aqua-atlas-fish-migrated', 'true');
+      })
+      .catch((error) => console.error('Chưa chuyển được dữ liệu cá cũ lên máy chủ:', error));
+  }, [apiReady, user]);
 
   useEffect(() => {
     function syncFishFromUrl() {
@@ -85,14 +143,25 @@ export default function App() {
     setIsAuthPage(true);
   }
 
-  function finishLogin(nextUser) {
-    sessionStorage.setItem('aqua-atlas-session', JSON.stringify(nextUser));
+  async function finishLogin(nextUser) {
     setUser(nextUser);
     const adminLogin = nextUser.role === 'admin';
-    let nextFavorites = loadFavorites(nextUser);
+    let nextFavorites = [];
+    if (!adminLogin) {
+      try {
+        nextFavorites = (await apiRequest('/api/favorites')).fishIds;
+        const legacyFavorites = loadFavorites(nextUser);
+        if (!nextFavorites.length && legacyFavorites.length) {
+          nextFavorites = await saveRemoteFavorites(legacyFavorites);
+        }
+      } catch {
+        nextFavorites = loadFavorites(nextUser);
+      }
+    }
     const pendingFishId = sessionStorage.getItem('aqua-atlas-pending-favorite');
     if (nextUser.role === 'customer' && pendingFishId && !nextFavorites.includes(pendingFishId)) {
       nextFavorites = [...nextFavorites, pendingFishId];
+      try { await saveRemoteFavorites(nextFavorites); } catch { /* Keep this login usable if favorites are temporarily unavailable. */ }
     }
     sessionStorage.removeItem('aqua-atlas-pending-favorite');
     setFavorites(nextFavorites);
@@ -104,23 +173,29 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function logout() {
-    sessionStorage.removeItem('aqua-atlas-session');
+  async function logout() {
+    try { await apiRequest('/api/auth/logout', { method: 'POST' }); } catch { /* Clear the local view even if the server is unreachable. */ }
     setUser(null);
     setFavorites([]);
     setShowFavorites(false);
     showLogin();
   }
 
-  function toggleFavorite(id) {
+  async function toggleFavorite(id) {
     if (user?.role !== 'customer') {
       sessionStorage.setItem('aqua-atlas-pending-favorite', id);
       showLogin();
       return;
     }
-    setFavorites((current) => current.includes(id)
-      ? current.filter((favoriteId) => favoriteId !== id)
-      : [...current, id]);
+    const nextFavorites = favorites.includes(id)
+      ? favorites.filter((favoriteId) => favoriteId !== id)
+      : [...favorites, id];
+    try {
+      await saveRemoteFavorites(nextFavorites);
+      setFavorites(nextFavorites);
+    } catch (error) {
+      console.error('Chưa lưu được cá yêu thích:', error);
+    }
   }
 
   function toggleFavoritesView() {
@@ -130,14 +205,18 @@ export default function App() {
     setShowFavorites((current) => !current);
   }
 
-  function saveFish(updatedFish) {
-    setFish((current) => {
-      const exists = current.some((item) => item.id === updatedFish.id);
-      return exists ? current.map((item) => item.id === updatedFish.id ? updatedFish : item) : [...current, updatedFish];
+  async function saveFish(updatedFish) {
+    const { fish: savedFish } = await apiRequest('/api/admin/fish', {
+      method: 'PUT',
+      body: JSON.stringify(updatedFish),
     });
+    setFish((current) => current.some((item) => item.id === savedFish.id)
+      ? current.map((item) => item.id === savedFish.id ? savedFish : item)
+      : [...current, savedFish]);
   }
 
-  function deleteFish(id) {
+  async function deleteFish(id) {
+    await apiRequest(`/api/admin/fish/${encodeURIComponent(id)}`, { method: 'DELETE' });
     setFish((current) => current.filter((item) => item.id !== id));
   }
 
@@ -186,37 +265,43 @@ export default function App() {
 function loadFish() {
   try {
     const savedFish = JSON.parse(localStorage.getItem('aqua-atlas-fish'));
-    if (!Array.isArray(savedFish)) return fishList;
-
-    const previousImages = {
-      guppy: 'https://images.unsplash.com/photo-1534043464124-3be32fe000c9?auto=format&fit=crop&w=900&q=85',
-    };
-
-    return savedFish.map((savedItem) => {
-      const defaultFish = fishList.find((item) => item.id === savedItem.id);
-      if (!defaultFish) return savedItem;
-
-      return {
-        ...defaultFish,
-        ...savedItem,
-        image: savedItem.image === previousImages[savedItem.id] ? defaultFish.image : savedItem.image,
-      };
-    });
+    return Array.isArray(savedFish) ? savedFish.map(mergeFishDefaults) : fishList;
   } catch {
     return fishList;
   }
 }
 
-function loadSession() {
-  try {
-    return JSON.parse(sessionStorage.getItem('aqua-atlas-session'));
-  } catch {
-    return null;
-  }
+const previousFishImages = {
+  guppy: 'https://images.unsplash.com/photo-1534043464124-3be32fe000c9?auto=format&fit=crop&w=900&q=85',
+};
+
+function mergeFishDefaults(savedItem) {
+  const defaultFish = fishList.find((item) => item.id === savedItem?.id);
+  if (!defaultFish) return savedItem;
+  return {
+    ...defaultFish,
+    ...savedItem,
+    image: savedItem.image === previousFishImages[savedItem.id] ? defaultFish.image : savedItem.image,
+  };
 }
 
-function favoritesKey(user) {
-  return `aqua-atlas-favorites:${user.email}`;
+async function apiRequest(path, options = {}) {
+  const response = await fetch(path, {
+    credentials: 'same-origin',
+    ...options,
+    headers: { 'Content-Type': 'application/json', ...options.headers },
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || 'Máy chủ chưa thể xử lý yêu cầu.');
+  return data;
+}
+
+async function saveRemoteFavorites(fishIds) {
+  const { fishIds: savedIds } = await apiRequest('/api/favorites', {
+    method: 'PUT',
+    body: JSON.stringify({ fishIds }),
+  });
+  return savedIds;
 }
 
 function loadFavorites(user) {
@@ -227,6 +312,10 @@ function loadFavorites(user) {
   } catch {
     return [];
   }
+}
+
+function favoritesKey(user) {
+  return `aqua-atlas-favorites:${user.email}`;
 }
 
 function normalize(value) {

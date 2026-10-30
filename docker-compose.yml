@@ -26,8 +26,13 @@ services:
       DB_NAME: aqua_atlas
       DB_USER: aqua_atlas
       DB_PASSWORD: ${POSTGRES_PASSWORD:-aqua-atlas-local-dev}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-aqua-demo}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
     expose:
       - "3000"
+    ports:
+      - "127.0.0.1:3000:3000"
     depends_on:
       database:
         condition: service_healthy

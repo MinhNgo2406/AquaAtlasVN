@@ -4,15 +4,15 @@ AquaAtlas Vietnam là website tiếng Việt dành cho người yêu cá cảnh.
 
 ## Tính năng hiện có
 
-- Danh mục sáu loài cá nước ngọt mẫu, tìm kiếm và lọc theo nhóm nước hoặc độ khó.
+- Danh mục 10 loài cá nước ngọt: betta, bảy màu, neon, cardinal tetra, tetra lửa, tetra mũi đỏ, cầu vồng Boesemani, mún, vàng và thần tiên.
 - Hồ sơ từng loài với điều kiện bể, thức ăn, cách nuôi theo nhóm, gợi ý cá sống chung và nguồn đọc thêm.
 - Có thể chuyển ảnh hồ sơ giữa video cá bơi và ảnh tĩnh.
 - Hướng dẫn theo dõi các dấu hiệu sức khỏe bất thường.
 - Danh sách cửa hàng tham khảo ở TP. Hồ Chí Minh, Hà Nội, Đà Nẵng và Cần Thơ.
-- Đăng nhập demo chung cho khách/admin; khách có thể tạo tài khoản và lưu cá yêu thích.
-- Dashboard demo để admin thêm, sửa và xóa hồ sơ cá.
+- Đăng nhập chung cho khách/admin; tài khoản, phiên đăng nhập và cá yêu thích được lưu qua backend/PostgreSQL.
+- Dashboard admin thêm, sửa, xóa hồ sơ; ảnh, video, ghi công và nguồn tham khảo của mỗi loài cũng được lưu.
 
-Thông tin cá và cửa hàng là dữ liệu mẫu; hãy kiểm tra nguồn và xác nhận cửa hàng trước khi đến. Đăng nhập, dashboard và dữ liệu cá/yêu thích hiện vẫn là demo phía trình duyệt, chưa được nối với API hoặc cơ sở dữ liệu. Không dùng mật khẩu thật. Hướng dẫn sức khỏe không thay thế chẩn đoán thú y.
+Thông tin cá và cửa hàng ban đầu là dữ liệu mẫu; hãy kiểm tra nguồn và xác nhận cửa hàng trước khi đến. PostgreSQL lưu tài khoản, phiên đăng nhập, hồ sơ cá và yêu thích. Nội dung cửa hàng, chăm sóc và sức khỏe vẫn là dữ liệu mẫu trong frontend. Hướng dẫn sức khỏe không thay thế chẩn đoán thú y.
 
 ## Chạy toàn bộ bằng Docker
 
@@ -22,7 +22,7 @@ Cài Docker Desktop, mở ứng dụng đó, rồi mở Terminal ở thư mục 
 docker compose up --build
 ```
 
-Khi quá trình khởi động hoàn tất, mở [http://localhost:8080](http://localhost:8080). Frontend chạy trong Nginx; yêu cầu `/api/` được chuyển tiếp tới backend. Chân trang hiển thị trạng thái kết nối API. PostgreSQL tạo bảng tài khoản ở lần khởi động database đầu tiên và giữ dữ liệu trong Docker volume. Để dừng, nhấn `Ctrl+C`; sau đó có thể chạy `docker compose down`.
+Khi quá trình khởi động hoàn tất, mở [http://localhost:8080](http://localhost:8080). Frontend chạy trong Nginx; yêu cầu `/api/` được chuyển tiếp tới backend. Chân trang báo trạng thái backend và database. PostgreSQL tạo bảng tài khoản ở lần khởi động database đầu tiên; backend tự tạo các bảng còn lại, thêm dữ liệu cá mẫu nếu database chưa có cá, rồi giữ dữ liệu trong Docker volume. Để dừng, nhấn `Ctrl+C`; `docker compose down` giữ nguyên volume.
 
 Backend hiện cung cấp endpoint kiểm tra trạng thái:
 
@@ -30,28 +30,31 @@ Backend hiện cung cấp endpoint kiểm tra trạng thái:
 http://localhost:8080/api/health
 ```
 
-Kết quả thành công có dạng `{"status":"ok","service":"aqua-atlas-backend"}`. Database đã có cấu trúc bảng để chuẩn bị lưu tài khoản, nhưng API đăng ký/đăng nhập chưa được nối vào đó; tài khoản, cá và yêu thích vẫn là bản demo lưu trên trình duyệt.
+Kết quả thành công có dạng `{"status":"ok","service":"aqua-atlas-backend","database":"connected"}`. Backend cũng cung cấp API đăng ký/đăng nhập, lấy danh sách cá, quản lý hồ sơ dành cho admin và lưu cá yêu thích của khách.
 
-Mật khẩu PostgreSQL mặc định trong Compose chỉ dùng cho phát triển local. Có thể thay bằng biến môi trường `POSTGRES_PASSWORD`; không dùng mật khẩu mẫu này khi triển khai công khai. `docker compose down` giữ database volume. Chỉ dùng `docker compose down -v` khi muốn xóa luôn dữ liệu database local.
+Lần chạy đầu dùng tài khoản admin local `admin` / `aqua-demo`. Trước khi đưa website lên mạng, tạo tệp `.env` từ `.env.example`, đặt mật khẩu PostgreSQL và admin riêng, rồi bật `COOKIE_SECURE=true` khi đã dùng HTTPS. Không dùng thông tin mẫu ở môi trường công khai. Chỉ chạy `docker compose down -v` nếu chủ ý xóa dữ liệu database local.
+
+Tài khoản cũ đã đăng ký trong trình duyệt có thể được chuyển lên máy chủ khi đăng nhập lần đầu bằng mật khẩu cũ. Dữ liệu cá admin đã lưu được chuyển lên khi admin đăng nhập lần đầu trên trình duyệt đó. Giữ browser data cho tới khi đã xác nhận nội dung xuất hiện trên website sau lần đăng nhập.
+
+Các bảng chính gồm `users` (tài khoản), `auth_sessions` (phiên đăng nhập), `fish` (hồ sơ cá) và `favorites` (cá yêu thích). Cookie phiên có cờ HttpOnly; mật khẩu được băm ở backend trước khi lưu. PostgreSQL không mở cổng ra mạng công khai.
 
 ## Cấu trúc dự án
 
 - `frontend/` — ứng dụng React + Vite + Material UI; Docker build thành trang tĩnh bằng Nginx.
-- `backend/` — API Node.js và script SQL khởi tạo schema tài khoản.
+- `backend/` — API Node.js, driver PostgreSQL, migration database và dữ liệu mẫu ban đầu.
 - `docker-compose.yml` — khởi động frontend, backend, PostgreSQL và volume database.
 - `README.md` — giới thiệu website và cách chạy.
 - `CODE-WALKTHROUGH.txt` — ghi chú học code và lịch sử từng đợt cập nhật.
 
-## Chạy riêng để phát triển
+## Chạy frontend riêng để phát triển
 
-Mở hai Terminal. Terminal thứ nhất chạy backend:
+Chạy database và backend bằng Docker trước để Vite có thể gọi API tại `localhost:3000`:
 
 ```bash
-cd backend
-npm start
+docker compose up -d database backend
 ```
 
-Terminal thứ hai chạy frontend:
+Sau đó mở Terminal khác để chạy frontend:
 
 ```bash
 cd frontend
@@ -59,13 +62,20 @@ npm install
 npm run dev
 ```
 
-Vite chuyển tiếp `/api` tới `http://localhost:3000`; mở địa chỉ frontend mà Vite in ra. Để tạo bản build frontend, chạy `npm run build` bên trong `frontend/`.
+Vite chuyển tiếp `/api` tới backend; mở địa chỉ frontend mà Vite in ra. Backend local có thể truy cập qua `localhost:3000`, PostgreSQL chỉ ở trong mạng Docker. Để tạo bản build frontend, chạy `npm run build` bên trong `frontend/`.
 
 ## Nguồn hình ảnh và video
 
-- Ảnh: [Unsplash](https://unsplash.com/)
 - Ảnh cá betta trong hồ sơ: [Stacey Koenitz trên Pexels](https://www.pexels.com/photo/betta-fish-inside-an-aquarium-2564494/)
-- Ảnh cá bảy màu trong hồ sơ: [Gaurav Kushwaha trên Pexels](https://www.pexels.com/photo/vibrant-aquarium-with-colorful-guppies-swimming-36426327/)
+- Ảnh cá bảy màu: [Andrew Sheedy trên Wikimedia Commons, CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Cobra_Guppy_(Poecilia_reticulata).JPG)
+- Ảnh cá neon: [SOK trên Wikimedia Commons, CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Paracheirodon_innesi_neon_tetra.jpg)
+- Ảnh cá mún: [Usien trên Wikimedia Commons, CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Xiphophorus_maculatus_Platy.JPG)
+- Ảnh cá vàng: [Kateryna Martyniuk trên Wikimedia Commons, CC BY 4.0](https://commons.wikimedia.org/wiki/File:Carassiusauratus.jpg)
+- Ảnh cá thần tiên: [Sarbast.T.Hameed trên Wikimedia Commons, CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Pterophyllum_Scalare.jpg)
+- Ảnh cá cầu vồng Boesemani: [Atamari trên Wikimedia Commons, CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Melanotaenia_boesemani.jpg)
+- Ảnh cardinal tetra: [Artūrs Grebstelis trên Wikimedia Commons, CC BY 2.0](https://commons.wikimedia.org/wiki/File:Cardinal_tetras.jpg)
+- Ảnh tetra lửa: [Usien trên Wikimedia Commons, CC BY 3.0](https://commons.wikimedia.org/wiki/File:Funkensalmler_Feuertetra_oder_Feuersalmler_Hyphessobrycon_amandae.JPG)
+- Ảnh tetra mũi đỏ: [Lerdsuwa trên Wikimedia Commons, CC BY-SA 3.0](https://commons.wikimedia.org/wiki/File:Brilliant_rummy_nose_-_Petitella_bleheri_-_2.jpg)
 - Video nền: [Pexels](https://www.pexels.com/video/serene-underwater-exploration-of-coral-reef-35719731/)
 - Video cá vàng trong bể: [Pexels](https://www.pexels.com/video/close-up-of-goldfish-in-a-home-aquarium-34576303/)
 - Video hồ sơ betta: [Daisy Sparkleweather trên Pexels](https://www.pexels.com/video/a-betta-fish-swimming-inside-an-aquarium-6590365/)
@@ -74,4 +84,6 @@ Vite chuyển tiếp `/api` tới `http://localhost:3000`; mở địa chỉ fro
 - Video hồ sơ cá mún: [The Nature Box trên Wikimedia Commons, CC BY 4.0](https://commons.wikimedia.org/wiki/File:Southern_platyfish_(Xiphophorus_maculatus).webm)
 - Video hồ sơ cá thần tiên: [João Pavese trên Pexels](https://www.pexels.com/video/close-up-view-of-a-swimming-angelfish-3824572/)
 
-Video hồ sơ tải từ các nguồn bên ngoài; cần kết nối Internet. Trang chi tiết dùng ảnh loài cá làm poster/dự phòng. Hai video Wikimedia Commons được phân phối dưới giấy phép Creative Commons ghi ở trên; xem liên kết từng video để biết đầy đủ điều kiện ghi công.
+Ảnh và video tải từ nguồn bên ngoài nên cần kết nối Internet. Ảnh hồ sơ hiện dùng nguồn ảnh cụ thể theo từng loài và hiển thị liên kết ghi công ngay trên ảnh. Các giấy phép CC BY yêu cầu ghi tác giả và liên kết giấy phép; CC BY-SA có thêm điều kiện chia sẻ tương tự. Hãy mở trang nguồn trước khi tái sử dụng hoặc chỉnh sửa ảnh.
+
+Thông số cá tetra và cầu vồng có ghi rõ khi nào là hướng dẫn chung theo nhóm. Chúng không thay thế yêu cầu riêng của cá tại cửa hàng hoặc nguồn nuôi.

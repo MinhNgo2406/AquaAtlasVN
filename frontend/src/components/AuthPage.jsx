@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 const ACCOUNTS_KEY = 'aqua-atlas-demo-accounts';
-const DEMO_ADMIN = { username: 'admin', password: 'aqua-demo', name: 'Quản trị viên', role: 'admin' };
 
 async function hashPassword(password, salt) {
   const bytes = new TextEncoder().encode(`${salt}:${password}`);
@@ -16,6 +15,20 @@ function readAccounts() {
   } catch {
     return [];
   }
+}
+
+async function migrateLegacyAccount(email, password) {
+  const account = readAccounts().find((item) => item.email === email);
+  if (!account || await hashPassword(password, account.salt) !== account.passwordHash) return null;
+
+  const response = await fetch('/api/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'same-origin',
+    body: JSON.stringify({ name: account.name, email: account.email, password }),
+  });
+  const data = await response.json();
+  return response.ok ? data.user : null;
 }
 
 export default function AuthPage({ onSuccess, onExit }) {
@@ -45,38 +58,41 @@ export default function AuthPage({ onSuccess, onExit }) {
           return;
         }
         const email = form.email.trim().toLocaleLowerCase('vi');
-        const accounts = readAccounts();
-        if (accounts.some((account) => account.email === email)) {
-          setMessage('Email này đã có tài khoản trên trình duyệt.');
-          return;
-        }
-        const salt = crypto.getRandomValues(new Uint8Array(16)).join('-');
-        const account = {
-          email,
-          name: form.name.trim(),
-          salt,
-          passwordHash: await hashPassword(form.password, salt),
-          role: 'customer',
-        };
-        localStorage.setItem(ACCOUNTS_KEY, JSON.stringify([...accounts, account]));
-        onSuccess({ name: account.name, email: account.email, role: account.role });
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ name: form.name.trim(), email, password: form.password }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Không tạo được tài khoản.');
+        onSuccess(data.user);
         return;
       }
 
       const username = form.email.trim().toLocaleLowerCase('vi');
-      if (username === DEMO_ADMIN.username && form.password === DEMO_ADMIN.password) {
-        onSuccess({ name: DEMO_ADMIN.name, email: DEMO_ADMIN.username, role: DEMO_ADMIN.role });
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ email: username, password: form.password }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        onSuccess(data.user);
         return;
       }
 
-      const account = readAccounts().find((item) => item.email === username);
-      if (!account || await hashPassword(form.password, account.salt) !== account.passwordHash) {
-        setMessage('Email hoặc mật khẩu chưa đúng.');
+      const migratedUser = await migrateLegacyAccount(username, form.password);
+      if (migratedUser) {
+        onSuccess(migratedUser);
         return;
       }
-      onSuccess({ name: account.name, email: account.email, role: 'customer' });
-    } catch {
-      setMessage('Trình duyệt không hỗ trợ thao tác tài khoản này. Hãy mở website qua localhost hoặc HTTPS.');
+      setMessage(data.error || 'Email hoặc mật khẩu chưa đúng.');
+    } catch (error) {
+      setMessage(error instanceof TypeError
+        ? 'Chưa kết nối được máy chủ. Hãy kiểm tra Docker và thử lại.'
+        : error.message || 'Có lỗi xảy ra. Vui lòng thử lại.');
     } finally {
       setBusy(false);
     }
@@ -102,9 +118,9 @@ export default function AuthPage({ onSuccess, onExit }) {
           <button className="admin-primary" type="submit" disabled={busy}>{busy ? 'Đang xử lý…' : mode === 'login' ? 'Đăng nhập' : 'Tạo tài khoản và vào trang chủ'}</button>
         </form>
         <div className="auth-demo-note">
-          <strong>Admin demo:</strong> tên đăng nhập <code>admin</code>, mật khẩu <code>aqua-demo</code>.
+          Tài khoản admin được cấu hình bằng <code>ADMIN_USERNAME</code> và <code>ADMIN_PASSWORD</code> trong Docker Compose.
         </div>
-        <small className="admin-security-note">Bản demo chỉ lưu tài khoản trong trình duyệt hiện tại, không đồng bộ giữa thiết bị. Không dùng mật khẩu thật; đăng nhập frontend không bảo vệ được website công khai. Muốn vận hành thật cần backend và xác thực máy chủ.</small>
+        <small className="admin-security-note">Tài khoản được lưu trong PostgreSQL; phiên đăng nhập dùng cookie HttpOnly. Mật khẩu admin mặc định chỉ dành cho chạy thử local. Hãy đặt ADMIN_PASSWORD riêng trước khi đưa website lên mạng.</small>
       </section>
     </main>
   );

@@ -3,14 +3,20 @@ import { useState } from 'react';
 const emptyFish = {
   id: '', name: '', scientificName: '', description: '', group: 'tropical', level: 'easy',
   category: 'NƯỚC NGỌT · NHIỆT ĐỚI', difficulty: 'Dễ bắt đầu', summary: '', tank: '',
-  temperature: '', ph: '', groupSize: '', food: '', compatibility: '', image: '', sources: [], sourceLabel: '', sourceUrl: '',
+  temperature: '', ph: '', groupSize: '', food: '', compatibility: '', image: '', video: '',
+  videoType: 'video/mp4', videoCredit: '', videoSource: '', imageCredit: '', imageSource: '',
+  sources: [], sourceLabel: '', sourceUrl: '',
 };
 
 const editableFields = [
   ['name', 'Tên thường gọi'], ['scientificName', 'Tên khoa học'], ['description', 'Mô tả ngắn'],
+  ['category', 'Nhãn nhóm hiển thị'],
   ['summary', 'Kích thước / đặc điểm'], ['tank', 'Kích thước bể'], ['temperature', 'Nhiệt độ'],
   ['ph', 'Độ pH'], ['groupSize', 'Nuôi theo nhóm'], ['food', 'Thức ăn'],
   ['compatibility', 'Khả năng sống chung'], ['image', 'Đường dẫn ảnh'],
+  ['video', 'Đường dẫn video (MP4/WebM)'], ['videoType', 'Định dạng video'],
+  ['videoCredit', 'Tác giả / giấy phép video'], ['videoSource', 'Trang nguồn video'],
+  ['imageCredit', 'Tác giả / giấy phép ảnh'], ['imageSource', 'Trang nguồn ảnh'],
   ['sourceLabel', 'Tên nguồn tham khảo'], ['sourceUrl', 'Liên kết nguồn tham khảo'],
 ];
 
@@ -23,19 +29,23 @@ export default function AdminDashboard({ fish, onSaveFish, onDeleteFish, onExit,
   const [form, setForm] = useState(null);
   const [notice, setNotice] = useState('');
 
-  function handleSave(event) {
+  async function handleSave(event) {
     event.preventDefault();
     const id = form.id || createSlug(form.name);
     const { sourceLabel, sourceUrl, ...fishFields } = form;
     const nextFish = {
       ...fishFields,
       id,
-      category: form.group === 'coldwater' ? 'NƯỚC NGỌT · NƯỚC MÁT' : 'NƯỚC NGỌT · NHIỆT ĐỚI',
+      category: form.category || (form.group === 'coldwater' ? 'NƯỚC NGỌT · NƯỚC MÁT' : 'NƯỚC NGỌT · NHIỆT ĐỚI'),
       sources: sourceUrl ? [{ label: sourceLabel || 'Nguồn tham khảo', url: sourceUrl }] : (form.sources || []),
     };
-    onSaveFish(nextFish);
-    setNotice(`Đã lưu hồ sơ “${form.name}”.`);
-    setForm(null);
+    try {
+      await onSaveFish(nextFish);
+      setNotice(`Đã lưu hồ sơ “${form.name}” vào PostgreSQL.`);
+      setForm(null);
+    } catch (error) {
+      setNotice(error.message || 'Không lưu được hồ sơ. Hãy thử lại.');
+    }
   }
 
   return (
@@ -45,8 +55,8 @@ export default function AdminDashboard({ fish, onSaveFish, onDeleteFish, onExit,
         <div><span className="admin-user-name">Xin chào, {user?.name}</span><button className="admin-secondary" onClick={onLogout}>Đăng xuất</button><button className="admin-secondary" onClick={onExit}>Xem website ↗</button></div>
       </header>
       <section className="admin-content">
-        <div className="admin-heading"><div><div className="eyebrow"><span /> DASHBOARD ADMIN</div><h1>Quản lý cá cảnh</h1><p>Thêm loài mới hoặc cập nhật thông tin trong danh mục. Dữ liệu được lưu trên trình duyệt này.</p></div><button className="admin-primary" onClick={() => { setNotice(''); setForm({ ...emptyFish }); }}>+ Thêm loài cá</button></div>
-        <div className="admin-warning"><strong>Chế độ demo:</strong> dữ liệu lưu bằng localStorage trên thiết bị này. Không đồng bộ với người dùng khác và không có xác thực bảo mật.</div>
+        <div className="admin-heading"><div><div className="eyebrow"><span /> DASHBOARD ADMIN</div><h1>Quản lý cá cảnh</h1><p>Thêm hoặc cập nhật hồ sơ. Thay đổi được lưu trong PostgreSQL và dùng chung cho khách truy cập.</p></div><button className="admin-primary" onClick={() => { setNotice(''); setForm({ ...emptyFish }); }}>+ Thêm loài cá</button></div>
+        <div className="admin-warning"><strong>Lưu ý:</strong> dữ liệu được gửi tới backend. Hãy dùng ảnh/video có nguồn và quyền sử dụng phù hợp.</div>
         {notice && <p className="admin-success" role="status">{notice}</p>}
         {form && (
           <form className="admin-editor" onSubmit={handleSave}>
@@ -63,7 +73,7 @@ export default function AdminDashboard({ fish, onSaveFish, onDeleteFish, onExit,
           {fish.map((item) => (
             <article className="admin-fish-row" key={item.id}>
               <img src={item.image} alt="" /><div className="admin-fish-info"><h2>{item.name}</h2><p><em>{item.scientificName}</em> · {item.group === 'coldwater' ? 'Nước mát' : 'Nhiệt đới'}</p></div>
-              <div className="admin-row-actions"><button className="admin-secondary" onClick={() => { setNotice(''); setForm({ ...emptyFish, ...item, sourceLabel: item.sources?.[0]?.label || '', sourceUrl: item.sources?.[0]?.url || '' }); }}>Sửa</button><button className="admin-danger" onClick={() => { if (window.confirm(`Xóa hồ sơ ${item.name}?`)) { onDeleteFish(item.id); setNotice(`Đã xóa “${item.name}”.`); } }}>Xóa</button></div>
+              <div className="admin-row-actions"><button className="admin-secondary" onClick={() => { setNotice(''); setForm({ ...emptyFish, ...item, sourceLabel: item.sources?.[0]?.label || '', sourceUrl: item.sources?.[0]?.url || '' }); }}>Sửa</button><button className="admin-danger" onClick={async () => { if (!window.confirm(`Xóa hồ sơ ${item.name}?`)) return; try { await onDeleteFish(item.id); setNotice(`Đã xóa “${item.name}” khỏi PostgreSQL.`); } catch (error) { setNotice(error.message || 'Không xóa được hồ sơ.'); } }}>Xóa</button></div>
             </article>
           ))}
         </div>

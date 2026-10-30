@@ -5,6 +5,61 @@ Tệp này dùng để học code và ghi lại các đợt cập nhật. README
 website và cách chạy dự án.
 
 
+BẢN 13 — CHUẨN HÓA HỒ SƠ VÀ THÊM CÁ TETRA, CẦU VỒNG — 30/10/2026
+
+Đã làm:
+  - Mở rộng danh mục từ sáu lên mười loài: thêm cá cầu vồng Boesemani,
+    cardinal tetra, tetra lửa và tetra mũi đỏ.
+  - Rà soát ảnh mặc định: thay các ảnh Unsplash/Pexels không chắc khớp cá bằng
+    ảnh Commons có trang nguồn và giấy phép rõ ràng. Ảnh cá betta tiếp tục dùng
+    trang Pexels đúng loài.
+  - Lưu tên tác giả/giấy phép (`imageCredit`) và trang nguồn ảnh (`imageSource`)
+    ngay trong từng hồ sơ. Trang chi tiết có liên kết ghi công trên ảnh; admin
+    cũng chỉnh sửa được hai trường này.
+  - Ghi nguồn chăm sóc theo loài và phân biệt thông số riêng với hướng dẫn chung
+    cho cả nhóm tetra/cá cầu vồng. Ví dụ, 22–27°C và pH 6.5–8.0 là mốc nhóm do
+    OATA đưa ra, không khẳng định đó là thông số tối ưu riêng cho mọi loài.
+  - Cập nhật README và dữ liệu seed để người mới cài project có cùng danh mục.
+
+Code liên quan:
+  - `frontend/src/data/fish.js` là nguồn hồ sơ mặc định dùng bởi trang React.
+    Mỗi object có mã `id`, tên thường gọi, tên khoa học, điều kiện bể, chăm sóc,
+    ảnh và `sources` để người đọc kiểm tra thông tin.
+  - `backend/db/seeds/fish.json` là bản JSON tương ứng cho database mới. Khi bảng
+    fish còn trống backend nạp các hồ sơ này; seed không ghi đè nội dung admin.
+  - `backend/db/migrations/003_add_freshwater_species.sql` thêm bốn loài vào
+    database đã có dữ liệu. Bảng `schema_migrations` đánh dấu bản cập nhật đã
+    chạy, để lần khởi động sau không thêm lại loài mà admin đã xóa.
+  - `backend/db/migrations/004_correct_image_attributions.sql` sửa nhãn giấy phép
+    của hai ảnh sau khi đối chiếu trang Commons. Nó chỉ đổi nhãn khi URL ảnh vẫn
+    khớp ảnh Commons tương ứng; ảnh do admin thay sẽ không bị ảnh hưởng.
+  - Migration chỉ sửa ảnh của sáu hồ sơ cũ nếu URL trong database vẫn đúng bằng
+    URL mẫu cũ. Nếu admin đã thay ảnh, câu `WHERE` không khớp nên ảnh riêng được
+    giữ nguyên.
+  - `FishDetailPage.jsx` hiển thị `imageCredit`/`imageSource`; khi video đang
+    chạy, nó vẫn hiện ghi công video như trước. `AdminDashboard.jsx` có trường
+    để nhập/xem lại nguồn ảnh và nhãn nhóm hiển thị.
+
+Cách hoạt động:
+  - Backend đọc file migration 003 mỗi lần khởi động. SQL kiểm tra version trong
+    `schema_migrations`; chỉ lần đầu mới thêm cá và sửa các ảnh mặc định.
+  - JSON hồ sơ cá được lưu nguyên object trong cột JSONB. Vì vậy các trường ghi
+    công mới đi cùng hồ sơ mà không cần thêm cột PostgreSQL.
+  - Ảnh Commons được tải trực tiếp từ Wikimedia qua `Special:FilePath`. Nếu chủ
+    ảnh đổi tệp hoặc nguồn không truy cập được, trang có thể không tải ảnh; liên
+    kết ghi công cho phép kiểm tra trang gốc.
+
+Điều cần hiểu / giới hạn:
+  - OATA cung cấp ngưỡng tham khảo chung theo nhóm. Cá bắt tự nhiên, cá từ trại
+    khác nhau hoặc từng biến thể có thể cần điều kiện khác; hãy hỏi cửa hàng và
+    theo dõi chất lượng nước trước khi thả cá.
+  - Ảnh có CC BY hoặc CC BY-SA cần giữ ghi công theo giấy phép. Đọc điều khoản
+    trên trang Commons trước khi phân phối lại hoặc chỉnh sửa.
+  - Bước này thêm ảnh tĩnh có nguồn cho bốn loài mới. Video động riêng cho từng
+    loài mới chưa được thêm nếu chưa tìm được clip xác nhận đúng loài và giấy
+    phép rõ ràng; website tiếp tục hiện ảnh tĩnh thay cho video.
+
+
 1. CẤU TRÚC THƯ MỤC VÀ CÁC TỆP QUAN TRỌNG
 ---------------------
 
@@ -13,10 +68,22 @@ docker-compose.yml
   backend, backend có thông tin kết nối database.
 
 backend/server.js
-  API Node.js. Hiện có GET /api/health để kiểm tra backend đang chạy.
+  API Node.js quản lý đăng ký/đăng nhập, phiên, danh sách cá, mục yêu thích và
+  quyền admin bằng các route /api/....
 
 backend/db/init/001_create_users.sql
   Schema PostgreSQL tạo bảng users khi database được khởi tạo lần đầu.
+
+backend/db/migrations/002_create_app_data.sql
+  Tạo bảng hồ sơ cá, phiên đăng nhập và cá yêu thích. Backend chạy migration
+  này khi khởi động, kể cả khi volume database đã được tạo trước đó.
+
+backend/db/seeds/fish.json
+  Bản dữ liệu khởi tạo cho sáu loài mẫu. Backend chép dữ liệu này vào bảng fish
+  khi bảng chưa có hồ sơ nào.
+
+backend/package.json và backend/package-lock.json
+  Khai báo và khóa phiên bản thư viện pg để backend gửi truy vấn tới PostgreSQL.
 
 backend/Dockerfile
   Chỉ dẫn đóng gói backend thành image Docker.
@@ -28,7 +95,8 @@ frontend/src/main.jsx
   Điểm bắt đầu của ứng dụng React. Tệp này nạp giao diện, theme MUI và CSS.
 
 frontend/src/App.jsx
-  Ghép các trang, quản lý bộ lọc, định tuyến query string và dữ liệu cá lưu cục bộ.
+  Ghép các trang, quản lý bộ lọc, gọi API lấy cá/tài khoản/yêu thích và chuyển
+  dữ liệu admin cũ từ trình duyệt lên backend trong lần đăng nhập admin đầu tiên.
 
 frontend/src/components/SiteHeader.jsx
   Thanh điều hướng. useState điều khiển menu mở/đóng trên điện thoại.
@@ -56,16 +124,18 @@ frontend/src/components/HealthAndShops.jsx
   email minh họa.
 
 frontend/src/components/AdminDashboard.jsx
-  Dashboard admin có thể tạo, đọc, sửa và xóa hồ sơ cá.
+  Dashboard admin có thể tạo, đọc, sửa, xóa hồ sơ và nhập URL video/nguồn clip.
 
 frontend/src/components/AuthPage.jsx
-  Màn hình đăng nhập chung và tạo tài khoản khách; phân luồng khách/admin.
+  Màn hình chung gửi đăng nhập/đăng ký tới backend. Tài khoản cũ trong trình duyệt
+  được chuyển lên máy chủ khi khách nhập đúng email và mật khẩu cũ.
 
 frontend/src/components/SiteFooter.jsx
   Chân trang và các liên kết tới khu vực khác.
 
 frontend/src/data/fish.js
-  Lưu sáu loài cá nước ngọt mẫu, thông tin chăm sóc và nguồn tham khảo.
+  Dữ liệu hồ sơ mặc định của sáu loài nước ngọt; backend/db/seeds/fish.json là
+  bản được dùng để tạo dữ liệu ban đầu trong database.
 
 frontend/src/data/shops.js
   Lưu cửa hàng mẫu theo thành phố, địa chỉ, nguồn thông tin và liên kết bản đồ.
@@ -474,6 +544,65 @@ Cách hoạt động:
   - Mật khẩu mặc định trong Compose chỉ dùng local. Đổi mật khẩu trước khi chia sẻ
     môi trường; database không publish cổng ra máy host.
   - Docker chưa cài trong môi trường Codex này, nên chưa thể khởi động Compose.
+
+
+BẢN 12 — LƯU TÀI KHOẢN VÀ HỒ SƠ CÁ TRÊN POSTGRESQL — 30/10/2026
+
+Đã làm:
+  - Kết nối backend Node.js với PostgreSQL bằng thư viện pg.
+  - Đăng ký và đăng nhập khách/admin qua API; backend băm mật khẩu bằng scrypt,
+    lưu tài khoản và tạo phiên đăng nhập phía máy chủ.
+  - Chuyển cookie phiên thành HttpOnly để JavaScript phía trang không đọc được mã
+    phiên. Đăng xuất xóa phiên tương ứng khỏi bảng auth_sessions.
+  - Đọc danh mục cá từ database. Admin thêm/sửa/xóa hồ sơ qua API có kiểm tra vai
+    trò; video, ảnh và nguồn tham khảo nằm chung trong dữ liệu hồ sơ.
+  - Lưu danh sách yêu thích theo tài khoản trong PostgreSQL.
+  - Chuyển dữ liệu cá cũ của admin lên database trong lần đăng nhập đầu tiên; tài
+    khoản khách cũ được chuyển khi họ đăng nhập bằng mật khẩu đang dùng.
+  - Cập nhật giao diện admin, hướng dẫn cấu hình .env, Docker và các bảng database.
+
+Code liên quan:
+  - backend/server.js thiết lập kết nối Pool, tạo phiên, kiểm tra cookie/quyền,
+    xác thực API, đọc/ghi cá và yêu thích. Mọi dữ liệu từ người dùng đi vào SQL
+    qua tham số `$1`, `$2` thay vì ghép trực tiếp vào câu truy vấn.
+  - backend/db/migrations/002_create_app_data.sql tạo `fish`, `auth_sessions` và
+    `favorites`. `backend/db/init/001_create_users.sql` tạo bảng users.
+  - backend/db/seeds/fish.json chứa sáu hồ sơ mẫu. Chỉ khi bảng fish rỗng backend
+    mới thêm dữ liệu mẫu; các lần khởi động sau không ghi đè nội dung admin sửa.
+  - frontend/src/App.jsx tải dữ liệu qua API, gửi thay đổi admin lên server, lưu
+    yêu thích cùng tài khoản và khởi tạo lại phiên từ cookie khi tải trang.
+  - frontend/src/components/AuthPage.jsx gửi form đăng nhập/đăng ký tới server.
+    Frontend cũng có thể xác minh tài khoản legacy trong localStorage rồi đăng
+    ký tài khoản đó trên server bằng mật khẩu người dùng vừa nhập.
+  - frontend/src/components/AdminDashboard.jsx chờ API lưu/xóa thành công rồi
+    mới cập nhật thông báo; thêm trường video và ghi công clip.
+  - docker-compose.yml truyền cấu hình database và tài khoản admin vào backend;
+    `.env.example` liệt kê các giá trị local cần thay trước khi triển khai.
+
+Cách hoạt động:
+  - Khi Docker khởi động, PostgreSQL chạy script users khi volume mới. Backend
+    sau đó chạy migration bảng còn lại, nạp dữ liệu cá nếu chưa có, rồi khởi động
+    API khi database đã khỏe mạnh.
+  - Trình duyệt gửi tài khoản/mật khẩu qua API. Backend so sánh mật khẩu với hash
+    scrypt trong bảng users, tạo chuỗi phiên ngẫu nhiên và chỉ lưu hash của chuỗi
+    phiên vào bảng auth_sessions. Cookie HttpOnly gửi lại cho trình duyệt.
+  - Khi người dùng mở trang, App.jsx gọi `/api/auth/me`; backend kiểm tra cookie
+    với session trong database để trả về danh tính và vai trò. Admin API từ chối
+    yêu cầu nếu phiên thiếu hoặc vai trò không phải admin.
+  - Khi admin lưu cá, React gửi một hồ sơ JSON. Backend ghi hồ sơ vào cột JSONB
+    trong bảng fish. Khách lưu yêu thích dưới dạng các hàng nối user_id với fish_id.
+  - Dữ liệu cũ được nâng cấp theo từng người dùng: admin truyền hồ sơ cũ sau khi
+    đăng nhập; khách nhập đúng mật khẩu cũ để frontend đăng ký hồ sơ đó trên server.
+
+Điều cần hiểu / giới hạn:
+  - Dùng `docker compose up --build` để áp dụng backend mới. Volume hiện tại được
+    giữ; migration thêm bảng mới và backend nạp cá mẫu nếu bảng fish còn trống.
+  - Admin local mặc định là `admin` / `aqua-demo`; đổi các giá trị trong `.env`
+    trước khi mở website ra Internet. Bật `COOKIE_SECURE=true` khi chạy HTTPS.
+  - Database lưu cá, tài khoản, phiên và yêu thích; dữ liệu cửa hàng, hướng dẫn
+    chăm sóc và sức khỏe vẫn đang nằm trong frontend.
+  - Cookie và truy vấn được thiết kế cho ứng dụng cùng origin. Trước khi triển
+    khai công khai còn cần HTTPS, giới hạn thử mật khẩu và sao lưu database.
 
 
 BẢN 11 — NÚT CHUYỂN ẢNH TĨNH / ẢNH ĐỘNG — 29/10/2026
