@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" role="img" aria-labelledby="title desc">
+  <title id="title">Ảnh cá đang được cập nhật</title>
+  <desc id="desc">Minh họa cá trên nền nước xanh nhạt</desc>
+  <defs>
+    <linearGradient id="water" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#dff2e8"/><stop offset="1" stop-color="#a9d7ca"/></linearGradient>
+    <linearGradient id="body" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#347d70"/><stop offset="1" stop-color="#1f5148"/></linearGradient>
+  </defs>
+  <rect width="960" height="720" fill="url(#water)"/>
+  <circle cx="122" cy="120" r="16" fill="#fff" opacity=".48"/><circle cx="830" cy="520" r="24" fill="#fff" opacity=".42"/><circle cx="780" cy="140" r="10" fill="#fff" opacity=".5"/>
+  <path d="M260 360c112-133 318-143 430-6-106 151-315 154-430 6Z" fill="url(#body)"/>
+  <path d="m660 354 170-130v270L660 370Z" fill="#94c94f"/>
+  <circle cx="340" cy="330" r="14" fill="#f4f7ee"/><circle cx="344" cy="330" r="7" fill="#173e38"/>
+  <path d="M460 250c27-60 78-72 112-42-25 22-43 47-51 73m-61 187c29 49 72 65 110 47-27-21-44-42-53-65" fill="#b9df78" opacity=".8"/>
+  <text x="480" y="600" fill="#315b50" font-family="Arial,sans-serif" font-size="28" text-anchor="middle">Ảnh loài cá đang được cập nhật</text>
+</svg>

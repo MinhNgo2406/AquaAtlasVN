@@ -5,6 +5,134 @@ Tệp này dùng để học code và ghi lại các đợt cập nhật. README
 website và cách chạy dự án.
 
 
+BẢN 17 — THÊM 10 LOÀI CÁ, SỬA ẢNH HỎNG VÀ ẢNH DỰ PHÒNG — 03/11/2026
+
+Đã làm:
+  - Tăng danh mục từ 35 lên 45 loài: cá hồng két, hắc ma, hề chạch,
+    chuột panda/Sterbai, cầu vồng Parkinson/đỏ, ali vàng, bống vàng ăn rêu và
+    tai tượng.
+  - Sửa năm đường dẫn ảnh đã dùng tên file sai: cá mây trắng, lau kiếng mũi
+    lông, bút chì Thái, mập cầu vồng và cá rồng bạc. Nguồn ảnh Commons hiện có
+    liên kết trang file và credit tác giả/giấy phép.
+  - Thêm ảnh minh họa tại `frontend/public/images/fish-placeholder.svg`; nếu
+    ảnh ngoài bị gỡ hoặc mạng không tải được, thẻ, chi tiết và dashboard không
+    còn để một khung ảnh trống.
+  - Migration 011 thêm profile mới đúng một lần, sửa hai ảnh; migration 012
+    cập nhật ba ảnh xác nhận thêm. Các hồ sơ cá khác admin đã sửa vẫn được giữ.
+
+Code liên quan:
+  - `frontend/src/data/fish.js` định nghĩa thông tin 10 loài mới và tạo hồ sơ
+    hiển thị thống nhất. `backend/db/seeds/fish.json` đồng bộ dữ liệu cho backend.
+  - `backend/db/seeds/fish-image-fixes.json` ghi mã cá, URL ảnh, trang nguồn và
+    credit của cả năm ảnh đã sửa.
+  - `backend/server.js` dùng marker `011_freshwater_fish_and_images` để thêm
+    profile chưa có, rồi cập nhật đúng các trường ảnh được khai báo.
+  - `frontend/src/components/SpeciesSection.jsx`, `FishDetailPage.jsx` và
+    `AdminDashboard.jsx` thay ảnh lỗi bằng tệp SVG ở thư mục `public`.
+
+Cách hoạt động:
+  - Ảnh Commons được tham chiếu qua trang `Special:FilePath`; trang `imageSource`
+    mở thông tin file, tác giả và giấy phép. Trang nguồn luôn là nơi cần kiểm
+    tra điều khoản trước khi tái sử dụng.
+  - Hồ sơ mới vẫn mang nhãn cần rà soát. Số lít/nhiệt độ là mốc tham khảo và
+    loài cá lớn như hắc ma, hề chạch, cá tai tượng không phù hợp bể nhỏ.
+
+
+BẢN 16 — QUẢN LÝ DANH BẠ CỬA HÀNG TRONG DASHBOARD — 03/11/2026
+
+Đã làm:
+  - Chuyển danh sách cửa hàng từ dữ liệu frontend sang PostgreSQL. Khách vẫn
+    thấy cửa hàng đang bật; cửa hàng ẩn không xuất hiện trên website.
+  - Admin thêm cửa hàng, sửa địa chỉ/số điện thoại/giờ/ghi chú/nguồn, và bật
+    hoặc ẩn cửa hàng trong dashboard.
+  - Migration 010 tạo bảng `shops` và marker schema. Backend nhập danh sách
+    mẫu từ `backend/db/seeds/shops.json` một lần; lần khởi động tiếp theo không
+    ghi đè nội dung đã sửa hoặc bật lại cửa hàng đã ẩn.
+
+Code liên quan:
+  - `frontend/src/data/shops.js` là danh sách nguồn ban đầu. Tệp JSON trong
+    backend là bản sao được nhập vào database khi migration lần đầu chạy.
+  - `backend/server.js` cung cấp `GET /api/shops` cho website khách;
+    `GET /api/admin/shops`, `PUT /api/admin/shops` và
+    `PATCH /api/admin/shops/:id/status` chỉ hoạt động với tài khoản admin.
+  - `frontend/src/App.jsx` lấy danh sách công khai từ API và truyền nó tới
+    `HealthAndShops`. Nếu API chưa chạy, website dùng danh sách mẫu frontend
+    để vẫn xem được nội dung.
+  - `frontend/src/components/AdminDashboard.jsx` tải cả cửa hàng đang bật và
+    đang ẩn, rồi gửi thay đổi lên backend. Ẩn là đổi cột `is_active`, không xóa
+    vĩnh viễn bản ghi hoặc lịch sử báo cáo.
+  - `backend/db/migrations/010_shop_directory.sql` tạo bảng `shops`; mỗi hàng
+    có mã ổn định, dữ liệu hiển thị JSON, trạng thái công khai và thứ tự.
+
+Cách hoạt động:
+  - Server xác thực phiên và quyền admin trước mỗi thao tác thay đổi. Kiểm tra
+    dữ liệu bắt buộc, thành phố và URL nguồn trước khi lưu.
+  - `schema_migrations` ghi dấu `010_shop_directory` sau khi nhập dữ liệu mẫu.
+    Điều đó tránh việc seed chạy lại làm mất các sửa đổi trong dashboard.
+
+
+BẢN 15 — BỂ CÁ CÁ NHÂN, LỊCH CHĂM SÓC, GÓP Ý, CỬA HÀNG TOÀN QUỐC VÀ DANH MỤC 35 LOÀI — 03/11/2026
+
+Đã làm:
+  - Mở rộng danh mục từ 10 lên 35 hồ sơ. Có thêm cá molly, kiếm, sọc ngựa,
+    mây trắng, tam giác, barb anh đào/tứ vân, sặc gấm/lửa, dĩa, Oscar, Koi,
+    cá chuột, lau kiếng, chạch, bút chì ăn rêu, mập cầu vồng, La Hán, cá rồng,
+    thêm tetra và cá phượng hoàng. Hồ sơ mới hiển thị trạng thái cần rà soát;
+    nguồn OATA thường là hướng dẫn chung theo nhóm, không khẳng định tối ưu cho
+    mọi biến thể thương mại.
+  - Thêm bộ lọc “Nhóm loài”, giữ các lọc nhóm nước, độ khó, dung tích, tính cách
+    và tương thích. Tên thường gọi và tên khoa học vẫn dùng chung ô tìm kiếm.
+  - Mở rộng cửa hàng đã có nguồn tại TP.HCM, Hà Nội, Nha Trang, Cần Thơ và Hải
+    Phòng; có tùy chọn xem mọi khu vực đang có dữ liệu. Người dùng đã đăng nhập
+    có thể gửi gợi ý cửa hàng cho admin nếu khu vực mình chưa có kết quả.
+  - Khách đăng nhập có thể lưu bể cá riêng theo dung tích và loài đang nuôi,
+    thêm lịch việc lặp theo ngày, đánh dấu đã làm để lịch tiếp theo được dời,
+    và ghi nhật ký kiểm tra nước/chăm sóc.
+  - Thêm nút báo sai thông tin ở hồ sơ cá và cửa hàng. Admin nhận danh sách,
+    đổi trạng thái mới/đang xem/đã xử lý/không áp dụng, và lưu ghi chú nội bộ.
+  - Thêm migration 007 cho bể, lịch, nhật ký và báo cáo; migration 008 thêm
+    nhóm loài vào hồ sơ cũ nếu chưa có.
+  - Migration dữ liệu 009 thêm hồ sơ mới đúng một lần, chỉ khi mã cá chưa có,
+    giữ nguyên hồ sơ admin đã sửa. Marker `009_expand_freshwater_catalog` ngăn
+    việc nạp lại và đưa cá admin đã xóa trở lại ở lần khởi động sau.
+
+Code liên quan:
+  - `frontend/src/components/CustomerWorkspace.jsx` cung cấp form bể cá, lịch,
+    nút hoàn thành và nhật ký; component chỉ hiện cho tài khoản khách.
+  - `frontend/src/components/ContentReportButton.jsx` gửi mô tả lỗi tới API,
+    gồm loại nội dung, mã, tên và lời giải thích của khách.
+  - `frontend/src/components/AdminDashboard.jsx` tải hàng chờ báo cáo và cho admin
+    đổi trạng thái/ghi chú. Backend vẫn kiểm tra role admin trên mọi thao tác.
+  - `backend/server.js` xác minh quyền sở hữu `user_id` trước khi đọc/xóa bể,
+    thêm lịch hoặc ghi nhật ký. Khi đánh dấu lịch lặp hoàn thành, cùng một
+    transaction ghi log và dời hạn kế tiếp.
+  - `backend/db/migrations/007_customer_workspace.sql` tạo các bảng `aquariums`,
+    `care_tasks`, `care_logs`, `content_reports`; các khóa ngoại xóa dữ liệu con
+    cùng bể hoặc tài khoản.
+  - `frontend/src/data/shops.js` thêm 5 cửa hàng/điểm bán có nguồn tại 3 vùng,
+    giữ riêng trạng thái nguồn chính thức, danh bạ, giờ mở cửa và ngày đối chiếu.
+  - `frontend/src/data/fish.js` thêm 25 hồ sơ. `backend/db/seeds/fish.json` là
+    bản sao dữ liệu mẫu mà backend dùng trong lần nâng cấp catalog.
+  - `backend/db/migrations/009_expand_freshwater_catalog.sql` tạo bảng lưu
+    version migration; backend ghi version sau khi nạp xong loài mới.
+
+Cách hoạt động:
+  - Mỗi bể được lưu với `user_id` từ cookie phiên trên server; client không gửi
+    user_id để tự chọn chủ sở hữu. Vì vậy thay đổi số ID trên URL không mở được
+    bể của người khác.
+  - Lịch có `cadence_days` sẽ tăng ngày đến hạn khi hoàn thành. Lịch không lặp
+    được đánh dấu `completed_at`. Cả hai trường hợp đều tạo bản ghi trong
+    `care_logs`, tạo lịch sử hoạt động.
+  - Góp ý của khách ban đầu có status `open`. Admin chỉ chọn trạng thái và lưu
+    ghi chú; bước này chưa tự chỉnh nội dung hồ sơ cá. Admin cần tự mở hồ sơ rồi
+    sửa sau khi kiểm chứng nguồn.
+  - `ON CONFLICT (id) DO NOTHING` cho phép thêm profile mới mà không ghi đè dữ
+    liệu admin. Marker chỉ chạy catalog upgrade một lần, nên admin xóa loài sau
+    đó thì lần mở website tiếp theo cũng không tự thêm loài đó lại.
+  - Dung tích/tính cách của hồ sơ mới là giá trị sàng lọc tham khảo, không bảo
+    đảm một bể thực tế có thể nuôi loài đó. Xem trạng thái và nguồn từng hồ sơ.
+
+
 BẢN 14 — BỘ LỌC, SO SÁNH, SỨC KHỎE VÀ CỬA HÀNG — 03/11/2026
 
 Đã làm:

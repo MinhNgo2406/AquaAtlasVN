@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import ContentReportButton from './ContentReportButton.jsx';
 
 function Fact({ label, value }) {
   return <div className="fish-fact"><dt>{label}</dt><dd>{value}</dd></div>;
 }
 
-export default function FishDetailPage({ fish, onBack }) {
+export default function FishDetailPage({ fish, onBack, user }) {
   const [isAnimated, setIsAnimated] = useState(Boolean(fish.video));
 
   return (
@@ -15,7 +16,7 @@ export default function FishDetailPage({ fish, onBack }) {
 
       <div className="detail-hero">
         <div className="detail-media">
-          <img className="detail-poster" src={fish.image} alt={fish.name} />
+          <img className="detail-poster" src={fish.image} alt={fish.name} onError={(event) => { event.currentTarget.src = '/images/fish-placeholder.svg'; }} />
           {fish.video && isAnimated && <video
             className="detail-video"
             autoPlay
@@ -77,6 +78,7 @@ export default function FishDetailPage({ fish, onBack }) {
       </div>
 
       <aside className="detail-sources">
+        <ContentReportButton user={user} targetType="fish" targetId={fish.id} targetLabel={fish.name} />
         <h2>Nguồn tham khảo</h2>
         <p className="data-review-note">{fish.dataStatus === 'reviewed' ? `Hồ sơ được đối chiếu nguồn lần gần nhất: ${fish.reviewedAt || 'chưa ghi ngày'}.` : 'Hồ sơ đang cần kiểm tra thêm nguồn và thông số.'} Thông số chăm sóc là hướng dẫn tham khảo; một số mốc có thể là hướng dẫn chung theo nhóm, không phải tối ưu riêng cho mọi dòng cá.</p>
         {fish.minTankLiters && <p className="data-review-note">Bể tối thiểu đang dùng để lọc danh mục: khoảng {fish.minTankLiters}L cho nhóm/cá theo hướng dẫn hồ sơ. Đây là mốc sàng lọc, không thay thế việc tính bể theo cá trưởng thành, kích thước bể và lọc.</p>}

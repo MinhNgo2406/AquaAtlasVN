@@ -5,8 +5,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 
-export default function QuickSearch({ query, group, level, tankSize, temperament, compatibility,
-  onQueryChange, onGroupChange, onLevelChange, onTankSizeChange, onTemperamentChange, onCompatibilityChange }) {
+export default function QuickSearch({ query, group, family, level, tankSize, temperament, compatibility,
+  onQueryChange, onGroupChange, onFamilyChange, onLevelChange, onTankSizeChange, onTemperamentChange, onCompatibilityChange }) {
   return (
     <section className="quick-search" aria-label="Tìm cá nhanh">
       <div className="search-intro">
@@ -29,6 +29,26 @@ export default function QuickSearch({ query, group, level, tankSize, temperament
           <MenuItem value="all">Tất cả nhóm</MenuItem>
           <MenuItem value="tropical">Cá nhiệt đới</MenuItem>
           <MenuItem value="coldwater">Cá nước mát</MenuItem>
+        </Select>
+      </FormControl>
+
+      <FormControl className="search-field" size="small">
+        <InputLabel id="family-label">Nhóm loài</InputLabel>
+        <Select labelId="family-label" label="Nhóm loài" value={family} onChange={(event) => onFamilyChange(event.target.value)}>
+          <MenuItem value="all">Tất cả nhóm loài</MenuItem>
+          <MenuItem value="livebearer">Bảy màu, molly, kiếm, mún</MenuItem>
+          <MenuItem value="tetra">Tetra</MenuItem>
+          <MenuItem value="rainbowfish">Cá cầu vồng</MenuItem>
+          <MenuItem value="danio">Sọc ngựa, mây trắng</MenuItem>
+          <MenuItem value="rasbora">Rasbora</MenuItem>
+          <MenuItem value="barb">Cá barb</MenuItem>
+          <MenuItem value="gourami">Cá sặc</MenuItem>
+          <MenuItem value="cichlid">Cichlid, cá dĩa, La Hán</MenuItem>
+          <MenuItem value="catfish">Cá chuột, lau kiếng</MenuItem>
+          <MenuItem value="loach">Cá chạch</MenuItem>
+          <MenuItem value="shark">Cá mập nước ngọt</MenuItem>
+          <MenuItem value="coldwater">Cá nước mát, Koi</MenuItem>
+          <MenuItem value="tankbuster">Cá kích thước rất lớn</MenuItem>
         </Select>
       </FormControl>
 

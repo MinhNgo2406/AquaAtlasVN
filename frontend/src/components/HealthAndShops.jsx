@@ -4,7 +4,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { useState } from 'react';
-import shops, { shopCities } from '../data/shops.js';
+import { shopCities } from '../data/shops.js';
+import ContentReportButton from './ContentReportButton.jsx';
 
 const warningSigns = [
   ['Bỏ ăn hoặc lờ đờ', 'Quan sát nhịp thở, khả năng bơi và xem có cá nào khác bị tương tự không.'],
@@ -59,23 +60,24 @@ function HealthSection() {
   );
 }
 
-function ShopSection() {
+function ShopSection({ user, shops = [] }) {
   const [city, setCity] = useState('hcm');
   const [shopQuery, setShopQuery] = useState('');
   const selectedCity = shopCities.find((item) => item.id === city);
-  const cityShops = shops.filter((shop) => shop.city === city && `${shop.name} ${shop.address}`.toLocaleLowerCase('vi').includes(shopQuery.trim().toLocaleLowerCase('vi')));
+  const cityShops = shops.filter((shop) => (city === 'all' || shop.city === city) && `${shop.name} ${shop.address}`.toLocaleLowerCase('vi').includes(shopQuery.trim().toLocaleLowerCase('vi')));
 
   return (
     <section className="shop-section" id="shops">
       <div className="shop-copy">
         <div className="eyebrow light"><span /> KẾT NỐI NGƯỜI CHƠI</div>
         <h2>Tìm nơi mua cá<br />gần <em>bạn.</em></h2>
-        <p>Chọn khu vực để xem một số cửa hàng cá cảnh. Danh sách tham khảo từ trang cửa hàng và danh bạ địa phương; hãy xác nhận thông tin trước khi đi.</p>
+        <p>Chọn khu vực để xem cửa hàng đã có nguồn tham khảo. Danh sách hiện có tại TP.HCM, Hà Nội, Nha Trang, Cần Thơ và Hải Phòng; hãy xác nhận tồn cá và giờ trước khi đi.</p>
         <div className="shop-search">
           <label htmlFor="city-select">Tỉnh / thành phố</label>
           <div className="shop-search-controls">
             <FormControl fullWidth size="small">
               <Select id="city-select" value={city} onChange={(event) => setCity(event.target.value)}>
+                <MenuItem value="all">Tất cả khu vực đang có dữ liệu</MenuItem>
                 {shopCities.map((item) => <MenuItem value={item.id} key={item.id}>{item.name}</MenuItem>)}
               </Select>
             </FormControl>
@@ -101,7 +103,7 @@ function ShopSection() {
         <span className="shop-video-shade" aria-hidden="true" />
       </div>
       <div className="shop-results" id="shop-results" aria-live="polite">
-        <div className="eyebrow"><span /> {selectedCity?.name.toLocaleUpperCase('vi')}</div>
+        <div className="eyebrow"><span /> {city === 'all' ? 'TOÀN BỘ KHU VỰC CÓ DỮ LIỆU' : selectedCity?.name.toLocaleUpperCase('vi')}</div>
         <div className="shop-card-grid">
           {cityShops.map((shop) => (
             <article className="shop-card" key={shop.id}>
@@ -117,9 +119,10 @@ function ShopSection() {
                 <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${shop.name} ${shop.address}`)}`} target="_blank" rel="noreferrer">Mở bản đồ ↗</a>
                 <a href={shop.source} target="_blank" rel="noreferrer">{shop.sourceLabel} ↗</a>
               </div>
+              <ContentReportButton user={user} targetType="shop" targetId={shop.id} targetLabel={shop.name} />
             </article>
           ))}
-          {!cityShops.length && <p className="empty-state">Chưa có cửa hàng khớp khu vực tìm kiếm này.</p>}
+          {!cityShops.length && <div className="empty-state"><p>Chưa có cửa hàng khớp khu vực tìm kiếm này.</p>{user?.role === 'customer' && <><p>Biết một cửa hàng cá cảnh đáng tin cậy ở khu vực này?</p><ContentReportButton user={user} targetType="shop" targetId="directory-suggestion" targetLabel={`Gợi ý cửa hàng — ${shopQuery || selectedCity?.name || 'toàn quốc'}`} /></>}</div>}
         </div>
       </div>
     </section>
@@ -146,6 +149,6 @@ function NewsletterSection() {
   );
 }
 
-export default function HealthAndShops() {
-  return <><HealthSection /><ShopSection /><NewsletterSection /></>;
+export default function HealthAndShops({ user, shops }) {
+  return <><HealthSection /><ShopSection user={user} shops={shops} /><NewsletterSection /></>;
 }

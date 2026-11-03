@@ -4,17 +4,20 @@ AquaAtlas Vietnam là website tiếng Việt dành cho người yêu cá cảnh.
 
 ## Tính năng hiện có
 
-- Danh mục 10 loài cá nước ngọt: betta, bảy màu, neon, cardinal tetra, tetra lửa, tetra mũi đỏ, cầu vồng Boesemani, mún, vàng và thần tiên.
+- Danh mục 45 hồ sơ cá nước ngọt, bổ sung nhiều dòng được chơi phổ biến như molly, cá kiếm, sọc ngựa, mây trắng, rasbora, barb, cá sặc, cá dĩa, Oscar, Koi, nhiều loại cá chuột, lau kiếng, chạch, cá cầu vồng, hồng két, ali vàng và cá hắc ma.
 - Hồ sơ từng loài với điều kiện bể, thức ăn, cách nuôi theo nhóm, gợi ý cá sống chung, ngày đối chiếu và nguồn đọc thêm.
-- Bộ lọc theo nhóm nước, độ khó, thể tích bể, tính cách và loại bể nuôi chung.
+- Tìm theo tên thường gọi/tên khoa học; lọc theo nhóm nước, họ cá, độ khó, thể tích bể, tính cách và loại bể nuôi chung.
 - Chọn tối đa ba loài để so sánh dung tích bể, nhiệt độ, pH, độ khó và chăm sóc.
 - Có thể chuyển ảnh hồ sơ giữa video cá bơi và ảnh tĩnh.
 - Hướng dẫn theo dõi sức khỏe: ghi triệu chứng, kiểm tra nước trước, nhận biết khi cần hỗ trợ chuyên môn; không thay chẩn đoán thú y.
-- Tìm cửa hàng theo TP. Hồ Chí Minh/Hà Nội, tìm theo tên hoặc quận, mở bản đồ, gọi điện và xem nguồn/ngày đối chiếu. Có Thủy Sinh Tím, HT Aquarium và Trung Tín.
+- Tìm cửa hàng theo TP. Hồ Chí Minh, Hà Nội, Hải Phòng, Cần Thơ và Nha Trang; xem tất cả khu vực có dữ liệu, tìm theo tên/quận, mở bản đồ, gọi điện và xem nguồn/ngày đối chiếu. Hồ sơ chỉ hiển thị cửa hàng có nguồn; giờ và tồn cá cần được xác nhận trực tiếp.
 - Đăng nhập chung cho khách/admin; tài khoản, phiên đăng nhập và cá yêu thích được lưu qua backend/PostgreSQL.
-- Dashboard admin thêm, sửa, xóa hồ sơ; có kiểm tra ảnh, video, ghi công, thông số bể, nhóm tương thích và nguồn trước khi lưu.
+- Khách lưu hồ sơ bể theo tài khoản, đánh dấu loài đang nuôi, lập lịch chăm sóc lặp lại và ghi nhật ký từng lần kiểm tra/thay nước.
+- Khách gửi báo cáo khi thấy thông tin cá/cửa hàng chưa đúng; admin xử lý trạng thái và ghi chú trong dashboard.
+- Dashboard admin thêm, sửa, xóa hồ sơ cá; có kiểm tra ảnh, video, ghi công, thông số bể, nhóm tương thích và nguồn trước khi lưu.
+- Admin quản lý danh bạ cửa hàng: thêm, sửa, ẩn và hiển thị lại. Cửa hàng công khai được đọc từ PostgreSQL, không cần sửa mã giao diện khi cập nhật danh bạ.
 
-PostgreSQL lưu tài khoản, phiên đăng nhập, hồ sơ cá và yêu thích. Danh sách cửa hàng, hướng dẫn chăm sóc và sức khỏe nằm trong frontend; cửa hàng cần xác nhận tồn cá/giờ mở cửa trước khi đi. Ngày đối chiếu ghi trong hồ sơ cho biết lần xem lại nguồn, không bảo đảm thông tin hoặc hàng còn hiện tại. Hướng dẫn sức khỏe không thay thế chẩn đoán thú y.
+PostgreSQL lưu tài khoản, phiên đăng nhập, hồ sơ cá, yêu thích, cửa hàng, bể cá, lịch chăm sóc, nhật ký và báo cáo nội dung. Migration 010 nhập danh sách cửa hàng mẫu một lần; migration 011 thêm mười loài mới, còn migration 011–012 sửa năm liên kết ảnh bị sai. Trạng thái dữ liệu được lưu theo từng loài; chỉnh sửa admin được giữ nguyên khi khởi động lại. Ảnh lấy từ Wikimedia Commons và trang nguồn liên kết tác giả/giấy phép. Nếu nguồn ảnh bên ngoài tạm thời lỗi, giao diện dùng ảnh minh họa dự phòng. Mốc bể/nhiệt độ ở hồ sơ mới là hướng dẫn tham khảo cần kiểm tra thêm; ngày đối chiếu cửa hàng không bảo đảm tiệm đang mở/còn cá. Hướng dẫn sức khỏe không thay thế chẩn đoán thú y.
 
 ## Chạy toàn bộ bằng Docker
 
@@ -26,19 +29,19 @@ docker compose up --build
 
 Khi quá trình khởi động hoàn tất, mở [http://localhost:8080](http://localhost:8080). Frontend chạy trong Nginx; yêu cầu `/api/` được chuyển tiếp tới backend. Chân trang báo trạng thái backend và database. PostgreSQL tạo bảng tài khoản ở lần khởi động database đầu tiên; backend tự tạo các bảng còn lại, thêm dữ liệu cá mẫu nếu database chưa có cá, rồi giữ dữ liệu trong Docker volume. Để dừng, nhấn `Ctrl+C`; `docker compose down` giữ nguyên volume.
 
-Backend hiện cung cấp endpoint kiểm tra trạng thái:
+Backend cung cấp endpoint kiểm tra trạng thái:
 
 ```text
 http://localhost:8080/api/health
 ```
 
-Kết quả thành công có dạng `{"status":"ok","service":"aqua-atlas-backend","database":"connected"}`. Backend cũng cung cấp API đăng ký/đăng nhập, lấy danh sách cá, quản lý hồ sơ dành cho admin và lưu cá yêu thích của khách.
+Kết quả thành công có dạng `{"status":"ok","service":"aqua-atlas-backend","database":"connected"}`. Backend cũng cung cấp API đăng nhập, hồ sơ cá admin, danh bạ cửa hàng công khai và quản trị, yêu thích, bể/lịch/nhật ký của khách và hàng chờ báo cáo dành cho admin. Migration 007 tạo các bảng dữ liệu cá nhân; migration 008 gắn nhóm họ cá cho hồ sơ cũ; migration 009 đưa 25 hồ sơ cá vào danh mục; migration 010 tạo danh bạ cửa hàng; migration 011 thêm 10 loài và sửa hai ảnh, migration 012 sửa thêm ba ảnh đã xác nhận URL sai. Các lần khởi động sau không nạp lại loài đã bị admin xóa.
 
 Lần chạy đầu dùng tài khoản admin local `admin` / `aqua-demo`. Trước khi đưa website lên mạng, tạo tệp `.env` từ `.env.example`, đặt mật khẩu PostgreSQL và admin riêng, rồi bật `COOKIE_SECURE=true` khi đã dùng HTTPS. Không dùng thông tin mẫu ở môi trường công khai. Chỉ chạy `docker compose down -v` nếu chủ ý xóa dữ liệu database local.
 
 Tài khoản cũ đã đăng ký trong trình duyệt có thể được chuyển lên máy chủ khi đăng nhập lần đầu bằng mật khẩu cũ. Dữ liệu cá admin đã lưu được chuyển lên khi admin đăng nhập lần đầu trên trình duyệt đó. Giữ browser data cho tới khi đã xác nhận nội dung xuất hiện trên website sau lần đăng nhập.
 
-Các bảng chính gồm `users` (tài khoản), `auth_sessions` (phiên đăng nhập), `fish` (hồ sơ cá) và `favorites` (cá yêu thích). Cookie phiên có cờ HttpOnly; mật khẩu được băm ở backend trước khi lưu. PostgreSQL không mở cổng ra mạng công khai.
+Các bảng chính gồm `users`, `auth_sessions`, `fish`, `favorites`, `aquariums`, `care_tasks`, `care_logs` và `content_reports`. API chỉ trả bể/lịch/nhật ký có `user_id` thuộc phiên đang đăng nhập; admin có quyền xem và đổi trạng thái báo cáo. Cookie phiên có cờ HttpOnly; mật khẩu được băm ở backend trước khi lưu. PostgreSQL không mở cổng ra mạng công khai.
 
 ## Cấu trúc dự án
 
@@ -95,3 +98,8 @@ Thông số cá tetra và cầu vồng có ghi rõ khi nào là hướng dẫn c
 - [Thủy Sinh Tím — hệ thống cửa hàng](https://thuysinhtim.vn/he-thong-cua-hang) — bốn chi nhánh tại Hà Nội và TP. Hồ Chí Minh; trang chính thức công bố số liên hệ và giờ 09:00–21:00.
 - [HT Aquarium — danh bạ đại lý Seachem](https://www.seachem.com/SDL/SDLDealerDetail.php?recID=213454) — nguồn hãng ghi địa chỉ tại Quận 5, TP. Hồ Chí Minh. Tồn kho trên nguồn được ghi nhận lần cuối năm 2025; hỏi lại trước khi mua.
 - [Cá Cảnh Thủy Sinh Trung Tín](https://cacanhthuysinhtrungtin.com/) — website cửa hàng và [cảnh báo kênh giả mạo](https://cacanhthuysinhtrungtin.com/canh-bao-gia-mao-thuong-hieu-ca-canh-trung-tin/); chỉ liên hệ qua kênh chính thức.
+- [Danh sách đại lý ADA tại Việt Nam](https://www.adana.co.jp/cn/contents/distributors/shop.html) — ghi nhận Sài Gòn Aqua (TP.HCM), Việt Aqua (Hà Nội) và Thanh Tinh Aqua (Nha Trang).
+- [Cá Cảnh Đăng Khoa](https://www.dangkhoatran.id.vn/) — website cửa hàng tự công bố địa chỉ và giờ tại Cần Thơ.
+- [Koi Kamkoi](https://chamsocthucung.vn/dichvu/koi-kamkoi-le-chan-hai-phong/) — nguồn danh bạ địa phương cho Hải Phòng; gọi xác nhận trước khi đi.
+
+Danh mục loài tham khảo danh sách loài phổ biến trong [nghiên cứu của Đại học Nông Lâm TP.HCM](https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf); thông số chăm sóc liên kết tới [hướng dẫn nhóm cá nước ngọt OATA](https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/). Những hồ sơ mới cần được chuyên gia/người nuôi có kinh nghiệm rà soát trước khi xem như hướng dẫn riêng cho dòng cá.

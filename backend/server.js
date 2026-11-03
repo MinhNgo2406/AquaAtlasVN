@@ -150,10 +150,13 @@ async function saveFish(inputFish, { allowIncomplete = false } = {}) {
     if (!['community', 'separate', 'coldwater-community', 'large-community'].includes(fish.compatibilityGroup)) {
       throw new HttpError(400, 'Chọn một nhóm tương thích trong danh sách.');
     }
+    if (!['livebearer', 'tetra', 'rainbowfish', 'danio', 'rasbora', 'barb', 'gourami', 'cichlid', 'catfish', 'loach', 'shark', 'coldwater', 'tankbuster', 'betta', 'other'].includes(fish.family)) {
+      throw new HttpError(400, 'Chọn một nhóm loài trong danh sách.');
+    }
     fish.dataStatus = 'reviewed';
     fish.reviewedAt = new Date().toISOString().slice(0, 10);
   } else if (!fish.imageSource || !fish.imageCredit || !Array.isArray(fish.sources) || !fish.sources.length
-    || !Number.isInteger(Number(fish.minTankLiters)) || !fish.temperament || !fish.compatibilityGroup) {
+    || !Number.isInteger(Number(fish.minTankLiters)) || !fish.temperament || !fish.compatibilityGroup || !fish.family) {
     fish.dataStatus = 'needs-review';
   }
   const result = await pool.query(
@@ -164,6 +167,35 @@ async function saveFish(inputFish, { allowIncomplete = false } = {}) {
     [fish.id, JSON.stringify(fish)],
   );
   return result.rows[0].data;
+}
+
+async function saveShop(inputShop) {
+  const shop = inputShop && typeof inputShop === 'object' ? { ...inputShop } : {};
+  const required = ['name', 'address', 'hours', 'verification', 'note', 'sourceLabel'];
+  if (!/^[a-z0-9-]{1,100}$/.test(shop.id || '') || required.some((key) => typeof shop[key] !== 'string' || !shop[key].trim())) {
+    throw new HttpError(400, 'Mã, tên, địa chỉ, giờ, nguồn xác minh và ghi chú cửa hàng là bắt buộc.');
+  }
+  if (!['hcm', 'hanoi', 'haiphong', 'cantho', 'nhatrang'].includes(shop.city)) {
+    throw new HttpError(400, 'Chọn một tỉnh/thành phố trong danh sách.');
+  }
+  for (const key of ['source']) {
+    try {
+      if (!['http:', 'https:'].includes(new URL(shop[key]).protocol)) throw new Error();
+    } catch {
+      throw new HttpError(400, 'Trang nguồn cần là liên kết HTTP hoặc HTTPS hợp lệ.');
+    }
+  }
+  shop.phone = String(shop.phone || '').trim();
+  shop.verifiedAt = String(shop.verifiedAt || new Date().toISOString().slice(0, 10));
+  shop.isActive = shop.isActive !== false;
+  const result = await pool.query(
+    `INSERT INTO shops (id, data, is_active, sort_order)
+     VALUES ($1, $2::jsonb, $3, (SELECT COALESCE(MAX(sort_order) + 1, 0) FROM shops))
+     ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data, is_active = EXCLUDED.is_active, updated_at = NOW()
+     RETURNING data, is_active AS "isActive"`,
+    [shop.id, JSON.stringify(shop), shop.isActive],
+  );
+  return { ...result.rows[0].data, isActive: result.rows[0].isActive };
 }
 
 async function route(request, response) {
@@ -179,6 +211,40 @@ async function route(request, response) {
   if (request.method === 'GET' && pathname === '/api/fish') {
     const result = await pool.query('SELECT data FROM fish ORDER BY sort_order, id');
     send(response, 200, result.rows.map((row) => row.data));
+    return;
+  }
+
+  if (request.method === 'GET' && pathname === '/api/shops') {
+    const result = await pool.query('SELECT data FROM shops WHERE is_active ORDER BY sort_order, id');
+    send(response, 200, result.rows.map((row) => row.data));
+    return;
+  }
+
+  if (request.method === 'GET' && pathname === '/api/admin/shops') {
+    await requireUser(request, 'admin');
+    const result = await pool.query('SELECT data, is_active AS "isActive" FROM shops ORDER BY sort_order, id');
+    send(response, 200, { shops: result.rows.map((row) => ({ ...row.data, isActive: row.isActive })) });
+    return;
+  }
+
+  if (request.method === 'PUT' && pathname === '/api/admin/shops') {
+    await requireUser(request, 'admin');
+    const body = await readBody(request);
+    send(response, 200, { shop: await saveShop(body) });
+    return;
+  }
+
+  const shopStatusMatch = pathname.match(/^\/api\/admin\/shops\/([a-z0-9-]{1,100})\/status$/);
+  if (request.method === 'PATCH' && shopStatusMatch) {
+    await requireUser(request, 'admin');
+    const body = await readBody(request);
+    if (typeof body.isActive !== 'boolean') throw new HttpError(400, 'Trạng thái cửa hàng không hợp lệ.');
+    const result = await pool.query(
+      'UPDATE shops SET is_active = $1, data = jsonb_set(data, \'{isActive}\', to_jsonb($1::boolean), true), updated_at = NOW() WHERE id = $2 RETURNING data, is_active AS "isActive"',
+      [body.isActive, shopStatusMatch[1]],
+    );
+    if (!result.rowCount) throw new HttpError(404, 'Không tìm thấy cửa hàng.');
+    send(response, 200, { shop: { ...result.rows[0].data, isActive: result.rows[0].isActive } });
     return;
   }
 
@@ -279,6 +345,169 @@ async function route(request, response) {
     return;
   }
 
+  if (request.method === 'GET' && pathname === '/api/aquariums') {
+    const user = await requireUser(request, 'customer');
+    const result = await pool.query(
+      `SELECT a.id, a.name, a.volume_liters AS "volumeLiters", a.fish_ids AS "fishIds",
+              a.created_at AS "createdAt",
+              COALESCE((SELECT jsonb_agg(jsonb_build_object(
+                'id', t.id, 'title', t.title, 'dueDate', t.due_date,
+                'cadenceDays', t.cadence_days, 'completedAt', t.completed_at
+              ) ORDER BY t.completed_at NULLS FIRST, t.due_date) FROM care_tasks t WHERE t.aquarium_id = a.id), '[]'::jsonb) AS tasks,
+              COALESCE((SELECT jsonb_agg(jsonb_build_object(
+                'id', l.id, 'title', l.title, 'note', l.note, 'completedAt', l.completed_at
+              ) ORDER BY l.completed_at DESC) FROM care_logs l WHERE l.aquarium_id = a.id), '[]'::jsonb) AS logs
+         FROM aquariums a WHERE a.user_id = $1 ORDER BY a.created_at DESC`,
+      [user.id],
+    );
+    send(response, 200, { aquariums: result.rows });
+    return;
+  }
+
+  if (request.method === 'POST' && pathname === '/api/aquariums') {
+    const user = await requireUser(request, 'customer');
+    const body = await readBody(request);
+    const name = String(body.name || '').trim();
+    const volumeLiters = Number(body.volumeLiters);
+    const fishIds = Array.isArray(body.fishIds) ? [...new Set(body.fishIds)] : [];
+    if (!name || name.length > 100 || !Number.isInteger(volumeLiters) || volumeLiters < 1 || volumeLiters > 1000000) {
+      throw new HttpError(400, 'Nhập tên bể và dung tích nguyên từ 1 đến 1.000.000 lít.');
+    }
+    if (fishIds.length > 50 || fishIds.some((id) => typeof id !== 'string')) throw new HttpError(400, 'Danh sách cá trong bể không hợp lệ.');
+    if (fishIds.length) {
+      const found = await pool.query('SELECT id FROM fish WHERE id = ANY($1::varchar[])', [fishIds]);
+      if (found.rowCount !== fishIds.length) throw new HttpError(400, 'Danh sách có loài cá không tồn tại.');
+    }
+    const result = await pool.query(
+      'INSERT INTO aquariums (user_id, name, volume_liters, fish_ids) VALUES ($1, $2, $3, $4::jsonb) RETURNING id, name, volume_liters AS "volumeLiters", fish_ids AS "fishIds", created_at AS "createdAt"',
+      [user.id, name, volumeLiters, JSON.stringify(fishIds)],
+    );
+    send(response, 201, { aquarium: { ...result.rows[0], tasks: [], logs: [] } });
+    return;
+  }
+
+  const aquariumMatch = pathname.match(/^\/api\/aquariums\/(\d+)$/);
+  if (request.method === 'DELETE' && aquariumMatch) {
+    const user = await requireUser(request, 'customer');
+    const result = await pool.query('DELETE FROM aquariums WHERE id = $1 AND user_id = $2 RETURNING id', [aquariumMatch[1], user.id]);
+    if (!result.rowCount) throw new HttpError(404, 'Không tìm thấy bể cá của bạn.');
+    send(response, 200, { id: result.rows[0].id });
+    return;
+  }
+
+  const aquariumTasksMatch = pathname.match(/^\/api\/aquariums\/(\d+)\/(tasks|logs)$/);
+  if (request.method === 'POST' && aquariumTasksMatch) {
+    const user = await requireUser(request, 'customer');
+    const aquariumId = aquariumTasksMatch[1];
+    const body = await readBody(request);
+    const owner = await pool.query('SELECT id FROM aquariums WHERE id = $1 AND user_id = $2', [aquariumId, user.id]);
+    if (!owner.rowCount) throw new HttpError(404, 'Không tìm thấy bể cá của bạn.');
+    const title = String(body.title || '').trim();
+    if (!title || title.length > 160) throw new HttpError(400, 'Tên công việc cần từ 1 đến 160 ký tự.');
+    if (aquariumTasksMatch[2] === 'tasks') {
+      const dueDate = String(body.dueDate || '');
+      const cadenceDays = body.cadenceDays === '' || body.cadenceDays == null ? null : Number(body.cadenceDays);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(dueDate) || (cadenceDays !== null && (!Number.isInteger(cadenceDays) || cadenceDays < 1 || cadenceDays > 365))) {
+        throw new HttpError(400, 'Chọn ngày đến hạn hợp lệ; chu kỳ lặp cần từ 1 đến 365 ngày.');
+      }
+      const result = await pool.query(
+        'INSERT INTO care_tasks (aquarium_id, title, due_date, cadence_days) VALUES ($1, $2, $3, $4) RETURNING id, title, due_date AS "dueDate", cadence_days AS "cadenceDays", completed_at AS "completedAt"',
+        [aquariumId, title, dueDate, cadenceDays],
+      );
+      send(response, 201, { task: result.rows[0] });
+    } else {
+      const note = String(body.note || '').trim().slice(0, 2000);
+      const result = await pool.query(
+        'INSERT INTO care_logs (aquarium_id, user_id, title, note) VALUES ($1, $2, $3, $4) RETURNING id, title, note, completed_at AS "completedAt"',
+        [aquariumId, user.id, title, note],
+      );
+      send(response, 201, { log: result.rows[0] });
+    }
+    return;
+  }
+
+  const completeTaskMatch = pathname.match(/^\/api\/aquariums\/(\d+)\/tasks\/(\d+)\/complete$/);
+  if (request.method === 'POST' && completeTaskMatch) {
+    const user = await requireUser(request, 'customer');
+    const aquariumId = completeTaskMatch[1];
+    const taskId = completeTaskMatch[2];
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      const taskResult = await client.query(
+        `SELECT t.id, t.title, t.cadence_days AS "cadenceDays" FROM care_tasks t
+          JOIN aquariums a ON a.id = t.aquarium_id
+         WHERE t.id = $1 AND t.aquarium_id = $2 AND a.user_id = $3 AND t.completed_at IS NULL FOR UPDATE`,
+        [taskId, aquariumId, user.id],
+      );
+      if (!taskResult.rowCount) throw new HttpError(404, 'Không tìm thấy công việc chưa hoàn tất.');
+      const task = taskResult.rows[0];
+      const log = await client.query(
+        'INSERT INTO care_logs (aquarium_id, user_id, task_id, title) VALUES ($1, $2, $3, $4) RETURNING id, title, note, completed_at AS "completedAt"',
+        [aquariumId, user.id, taskId, task.title],
+      );
+      const updated = task.cadenceDays
+        ? await client.query('UPDATE care_tasks SET due_date = GREATEST(due_date, CURRENT_DATE) + cadence_days WHERE id = $1 RETURNING id, title, due_date AS "dueDate", cadence_days AS "cadenceDays", completed_at AS "completedAt"', [taskId])
+        : await client.query('UPDATE care_tasks SET completed_at = NOW() WHERE id = $1 RETURNING id, title, due_date AS "dueDate", cadence_days AS "cadenceDays", completed_at AS "completedAt"', [taskId]);
+      await client.query('COMMIT');
+      send(response, 200, { task: updated.rows[0], log: log.rows[0] });
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally { client.release(); }
+    return;
+  }
+
+  if (request.method === 'POST' && pathname === '/api/reports') {
+    const user = await requireUser(request, 'customer');
+    const body = await readBody(request);
+    const targetType = String(body.targetType || '');
+    const targetId = String(body.targetId || '').trim();
+    const targetLabel = String(body.targetLabel || '').trim();
+    const message = String(body.message || '').trim();
+    if (!['fish', 'shop'].includes(targetType) || !targetId || targetId.length > 100 || !targetLabel || targetLabel.length > 200 || message.length < 10 || message.length > 2000) {
+      throw new HttpError(400, 'Chọn nội dung cần góp ý và nhập mô tả từ 10 đến 2.000 ký tự.');
+    }
+    if (targetType === 'fish') {
+      const exists = await pool.query('SELECT 1 FROM fish WHERE id = $1', [targetId]);
+      if (!exists.rowCount) throw new HttpError(404, 'Không tìm thấy hồ sơ cá này.');
+    }
+    const result = await pool.query(
+      'INSERT INTO content_reports (user_id, target_type, target_id, target_label, message) VALUES ($1, $2, $3, $4, $5) RETURNING id, status, created_at AS "createdAt"',
+      [user.id, targetType, targetId, targetLabel, message],
+    );
+    send(response, 201, { report: result.rows[0] });
+    return;
+  }
+
+  if (request.method === 'GET' && pathname === '/api/admin/reports') {
+    await requireUser(request, 'admin');
+    const result = await pool.query(
+      `SELECT r.id, r.target_type AS "targetType", r.target_id AS "targetId", r.target_label AS "targetLabel",
+              r.message, r.status, r.admin_note AS "adminNote", r.created_at AS "createdAt",
+              u.display_name AS "userName", u.email AS "userEmail"
+         FROM content_reports r JOIN users u ON u.id = r.user_id ORDER BY r.created_at DESC LIMIT 500`,
+    );
+    send(response, 200, { reports: result.rows });
+    return;
+  }
+
+  const reportMatch = pathname.match(/^\/api\/admin\/reports\/(\d+)$/);
+  if (request.method === 'PATCH' && reportMatch) {
+    await requireUser(request, 'admin');
+    const body = await readBody(request);
+    const status = String(body.status || '');
+    const adminNote = String(body.adminNote || '').trim().slice(0, 2000);
+    if (!['open', 'reviewing', 'resolved', 'dismissed'].includes(status)) throw new HttpError(400, 'Trạng thái báo cáo không hợp lệ.');
+    const result = await pool.query(
+      'UPDATE content_reports SET status = $1, admin_note = $2, updated_at = NOW() WHERE id = $3 RETURNING id, status, admin_note AS "adminNote"',
+      [status, adminNote, reportMatch[1]],
+    );
+    if (!result.rowCount) throw new HttpError(404, 'Không tìm thấy báo cáo.');
+    send(response, 200, { report: result.rows[0] });
+    return;
+  }
+
   if (request.method === 'PUT' && pathname === '/api/admin/fish') {
     await requireUser(request, 'admin');
     const body = await readBody(request);
@@ -333,13 +562,100 @@ async function start() {
   await pool.query(qualityMigration);
   const catalogMigration = await readFile(new URL('./db/migrations/006_complete_initial_fish_catalog.sql', import.meta.url), 'utf8');
   await pool.query(catalogMigration);
+  const workspaceMigration = await readFile(new URL('./db/migrations/007_customer_workspace.sql', import.meta.url), 'utf8');
+  await pool.query(workspaceMigration);
+  const familyMigration = await readFile(new URL('./db/migrations/008_catalog_family_groups.sql', import.meta.url), 'utf8');
+  await pool.query(familyMigration);
+  const shopsMigration = await readFile(new URL('./db/migrations/010_shop_directory.sql', import.meta.url), 'utf8');
+  await pool.query(shopsMigration);
+  const legacySpeciesFamilies = {
+    'molly': 'livebearer', 'swordtail': 'livebearer', 'zebra-danio': 'danio', 'white-cloud-minnow': 'danio',
+    'harlequin-rasbora': 'rasbora', 'cherry-barb': 'barb', 'tiger-barb': 'barb', 'pearl-gourami': 'gourami',
+    'dwarf-gourami': 'gourami', 'discus': 'cichlid', 'oscar': 'cichlid', 'koi': 'coldwater', 'corydoras': 'catfish',
+    'bristlenose-pleco': 'catfish', 'common-pleco': 'catfish', 'kuhli-loach': 'loach', 'siamese-algae-eater': 'other',
+    'rainbow-shark': 'shark', 'flowerhorn': 'cichlid', 'silver-arowana': 'tankbuster', 'glowlight-tetra': 'tetra',
+    'black-skirt-tetra': 'tetra', 'electric-blue-ram': 'cichlid', 'redtail-shark': 'shark', 'common-carp-koi': 'coldwater',
+  };
+  for (const [id, family] of Object.entries(legacySpeciesFamilies)) {
+    await pool.query(
+      `UPDATE fish SET data = jsonb_set(data, '{family}', to_jsonb($2::text), true)
+        WHERE id = $1 AND NOT (data ? 'family')`,
+      [id, family],
+    );
+  }
 
-  const seedResult = await pool.query('SELECT COUNT(*)::int AS count FROM fish');
-  if (seedResult.rows[0].count === 0) {
-    const seedFish = JSON.parse(await readFile(new URL('./db/seeds/fish.json', import.meta.url), 'utf8'));
-    for (const [index, item] of seedFish.entries()) {
-      await pool.query('INSERT INTO fish (id, data, sort_order) VALUES ($1, $2::jsonb, $3)', [item.id, JSON.stringify(item), index]);
+  const catalogSchemaMigration = await readFile(new URL('./db/migrations/009_expand_freshwater_catalog.sql', import.meta.url), 'utf8');
+  await pool.query(catalogSchemaMigration);
+  const seedFish = JSON.parse(await readFile(new URL('./db/seeds/fish.json', import.meta.url), 'utf8'));
+  const catalogUpdate = await pool.query('SELECT 1 FROM schema_migrations WHERE version = $1', ['009_expand_freshwater_catalog']);
+  if (!catalogUpdate.rowCount) {
+    // This is a one-time catalog upgrade, not a recurring seed. It never overwrites
+    // an existing admin profile and won't re-add fish an admin removes later.
+    const newProfiles = seedFish.filter((item) => item.dataStatus === 'needs-review');
+    for (const [index, item] of newProfiles.entries()) {
+      await pool.query(
+        'INSERT INTO fish (id, data, sort_order) VALUES ($1, $2::jsonb, (SELECT COALESCE(MAX(sort_order) + 1, 0) FROM fish)) ON CONFLICT (id) DO NOTHING',
+        [item.id, JSON.stringify(item)],
+      );
     }
+    await pool.query('INSERT INTO schema_migrations (version) VALUES ($1) ON CONFLICT DO NOTHING', ['009_expand_freshwater_catalog']);
+  }
+
+  const shopSeedUpdate = await pool.query('SELECT 1 FROM schema_migrations WHERE version = $1', ['010_shop_directory']);
+  if (!shopSeedUpdate.rowCount) {
+    const seedShops = JSON.parse(await readFile(new URL('./db/seeds/shops.json', import.meta.url), 'utf8'));
+    for (const shop of seedShops) {
+      await pool.query(
+        'INSERT INTO shops (id, data, is_active, sort_order) VALUES ($1, $2::jsonb, $3, $4) ON CONFLICT (id) DO NOTHING',
+        [shop.id, JSON.stringify(shop), shop.isActive !== false, seedShops.indexOf(shop)],
+      );
+    }
+    await pool.query('INSERT INTO schema_migrations (version) VALUES ($1) ON CONFLICT DO NOTHING', ['010_shop_directory']);
+  }
+
+  const fishRepairMigration = await readFile(new URL('./db/migrations/011_freshwater_fish_and_images.sql', import.meta.url), 'utf8');
+  await pool.query(fishRepairMigration);
+  const fishRepairUpdate = await pool.query('SELECT 1 FROM schema_migrations WHERE version = $1', ['011_freshwater_fish_and_images']);
+  if (!fishRepairUpdate.rowCount) {
+    // Add new profiles once; existing/admin-edited fish are kept. Image repairs
+    // below intentionally replace only the two image fields and their credits.
+    const expandedSeed = JSON.parse(await readFile(new URL('./db/seeds/fish.json', import.meta.url), 'utf8'));
+    for (const item of expandedSeed.filter((profile) => profile.dataStatus === 'needs-review')) {
+      await pool.query(
+        'INSERT INTO fish (id, data, sort_order) VALUES ($1, $2::jsonb, (SELECT COALESCE(MAX(sort_order) + 1, 0) FROM fish)) ON CONFLICT (id) DO NOTHING',
+        [item.id, JSON.stringify(item)],
+      );
+    }
+    const imageFixes = JSON.parse(await readFile(new URL('./db/seeds/fish-image-fixes.json', import.meta.url), 'utf8'));
+    for (const fix of imageFixes) {
+      await pool.query(
+        `UPDATE fish
+            SET data = jsonb_set(jsonb_set(jsonb_set(data, '{image}', to_jsonb($2::text), true),
+                '{imageSource}', to_jsonb($3::text), true), '{imageCredit}', to_jsonb($4::text), true),
+                updated_at = NOW()
+          WHERE id = $1`,
+        [fix.id, fix.image, fix.imageSource, fix.imageCredit],
+      );
+    }
+    await pool.query('INSERT INTO schema_migrations (version) VALUES ($1) ON CONFLICT DO NOTHING', ['011_freshwater_fish_and_images']);
+  }
+
+  const moreImageRepairMigration = await readFile(new URL('./db/migrations/012_repair_more_fish_images.sql', import.meta.url), 'utf8');
+  await pool.query(moreImageRepairMigration);
+  const moreImageRepairUpdate = await pool.query('SELECT 1 FROM schema_migrations WHERE version = $1', ['012_repair_more_fish_images']);
+  if (!moreImageRepairUpdate.rowCount) {
+    const imageFixes = JSON.parse(await readFile(new URL('./db/seeds/fish-image-fixes.json', import.meta.url), 'utf8'));
+    for (const fix of imageFixes) {
+      await pool.query(
+        `UPDATE fish
+            SET data = jsonb_set(jsonb_set(jsonb_set(data, '{image}', to_jsonb($2::text), true),
+                '{imageSource}', to_jsonb($3::text), true), '{imageCredit}', to_jsonb($4::text), true),
+                updated_at = NOW()
+          WHERE id = $1`,
+        [fix.id, fix.image, fix.imageSource, fix.imageCredit],
+      );
+    }
+    await pool.query('INSERT INTO schema_migrations (version) VALUES ($1) ON CONFLICT DO NOTHING', ['012_repair_more_fish_images']);
   }
 
   const adminPassword = process.env.ADMIN_PASSWORD || 'aqua-demo';

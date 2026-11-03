@@ -4,11 +4,15 @@ import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import Favorite from '@mui/icons-material/Favorite';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import { useState } from 'react';
 
 function FishCard({ fish, saved, onSelectFish, onToggleFavorite, canSave, comparing, onToggleCompare }) {
+  const [imageSource, setImageSource] = useState(fish.image);
+
   return (
     <Card className="fish-card" elevation={0}>
-      <div className="fish-image" style={{ backgroundImage: `linear-gradient(0deg, #102c273b, transparent 45%), url("${fish.image}")` }}>
+      <div className="fish-image">
+        <img className="fish-card-photo" src={imageSource} alt={fish.name} loading="lazy" onError={() => setImageSource('/images/fish-placeholder.svg')} />
         <span className="card-tag">{fish.category}</span>
         {canSave !== 'hidden' && <IconButton className={`heart ${saved ? 'saved' : ''}`} aria-label={saved ? `Bỏ lưu ${fish.name}` : canSave ? `Lưu ${fish.name}` : `Đăng nhập để lưu ${fish.name}`} aria-pressed={saved} onClick={() => onToggleFavorite(fish.id)}>
           {saved ? <Favorite /> : <FavoriteBorder />}

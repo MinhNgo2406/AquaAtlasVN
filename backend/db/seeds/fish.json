@@ -31,7 +31,8 @@
         "label": "OATA — chăm sóc cá betta",
         "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-siamese-fighting-fish-bettas/"
       }
-    ]
+    ],
+    "family": "betta"
   },
   {
     "id": "guppy",
@@ -69,7 +70,8 @@
         "label": "FishBase — Poecilia reticulata",
         "url": "https://www.fishbase.se/summary/Poecilia-reticulata"
       }
-    ]
+    ],
+    "family": "livebearer"
   },
   {
     "id": "neon",
@@ -108,7 +110,8 @@
         "label": "FishBase — Paracheirodon innesi",
         "url": "https://www.fishbase.se/summary/Paracheirodon-innesi"
       }
-    ]
+    ],
+    "family": "tetra"
   },
   {
     "id": "boesemani-rainbowfish",
@@ -143,7 +146,8 @@
         "label": "FishBase — Melanotaenia boesemani",
         "url": "https://www.fishbase.se/summary/Melanotaenia-boesemani.html"
       }
-    ]
+    ],
+    "family": "rainbowfish"
   },
   {
     "id": "cardinal-tetra",
@@ -178,7 +182,8 @@
         "label": "FishBase — Paracheirodon axelrodi",
         "url": "https://www.fishbase.se/summary/Paracheirodon-axelrodi.html"
       }
-    ]
+    ],
+    "family": "tetra"
   },
   {
     "id": "ember-tetra",
@@ -213,7 +218,8 @@
         "label": "FishBase — Hyphessobrycon amandae",
         "url": "https://www.fishbase.se/summary/Hyphessobrycon-amandae.html"
       }
-    ]
+    ],
+    "family": "tetra"
   },
   {
     "id": "rummy-nose-tetra",
@@ -248,7 +254,8 @@
         "label": "FishBase — Petitella bleheri",
         "url": "https://www.fishbase.se/summary/Petitella-bleheri.html"
       }
-    ]
+    ],
+    "family": "tetra"
   },
   {
     "id": "platy",
@@ -287,7 +294,8 @@
         "label": "FishBase — Xiphophorus maculatus",
         "url": "https://www.fishbase.se/summary/Xiphophorus_maculatus.html"
       }
-    ]
+    ],
+    "family": "livebearer"
   },
   {
     "id": "goldfish",
@@ -321,7 +329,8 @@
         "label": "OATA — chăm sóc cá vàng",
         "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-coldwater-fish/how-to-look-after-goldfish-in-an-aquarium-fishtank/"
       }
-    ]
+    ],
+    "family": "coldwater"
   },
   {
     "id": "angelfish",
@@ -358,6 +367,1267 @@
       {
         "label": "FishBase — Pterophyllum scalare",
         "url": "https://www.fishbase.se/summary/Pterophyllum-scalare.html"
+      }
+    ],
+    "family": "cichlid"
+  },
+  {
+    "id": "molly",
+    "name": "Cá molly (hắc molly)",
+    "scientificName": "Poecilia sphenops",
+    "family": "livebearer",
+    "description": "CÁ ĐẺ CON · Khoảng 6–10cm tùy giống",
+    "group": "tropical",
+    "level": "easy",
+    "category": "NƯỚC NGỌT · CÁ ĐẺ CON",
+    "difficulty": "Dễ bắt đầu",
+    "summary": "Khoảng 6–10cm tùy giống",
+    "tank": "Từ 60L cho một nhóm nhỏ; thích nước khoáng vừa đến cứng",
+    "minTankLiters": 60,
+    "temperature": "22–28°C (tham khảo nhóm cá đẻ con)",
+    "ph": "7.0–8.2",
+    "temperament": "peaceful",
+    "compatibilityGroup": "community",
+    "groupSize": "Nuôi nhóm; tỷ lệ cá cái nhiều hơn cá đực giúp giảm rượt đuổi.",
+    "food": "Thức ăn tạp dạng viên/flakes, bổ sung thành phần thực vật.",
+    "compatibility": "Ghép với cá hiền chịu cùng dải nước; tránh loài quá nhút nhát hoặc cá lớn săn mồi.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/PoeciliaSphenops.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:PoeciliaSphenops.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá đẻ con (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-guppies-and-mollies/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "swordtail",
+    "name": "Cá kiếm (hồng kim)",
+    "scientificName": "Xiphophorus hellerii",
+    "family": "livebearer",
+    "description": "CÁ ĐẺ CON · Có thể dài khoảng 10–12cm",
+    "group": "tropical",
+    "level": "easy",
+    "category": "NƯỚC NGỌT · CÁ ĐẺ CON",
+    "difficulty": "Dễ bắt đầu",
+    "summary": "Có thể dài khoảng 10–12cm",
+    "tank": "Từ 60L cho nhóm; cần nắp bể vì cá có thể nhảy",
+    "minTankLiters": 60,
+    "temperature": "22–28°C (tham khảo nhóm cá đẻ con)",
+    "ph": "7.0–8.2",
+    "temperament": "active",
+    "compatibilityGroup": "community",
+    "groupSize": "Nuôi theo nhóm và tránh để một cá cái bị nhiều cá đực theo đuổi.",
+    "food": "Thức ăn tạp; viên/flakes phù hợp và một phần thức ăn thực vật.",
+    "compatibility": "Cá bơi khỏe; ghép với loài hiền có kích thước tương tự, tránh cá vây dài dễ bị rượt.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Xiphophorus%20hellerii%20-%20male%20and%20female.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Xiphophorus%20hellerii%20-%20male%20and%20female.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá đẻ con (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-platies-and-swordtails/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "zebra-danio",
+    "name": "Cá sọc ngựa",
+    "scientificName": "Danio rerio",
+    "family": "danio",
+    "description": "DANIO · Khoảng 4–5cm",
+    "group": "tropical",
+    "level": "easy",
+    "category": "NƯỚC NGỌT · DANIO",
+    "difficulty": "Dễ bắt đầu",
+    "summary": "Khoảng 4–5cm",
+    "tank": "Từ 45L cho đàn nhỏ; bể dài và có nắp",
+    "minTankLiters": 45,
+    "temperature": "18–26°C (tham khảo nhóm danio)",
+    "ph": "6.5–8.0",
+    "temperament": "active",
+    "compatibilityGroup": "community",
+    "groupSize": "Cá đàn; nuôi từ 5–6 con để phân tán hành vi rượt đuổi.",
+    "food": "Thức ăn viên/flakes nhỏ; bổ sung thức ăn đông lạnh cỡ nhỏ.",
+    "compatibility": "Ghép với cá bơi khỏe có kích thước gần nhau; tránh cá chậm, vây dài.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Danio%20rerio.JPG?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Danio%20rerio.JPG",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm danio (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-danios-and-white-cloud-mountain-minnows/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "white-cloud-minnow",
+    "name": "Cá mây trắng",
+    "scientificName": "Tanichthys albonubes",
+    "family": "danio",
+    "description": "DANIO · Khoảng 3–4cm",
+    "group": "tropical",
+    "level": "easy",
+    "category": "NƯỚC NGỌT · DANIO",
+    "difficulty": "Dễ bắt đầu",
+    "summary": "Khoảng 3–4cm",
+    "tank": "Từ 45L cho đàn; có thể sống trong bể mát đã ổn định",
+    "minTankLiters": 45,
+    "temperature": "14–22°C (tham khảo nhóm cá nước mát)",
+    "ph": "6.0–8.0",
+    "temperament": "peaceful",
+    "compatibilityGroup": "coldwater-community",
+    "groupSize": "Cá đàn; nuôi ít nhất 6 con và chừa khoảng bơi.",
+    "food": "Thức ăn tạp cỡ nhỏ; cho lượng vừa đủ.",
+    "compatibility": "Ghép với cá nước mát có kích thước và tính khí tương tự; không ghép bừa với cá nhiệt đới cần nước nóng.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Tanichthys-albonubes.jpg?width=1200",
+    "imageCredit": "Corydoras-adolfoi · CC BY-SA 4.0 · Wikimedia Commons",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Tanichthys-albonubes.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm danio (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-danios-and-white-cloud-mountain-minnows/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "harlequin-rasbora",
+    "name": "Cá tam giác",
+    "scientificName": "Trigonostigma heteromorpha",
+    "family": "rasbora",
+    "description": "RASBORA · Khoảng 4–5cm",
+    "group": "tropical",
+    "level": "easy",
+    "category": "NƯỚC NGỌT · RASBORA",
+    "difficulty": "Dễ bắt đầu",
+    "summary": "Khoảng 4–5cm",
+    "tank": "Từ 45L cho đàn nhỏ; bể có cây và khoảng bơi",
+    "minTankLiters": 45,
+    "temperature": "22–27°C (tham khảo nhóm rasbora)",
+    "ph": "6.0–8.0",
+    "temperament": "peaceful",
+    "compatibilityGroup": "community",
+    "groupSize": "Cá đàn; nuôi từ 6 con trở lên.",
+    "food": "Thức ăn flakes/viên nhỏ và thức ăn đông lạnh cỡ nhỏ.",
+    "compatibility": "Cá hiền, hợp bể cộng đồng với loài nhỏ và ôn hòa.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/01.Rasbora%20heteromorpha.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:01.Rasbora%20heteromorpha.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm rasbora (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-rasboras/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "cherry-barb",
+    "name": "Cá barb anh đào",
+    "scientificName": "Puntius titteya",
+    "family": "barb",
+    "description": "BARB · Khoảng 5cm",
+    "group": "tropical",
+    "level": "easy",
+    "category": "NƯỚC NGỌT · BARB",
+    "difficulty": "Dễ bắt đầu",
+    "summary": "Khoảng 5cm",
+    "tank": "Từ 60L cho đàn nhỏ, có cây và vùng bơi thoáng",
+    "minTankLiters": 60,
+    "temperature": "22–27°C (tham khảo nhóm barb)",
+    "ph": "6.0–8.0",
+    "temperament": "peaceful",
+    "compatibilityGroup": "community",
+    "groupSize": "Nuôi đàn từ 6 con; cá đực lên màu rõ khi được chăm sóc tốt.",
+    "food": "Thức ăn tạp dạng nhỏ; luân phiên thức ăn phù hợp.",
+    "compatibility": "Tương đối hiền so với nhiều loài barb; chọn bạn bể nhỏ, ôn hòa.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Cherry%20barb%2C%20Puntius%20titteya.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Cherry%20barb%2C%20Puntius%20titteya.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm barb (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-barbs/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "tiger-barb",
+    "name": "Cá tứ vân (barb hổ)",
+    "scientificName": "Puntigrus tetrazona",
+    "family": "barb",
+    "description": "BARB · Khoảng 6–7cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · BARB",
+    "difficulty": "Cần chọn bạn bể kỹ",
+    "summary": "Khoảng 6–7cm",
+    "tank": "Từ 80L cho đàn đủ lớn; bể dài để bơi",
+    "minTankLiters": 80,
+    "temperature": "22–27°C (tham khảo nhóm barb)",
+    "ph": "6.0–8.0",
+    "temperament": "active",
+    "compatibilityGroup": "large-community",
+    "groupSize": "Cá đàn; đàn nhỏ dễ rượt và rỉa vây cá khác.",
+    "food": "Thức ăn tạp dạng nhỏ; tránh cho ăn dư.",
+    "compatibility": "Có thể rỉa vây; không ghép với cá vây dài, chậm bơi hoặc quá nhỏ.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Puntius%20tetrazona%20(aka).jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Puntius%20tetrazona%20(aka).jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm barb (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-barbs/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "pearl-gourami",
+    "name": "Cá sặc gấm",
+    "scientificName": "Trichopodus leerii",
+    "family": "gourami",
+    "description": "CÁ SẶC · Có thể dài khoảng 10–12cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CÁ SẶC",
+    "difficulty": "Cần môi trường ổn định",
+    "summary": "Có thể dài khoảng 10–12cm",
+    "tank": "Từ 100L cho nhóm nhỏ; cây thủy sinh và mặt nước yên",
+    "minTankLiters": 100,
+    "temperature": "24–28°C (tham khảo nhóm gourami)",
+    "ph": "6.0–8.0",
+    "temperament": "peaceful",
+    "compatibilityGroup": "community",
+    "groupSize": "Nuôi một cá đực với cá cái hoặc chọn đàn có không gian phù hợp.",
+    "food": "Thức ăn tạp dạng viên/flakes; bổ sung thức ăn đông lạnh phù hợp.",
+    "compatibility": "Thường ôn hòa; tránh ghép với loài quá hiếu động hoặc hay cắn vây.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Trichopodus_leerii.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Trichopodus_leerii.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá sặc (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-gouramis-and-paradise-fish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "dwarf-gourami",
+    "name": "Cá sặc lửa (sặc gấm lùn)",
+    "scientificName": "Trichogaster lalius",
+    "family": "gourami",
+    "description": "CÁ SẶC · Khoảng 7–9cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CÁ SẶC",
+    "difficulty": "Cần chú ý nguồn cá và chất lượng nước",
+    "summary": "Khoảng 7–9cm",
+    "tank": "Từ 60L cho một cá hoặc cặp; cần nơi trú và mặt nước yên",
+    "minTankLiters": 60,
+    "temperature": "24–28°C (tham khảo nhóm gourami)",
+    "ph": "6.0–8.0",
+    "temperament": "peaceful",
+    "compatibilityGroup": "community",
+    "groupSize": "Cá đực có thể tranh chấp; tránh nuôi nhiều cá đực trong bể nhỏ.",
+    "food": "Thức ăn tạp cỡ nhỏ; thay đổi khẩu phần vừa phải.",
+    "compatibility": "Ghép với cá nhỏ hiền; tránh bạn bể quá nhanh hoặc hung dữ.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Trichogaster_lalius.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Trichogaster_lalius.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá sặc (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-gouramis-and-paradise-fish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "discus",
+    "name": "Cá dĩa (cá đĩa)",
+    "scientificName": "Symphysodon aequifasciatus",
+    "family": "cichlid",
+    "description": "CICHLID · Có thể đạt khoảng 15–20cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CICHLID",
+    "difficulty": "Cần kinh nghiệm và chăm nước kỹ",
+    "summary": "Có thể đạt khoảng 15–20cm",
+    "tank": "Từ 250L cho nhóm; cần bể cao, lọc tốt và nước ổn định",
+    "minTankLiters": 250,
+    "temperature": "26–30°C (tham khảo nhóm discus)",
+    "ph": "6.0–7.5",
+    "temperament": "peaceful",
+    "compatibilityGroup": "large-community",
+    "groupSize": "Cá sống theo nhóm; không nên nuôi đơn lẻ trong bể nhỏ.",
+    "food": "Thức ăn chuyên dụng chất lượng; chia lượng nhỏ và giữ nước sạch.",
+    "compatibility": "Chọn bạn bể chịu nhiệt độ cao và hiền; tránh ghép loài tranh thức ăn mạnh.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Discus_Fish.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Discus_Fish.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cichlid (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-discus/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "oscar",
+    "name": "Cá Oscar (cá hề mắt)",
+    "scientificName": "Astronotus ocellatus",
+    "family": "cichlid",
+    "description": "CICHLID · Có thể đạt khoảng 30–35cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CICHLID",
+    "difficulty": "Cần bể lớn",
+    "summary": "Có thể đạt khoảng 30–35cm",
+    "tank": "Từ 300L cho một cá trưởng thành; lọc mạnh và nhiều khoảng bơi",
+    "minTankLiters": 300,
+    "temperature": "24–28°C (tham khảo cichlid Mỹ)",
+    "ph": "6.0–8.0",
+    "temperament": "semi-aggressive",
+    "compatibilityGroup": "large-community",
+    "groupSize": "Nuôi một cá hoặc cặp tương thích; cần tính kích thước trưởng thành.",
+    "food": "Thức ăn cichlid lớn chất lượng; khẩu phần phù hợp, không dùng cá mồi không rõ nguồn.",
+    "compatibility": "Có thể ăn cá nhỏ và bảo vệ lãnh thổ; chỉ ghép với cá lớn, tương thích.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/A_photo_of_an_oscar_fish_(Astronotus_ocellatus)_in_a_aquarium.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:A_photo_of_an_oscar_fish_(Astronotus_ocellatus)_in_a_aquarium.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cichlid (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-american-cichlids/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "koi",
+    "name": "Cá Koi (chép Nhật)",
+    "scientificName": "Cyprinus carpio",
+    "family": "coldwater",
+    "description": "NƯỚC MÁT · Có thể dài trên 60cm khi trưởng thành",
+    "group": "coldwater",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · NƯỚC MÁT",
+    "difficulty": "Cần hồ lớn và lọc chuyên dụng",
+    "summary": "Có thể dài trên 60cm khi trưởng thành",
+    "tank": "Nuôi hồ ngoài trời lớn, thường từ 1.000L cho cá nhỏ; cần tính theo kích thước trưởng thành",
+    "minTankLiters": 1000,
+    "temperature": "3–30°C; tránh biến động đột ngột",
+    "ph": "7.0–8.5",
+    "temperament": "peaceful",
+    "compatibilityGroup": "coldwater-community",
+    "groupSize": "Cá lớn, tải sinh học cao; cần hồ sâu và lọc sinh học mạnh.",
+    "food": "Thức ăn chuyên cho Koi theo mùa và nhiệt độ nước.",
+    "compatibility": "Chỉ ghép với cá hồ lớn chịu cùng điều kiện; hồ nhỏ/bể kính không phù hợp lâu dài.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Koi_carp._(Cyprinus_carpio)_(27986997703).jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Koi_carp._(Cyprinus_carpio)_(27986997703).jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm nước mát (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-coldwater-fish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "corydoras",
+    "name": "Cá chuột Corydoras",
+    "scientificName": "Corydoras paleatus",
+    "family": "catfish",
+    "description": "CÁ DA TRƠN · Khoảng 5–7cm tùy loài",
+    "group": "tropical",
+    "level": "easy",
+    "category": "NƯỚC NGỌT · CÁ DA TRƠN",
+    "difficulty": "Dễ bắt đầu nếu nền bể phù hợp",
+    "summary": "Khoảng 5–7cm tùy loài",
+    "tank": "Từ 60L cho đàn; nền cát mịn và đáy sạch",
+    "minTankLiters": 60,
+    "temperature": "20–26°C (tham khảo cá da trơn nhỏ)",
+    "ph": "6.0–8.0",
+    "temperament": "peaceful",
+    "compatibilityGroup": "community",
+    "groupSize": "Cá sống theo nhóm; nuôi từ 6 con cùng loài.",
+    "food": "Viên chìm dành cho cá đáy; không chỉ dựa vào thức ăn thừa.",
+    "compatibility": "Cá hiền tầng đáy; ghép với loài ôn hòa, tránh cá săn mồi.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Corydoras_paleatus_2007.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Corydoras_paleatus_2007.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá da trơn (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-freshwater-catfish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "bristlenose-pleco",
+    "name": "Cá lau kiếng mũi lông",
+    "scientificName": "Ancistrus sp.",
+    "family": "catfish",
+    "description": "CÁ DA TRƠN · Khoảng 10–15cm tùy dòng",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CÁ DA TRƠN",
+    "difficulty": "Cần chỗ trú và chế độ ăn phù hợp",
+    "summary": "Khoảng 10–15cm tùy dòng",
+    "tank": "Từ 100L cho một cá trưởng thành; có hang trú và lũa",
+    "minTankLiters": 100,
+    "temperature": "22–27°C (tham khảo cá da trơn nhiệt đới)",
+    "ph": "6.0–8.0",
+    "temperament": "peaceful",
+    "compatibilityGroup": "community",
+    "groupSize": "Thường nuôi một cá hoặc nhóm trong bể nhiều hang và đủ diện tích.",
+    "food": "Viên chìm và thức ăn có thành phần thực vật; lũa không thay thế thức ăn.",
+    "compatibility": "Thường ôn hòa; lưu ý cạnh tranh lãnh thổ với cá da trơn tầng đáy.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Ancistrus%20sp.%20in%20aquarium.jpg?width=1200",
+    "imageCredit": "Júlio Reis · CC BY-SA 4.0 · Wikimedia Commons",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Ancistrus%20sp.%20in%20aquarium.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá da trơn (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-freshwater-catfish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "common-pleco",
+    "name": "Cá lau kiếng thường",
+    "scientificName": "Pterygoplichthys pardalis",
+    "family": "catfish",
+    "description": "CÁ DA TRƠN · Có thể dài trên 40cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CÁ DA TRƠN",
+    "difficulty": "Cần hồ lớn, không phải cá dọn bể cho bể nhỏ",
+    "summary": "Có thể dài trên 40cm",
+    "tank": "Không phù hợp bể nhỏ; cần hồ rất lớn và hệ lọc mạnh",
+    "minTankLiters": 500,
+    "temperature": "22–28°C (tham khảo cá da trơn nhiệt đới)",
+    "ph": "6.0–8.0",
+    "temperament": "peaceful",
+    "compatibilityGroup": "large-community",
+    "groupSize": "Cá lớn và thải nhiều; nuôi đơn hoặc trong hồ tương xứng.",
+    "food": "Thức ăn chìm phù hợp và rau củ; không chỉ ăn rêu trong bể.",
+    "compatibility": "Tránh mua thả vào bể nhỏ; không ghép cá có thể bị hút nhớt khi thiếu thức ăn.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Pterygoplichthys_pardalis.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Pterygoplichthys_pardalis.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá da trơn (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-freshwater-catfish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "kuhli-loach",
+    "name": "Cá chạch Kuhli",
+    "scientificName": "Pangio kuhlii",
+    "family": "loach",
+    "description": "CÁ CHẠCH · Khoảng 8–10cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CÁ CHẠCH",
+    "difficulty": "Cần bể trưởng thành, nhiều chỗ ẩn",
+    "summary": "Khoảng 8–10cm",
+    "tank": "Từ 60L cho nhóm; nền mịn, nhiều chỗ trú và nắp kín",
+    "minTankLiters": 60,
+    "temperature": "24–28°C (tham khảo nhóm chạch nhiệt đới)",
+    "ph": "5.5–7.5",
+    "temperament": "peaceful",
+    "compatibilityGroup": "community",
+    "groupSize": "Cá xã hội; nuôi nhóm từ 5–6 con.",
+    "food": "Thức ăn chìm nhỏ và đông lạnh phù hợp.",
+    "compatibility": "Hiền, hoạt động tầng đáy; tránh cá lớn săn mồi và nền sắc cạnh.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Pangio_kuhlii.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Pangio_kuhlii.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá chạch (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-loaches/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "siamese-algae-eater",
+    "name": "Cá bút chì Thái (ăn rêu)",
+    "scientificName": "Crossocheilus oblongus",
+    "family": "algae-eater",
+    "description": "CÁ ĂN RÊU · Có thể dài khoảng 15cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CÁ ĂN RÊU",
+    "difficulty": "Cần bể đủ rộng khi trưởng thành",
+    "summary": "Có thể dài khoảng 15cm",
+    "tank": "Từ 100L cho nhóm nhỏ; cần dòng chảy và khoảng bơi",
+    "minTankLiters": 100,
+    "temperature": "22–27°C (tham khảo nhóm cá ăn rêu nhiệt đới)",
+    "ph": "6.0–8.0",
+    "temperament": "active",
+    "compatibilityGroup": "community",
+    "groupSize": "Nuôi nhóm nhỏ trong bể rộng; cá lớn có thể tranh lãnh thổ.",
+    "food": "Thức ăn tảo chỉ là một phần khẩu phần; bổ sung viên chìm phù hợp.",
+    "compatibility": "Cá bơi khỏe; tránh mặc định đây là giải pháp thay vệ sinh và kiểm soát dinh dưỡng.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Siamese%20algae%20eater%20(Crossocheilus%20oblongus).jpg?width=1200",
+    "imageCredit": "Aleander2137 · CC BY-SA 4.0 · Wikimedia Commons",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Siamese%20algae%20eater%20(Crossocheilus%20oblongus).jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá ăn rêu (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-tropical-algae-eaters/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "rainbow-shark",
+    "name": "Cá mập cầu vồng",
+    "scientificName": "Epalzeorhynchos frenatum",
+    "family": "shark",
+    "description": "CÁ MẬP NƯỚC NGỌT · Có thể dài khoảng 15cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CÁ MẬP NƯỚC NGỌT",
+    "difficulty": "Có tính lãnh thổ",
+    "summary": "Có thể dài khoảng 15cm",
+    "tank": "Từ 200L cho một cá trưởng thành; cần nhiều chỗ trú",
+    "minTankLiters": 200,
+    "temperature": "22–27°C (tham khảo nhóm freshwater shark)",
+    "ph": "6.0–8.0",
+    "temperament": "semi-aggressive",
+    "compatibilityGroup": "large-community",
+    "groupSize": "Thường nuôi một cá trong bể; không ghép nhiều cá mập cầu vồng ở bể nhỏ.",
+    "food": "Thức ăn tạp dạng chìm và khẩu phần cân bằng.",
+    "compatibility": "Có thể bảo vệ lãnh thổ tầng đáy; tránh ghép với cá đáy hiền hoặc cùng dáng.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Labeo%20Frenatus.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Labeo%20Frenatus.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá mập nước ngọt (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-freshwater-sharks/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "flowerhorn",
+    "name": "Cá La Hán",
+    "scientificName": "Cichlid lai tạo (Flowerhorn)",
+    "family": "cichlid",
+    "description": "CICHLID · Có thể dài khoảng 25–35cm tùy dòng",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CICHLID",
+    "difficulty": "Cần bể riêng và kinh nghiệm",
+    "summary": "Có thể dài khoảng 25–35cm tùy dòng",
+    "tank": "Từ 250L cho một cá trưởng thành; bể riêng và lọc mạnh",
+    "minTankLiters": 250,
+    "temperature": "26–30°C (tham khảo cichlid nhiệt đới)",
+    "ph": "6.5–8.0",
+    "temperament": "semi-aggressive",
+    "compatibilityGroup": "separate",
+    "groupSize": "Dòng lai có tính khí khác nhau; thường nuôi riêng một cá.",
+    "food": "Thức ăn viên chuyên cho cichlid; không dùng khẩu phần thúc màu thiếu kiểm soát.",
+    "compatibility": "Có tính lãnh thổ mạnh; không mặc định phù hợp bể cộng đồng.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flowerhorn_cichlid.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Flowerhorn_cichlid.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cichlid (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-aggressive-species/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "silver-arowana",
+    "name": "Cá rồng bạc",
+    "scientificName": "Osteoglossum bicirrhosum",
+    "family": "tankbuster",
+    "description": "CÁ KÍCH THƯỚC LỚN · Có thể dài trên 90cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CÁ KÍCH THƯỚC LỚN",
+    "difficulty": "Cá kích thước lớn, không phù hợp người mới hoặc bể gia đình nhỏ",
+    "summary": "Có thể dài trên 90cm",
+    "tank": "Chỉ nuôi khi có hồ rất lớn (xấp xỉ 1.500L trở lên), nắp chắc và lọc chuyên dụng",
+    "minTankLiters": 1500,
+    "temperature": "24–30°C (tham khảo nhóm cá rất lớn)",
+    "ph": "6.0–7.5",
+    "temperament": "semi-aggressive",
+    "compatibilityGroup": "large-community",
+    "groupSize": "Cá bơi mặt nước, nhảy khỏe; cần hồ rất dài và nắp kín.",
+    "food": "Khẩu phần chuyên biệt cho cá săn mồi; cần tư vấn dinh dưỡng theo kích thước.",
+    "compatibility": "Cá nhỏ có thể thành mồi; chỉ ghép trong hồ tương xứng và có kinh nghiệm.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Osteoglossum%20bicirrhosum.JPG?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Osteoglossum%20bicirrhosum.JPG",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá kích thước lớn (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-very-large-fish-tankbusters/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "glowlight-tetra",
+    "name": "Cá tetra ánh vàng",
+    "scientificName": "Hemigrammus erythrozonus",
+    "family": "tetra",
+    "description": "TETRA · Khoảng 4cm",
+    "group": "tropical",
+    "level": "easy",
+    "category": "NƯỚC NGỌT · TETRA",
+    "difficulty": "Dễ bắt đầu",
+    "summary": "Khoảng 4cm",
+    "tank": "Từ 45L cho đàn nhỏ; nước ổn định và cây thủy sinh",
+    "minTankLiters": 45,
+    "temperature": "22–27°C (tham khảo nhóm tetra)",
+    "ph": "6.0–8.0",
+    "temperament": "peaceful",
+    "compatibilityGroup": "community",
+    "groupSize": "Cá đàn; nên nuôi ít nhất 6 con.",
+    "food": "Thức ăn tạp dạng nhỏ; luân phiên flakes và thức ăn đông lạnh.",
+    "compatibility": "Cá hiền, hợp bể cộng đồng với cá nhỏ và ôn hòa.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Hemigrammus_erythrozonus.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Hemigrammus_erythrozonus.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm tetra (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-tetras-and-pencilfish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "black-skirt-tetra",
+    "name": "Cá tetra váy đen",
+    "scientificName": "Gymnocorymbus ternetzi",
+    "family": "tetra",
+    "description": "TETRA · Khoảng 5–6cm",
+    "group": "tropical",
+    "level": "easy",
+    "category": "NƯỚC NGỌT · TETRA",
+    "difficulty": "Cần chọn bạn bể",
+    "summary": "Khoảng 5–6cm",
+    "tank": "Từ 80L cho đàn; bể dài và có khoảng bơi",
+    "minTankLiters": 80,
+    "temperature": "22–27°C (tham khảo nhóm tetra)",
+    "ph": "6.0–8.0",
+    "temperament": "active",
+    "compatibilityGroup": "community",
+    "groupSize": "Cá đàn; nuôi nhóm đủ lớn giúp giảm rỉa vây.",
+    "food": "Thức ăn tạp cỡ nhỏ; cho lượng cá ăn hết trong vài phút.",
+    "compatibility": "Có thể rỉa vây; tránh ghép với cá betta và loài vây dài chậm bơi.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Gymnocorymbus_ternetzi.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Gymnocorymbus_ternetzi.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm tetra (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-tetras-and-pencilfish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "electric-blue-ram",
+    "name": "Cá phượng hoàng (ramirezi)",
+    "scientificName": "Mikrogeophagus ramirezi",
+    "family": "cichlid",
+    "description": "CICHLID · Khoảng 5–7cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CICHLID",
+    "difficulty": "Nhạy với chất lượng nước",
+    "summary": "Khoảng 5–7cm",
+    "tank": "Từ 80L cho cặp; bể trưởng thành, nước ấm và ổn định",
+    "minTankLiters": 80,
+    "temperature": "26–30°C (tham khảo dwarf cichlid)",
+    "ph": "5.5–7.5",
+    "temperament": "peaceful",
+    "compatibilityGroup": "community",
+    "groupSize": "Nuôi theo cặp; cần lãnh thổ nhỏ và chỗ trú.",
+    "food": "Thức ăn viên nhỏ và thức ăn đông lạnh phù hợp.",
+    "compatibility": "Chọn cá cộng đồng nhỏ, ôn hòa, cùng thích nước ấm.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Mikrogeophagus_ramirezi.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Mikrogeophagus_ramirezi.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cichlid (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-dwarf-cichlids/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "redtail-shark",
+    "name": "Cá hồng vỹ (redtail shark)",
+    "scientificName": "Epalzeorhynchos bicolor",
+    "family": "shark",
+    "description": "CÁ MẬP NƯỚC NGỌT · Có thể dài khoảng 15cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CÁ MẬP NƯỚC NGỌT",
+    "difficulty": "Có tính lãnh thổ khi trưởng thành",
+    "summary": "Có thể dài khoảng 15cm",
+    "tank": "Từ 200L cho một cá trưởng thành, nhiều hang và khoảng bơi",
+    "minTankLiters": 200,
+    "temperature": "22–27°C (tham khảo nhóm freshwater shark)",
+    "ph": "6.0–8.0",
+    "temperament": "semi-aggressive",
+    "compatibilityGroup": "large-community",
+    "groupSize": "Thường nuôi một cá mỗi bể; cần chia vùng đáy.",
+    "food": "Thức ăn chìm tạp và thức ăn thực vật phù hợp.",
+    "compatibility": "Tránh nuôi chung cá đáy cùng dáng hoặc nhiều cá hồng vỹ trong bể nhỏ.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Epalzeorhynchos_bicolor.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Epalzeorhynchos_bicolor.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá mập nước ngọt (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-freshwater-sharks/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "common-carp-koi",
+    "name": "Cá chép cảnh",
+    "scientificName": "Cyprinus carpio",
+    "family": "coldwater",
+    "description": "NƯỚC MÁT · Có thể lớn trên 50cm",
+    "group": "coldwater",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · NƯỚC MÁT",
+    "difficulty": "Cần hồ rộng và lọc khỏe",
+    "summary": "Có thể lớn trên 50cm",
+    "tank": "Hồ lớn ngoài trời hoặc bể chuyên dụng; không hợp bể mini",
+    "minTankLiters": 500,
+    "temperature": "4–28°C; thích nghi theo mùa, tránh đổi đột ngột",
+    "ph": "6.5–8.5",
+    "temperament": "peaceful",
+    "compatibilityGroup": "coldwater-community",
+    "groupSize": "Cá lớn và hoạt động theo nhóm; tải sinh học cao.",
+    "food": "Thức ăn chuyên cho cá chép, điều chỉnh theo mùa và nhiệt độ.",
+    "compatibility": "Chỉ nuôi cùng cá nước mát đủ lớn trong hồ tương xứng.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Koi_carp._(Cyprinus_carpio)_(27986997703).jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Koi_carp._(Cyprinus_carpio)_(27986997703).jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm nước mát (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-coldwater-fish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "blood-parrot",
+    "name": "Cá hồng két",
+    "scientificName": "Cichlid lai (Blood parrot)",
+    "family": "cichlid",
+    "description": "CICHLID · Khoảng 15–20cm khi trưởng thành",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CICHLID",
+    "difficulty": "Cần bể rộng và chọn bạn bể kỹ",
+    "summary": "Khoảng 15–20cm khi trưởng thành",
+    "tank": "Từ 200L cho cá trưởng thành; lọc khỏe và chỗ trú",
+    "minTankLiters": 200,
+    "temperature": "24–28°C",
+    "ph": "6.5–8.0",
+    "temperament": "semi-aggressive",
+    "compatibilityGroup": "large-community",
+    "groupSize": "Có thể nuôi đơn hoặc nhóm thưa trong bể rộng; cá có thể tranh lãnh thổ.",
+    "food": "Viên chuyên cichlid; bổ sung thức ăn đông lạnh phù hợp, tránh cho ăn quá nhiều.",
+    "compatibility": "Chọn cá cứng cáp cùng kích thước; không ghép cá nhỏ hoặc quá hiền.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Blood%20parrot%20cichlid.jpg?width=1200",
+    "imageCredit": "LIS ARISH · CC BY 4.0 · Wikimedia Commons",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Blood%20parrot%20cichlid.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cichlid (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "black-ghost-knifefish",
+    "name": "Cá hắc ma (cá dao ma đen)",
+    "scientificName": "Apteronotus albifrons",
+    "family": "tankbuster",
+    "description": "CÁ KÍCH THƯỚC LỚN · Có thể dài khoảng 45–50cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CÁ KÍCH THƯỚC LỚN",
+    "difficulty": "Cần bể lớn và môi trường ổn định",
+    "summary": "Có thể dài khoảng 45–50cm",
+    "tank": "Bể dài từ 300L; nhiều nơi trú tối",
+    "minTankLiters": 300,
+    "temperature": "23–28°C",
+    "ph": "6.0–8.0",
+    "temperament": "peaceful",
+    "compatibilityGroup": "large-community",
+    "groupSize": "Thường nuôi một cá; hoạt động về đêm và cần nơi trú.",
+    "food": "Thức ăn giàu đạm phù hợp, ưu tiên thức ăn chìm/đông lạnh theo kích thước.",
+    "compatibility": "Không ghép cá nhỏ vừa miệng; hỏi người có kinh nghiệm trước khi chọn bạn bể.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Black%20Ghost%20Knife%20Fish%20700.jpg?width=1200",
+    "imageCredit": "Derek Ramsey · CC BY-SA · Wikimedia Commons",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Black%20Ghost%20Knife%20Fish%20700.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá kích thước lớn (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "clown-loach",
+    "name": "Cá hề chạch (clown loach)",
+    "scientificName": "Chromobotia macracanthus",
+    "family": "loach",
+    "description": "CÁ CHẠCH · Có thể vượt 25cm khi trưởng thành",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CÁ CHẠCH",
+    "difficulty": "Cá đàn nhưng trưởng thành rất lớn",
+    "summary": "Có thể vượt 25cm khi trưởng thành",
+    "tank": "Bể dài từ 400L cho đàn cá; cá trưởng thành cần không gian lớn",
+    "minTankLiters": 400,
+    "temperature": "25–30°C",
+    "ph": "6.0–7.5",
+    "temperament": "peaceful",
+    "compatibilityGroup": "large-community",
+    "groupSize": "Cá sống theo nhóm; không nên mua một con cho bể nhỏ.",
+    "food": "Thức ăn chìm đa dạng; một số cá thích thức ăn đông lạnh phù hợp.",
+    "compatibility": "Ghép cá hiền có kích thước tương tự; tránh cá nhỏ và bể chật.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Clown%20Loach%20Fish.jpg?width=1200",
+    "imageCredit": "Lemontiger168 · CC BY-SA 3.0 · Wikimedia Commons",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Clown%20Loach%20Fish.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá chạch (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "panda-corydoras",
+    "name": "Cá chuột panda",
+    "scientificName": "Corydoras panda",
+    "family": "catfish",
+    "description": "CÁ DA TRƠN · Khoảng 4–5cm",
+    "group": "tropical",
+    "level": "easy",
+    "category": "NƯỚC NGỌT · CÁ DA TRƠN",
+    "difficulty": "Dễ nuôi khi nền đáy phù hợp",
+    "summary": "Khoảng 4–5cm",
+    "tank": "Từ 60L cho đàn; nền cát mịn và nước ổn định",
+    "minTankLiters": 60,
+    "temperature": "20–25°C",
+    "ph": "6.0–7.5",
+    "temperament": "peaceful",
+    "compatibilityGroup": "community",
+    "groupSize": "Cá sống theo đàn; nên nuôi từ 6 con cùng loài.",
+    "food": "Thức ăn chìm cỡ nhỏ; đảm bảo cá đáy nhận đủ thức ăn.",
+    "compatibility": "Hợp cá cộng đồng hiền, cùng dải nhiệt độ; tránh cá săn mồi lớn.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Corydoras%20panda.JPG?width=1200",
+    "imageCredit": "Giniro · CC BY-SA 3.0 · Wikimedia Commons",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Corydoras%20panda.JPG",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá da trơn (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "sterbai-corydoras",
+    "name": "Cá chuột Sterbai",
+    "scientificName": "Corydoras sterbai",
+    "family": "catfish",
+    "description": "CÁ DA TRƠN · Khoảng 6–7cm",
+    "group": "tropical",
+    "level": "easy",
+    "category": "NƯỚC NGỌT · CÁ DA TRƠN",
+    "difficulty": "Dễ chăm sóc nếu nuôi thành đàn",
+    "summary": "Khoảng 6–7cm",
+    "tank": "Từ 75L cho đàn; nền mịn và nơi trú",
+    "minTankLiters": 75,
+    "temperature": "24–28°C",
+    "ph": "6.0–7.5",
+    "temperament": "peaceful",
+    "compatibilityGroup": "community",
+    "groupSize": "Cá sống theo nhóm; nên nuôi từ 6 con.",
+    "food": "Thức ăn chìm đa dạng, cỡ phù hợp.",
+    "compatibility": "Ghép với cá hiền thích nước ấm; tránh cá lớn săn mồi.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Corydoras%20Sterbai.jpg?width=1200",
+    "imageCredit": "Matthew Mannell · giấy phép tại Wikimedia Commons",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Corydoras%20Sterbai.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá da trơn (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "parkinson-rainbowfish",
+    "name": "Cá cầu vồng Parkinson",
+    "scientificName": "Melanotaenia parkinsoni",
+    "family": "rainbowfish",
+    "description": "CÁ CẦU VỒNG · Khoảng 10–15cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CÁ CẦU VỒNG",
+    "difficulty": "Cần bể dài và đàn đủ lớn",
+    "summary": "Khoảng 10–15cm",
+    "tank": "Từ 180L cho đàn; cần khoảng bơi dài",
+    "minTankLiters": 180,
+    "temperature": "24–28°C",
+    "ph": "7.0–8.0",
+    "temperament": "peaceful",
+    "compatibilityGroup": "large-community",
+    "groupSize": "Cá hoạt động theo nhóm; nuôi đàn thưa trong bể có khoảng bơi.",
+    "food": "Thức ăn viên/flakes chất lượng, bổ sung thức ăn đông lạnh cỡ phù hợp.",
+    "compatibility": "Ghép cá bơi khỏe cùng kích thước; tránh cá nhỏ hoặc vây dài dễ bị rượt.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Melanotaenia%20parkinsoni.jpg?width=1200",
+    "imageCredit": "Phalinn Ooi · CC BY 2.0 · Wikimedia Commons",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Melanotaenia%20parkinsoni.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá cầu vồng (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "red-rainbowfish",
+    "name": "Cá cầu vồng đỏ",
+    "scientificName": "Glossolepis incisus",
+    "family": "rainbowfish",
+    "description": "CÁ CẦU VỒNG · Có thể dài khoảng 15cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CÁ CẦU VỒNG",
+    "difficulty": "Cần nuôi đàn và có khoảng bơi",
+    "summary": "Có thể dài khoảng 15cm",
+    "tank": "Từ 180L cho đàn; bể dài có chỗ bơi",
+    "minTankLiters": 180,
+    "temperature": "24–28°C",
+    "ph": "7.0–8.0",
+    "temperament": "peaceful",
+    "compatibilityGroup": "large-community",
+    "groupSize": "Cá hoạt động theo đàn; màu cá đực thường rực hơn khi trưởng thành.",
+    "food": "Thức ăn tạp dạng viên/flakes và thức ăn đông lạnh phù hợp.",
+    "compatibility": "Ghép với loài bơi khỏe, cùng kích thước và điều kiện nước.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/GlossolepisIncisus.JPG?width=1200",
+    "imageCredit": "Kyle Weber · Public domain · Wikimedia Commons",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:GlossolepisIncisus.JPG",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá cầu vồng (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "yellow-lab-cichlid",
+    "name": "Cá ali vàng",
+    "scientificName": "Labidochromis caeruleus",
+    "family": "cichlid",
+    "description": "CICHLID · Khoảng 8–12cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CICHLID",
+    "difficulty": "Cần nước kiềm và chọn nhóm ghép phù hợp",
+    "summary": "Khoảng 8–12cm",
+    "tank": "Từ 200L; đá, hang và lọc khỏe",
+    "minTankLiters": 200,
+    "temperature": "24–28°C",
+    "ph": "7.5–8.5",
+    "temperament": "semi-aggressive",
+    "compatibilityGroup": "large-community",
+    "groupSize": "Có thể nuôi nhóm với bố trí lãnh thổ; tránh nuôi đơn lẻ trong bể nhỏ.",
+    "food": "Thức ăn chuyên cichlid hồ Malawi; tránh khẩu phần quá nhiều đạm động vật.",
+    "compatibility": "Chỉ ghép với cichlid có kích thước và điều kiện nước tương đồng.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Labidochromis%20caeruleus.jpg?width=1200",
+    "imageCredit": "Marrabbio2 · CC BY-SA 3.0 · Wikimedia Commons",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Labidochromis%20caeruleus.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cichlid (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "chinese-algae-eater",
+    "name": "Cá bống vàng ăn rêu",
+    "scientificName": "Gyrinocheilus aymonieri",
+    "family": "other",
+    "description": "CÁ NƯỚC NGỌT · Có thể dài khoảng 25–28cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CÁ NƯỚC NGỌT",
+    "difficulty": "Cá lớn dần và có thể trở nên lãnh thổ",
+    "summary": "Có thể dài khoảng 25–28cm",
+    "tank": "Từ 180L cho cá trưởng thành; bể dài và nhiều chỗ trú",
+    "minTankLiters": 180,
+    "temperature": "22–28°C",
+    "ph": "6.0–8.0",
+    "temperament": "semi-aggressive",
+    "compatibilityGroup": "large-community",
+    "groupSize": "Thường nuôi một cá trong bể; cá trưởng thành có thể bám cá khác.",
+    "food": "Thức ăn chìm và thực vật phù hợp; không xem cá là giải pháp thay thế vệ sinh bể.",
+    "compatibility": "Tránh ghép cá chậm, cá thân dẹt hoặc cá nhỏ; theo dõi khi cá lớn.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Gyrinocheilus%20(Chinese%20Algae%20Eater)%20in%20Aquarium.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Gyrinocheilus%20(Chinese%20Algae%20Eater)%20in%20Aquarium.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá nước ngọt (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
+      }
+    ]
+  },
+  {
+    "id": "giant-gourami",
+    "name": "Cá tai tượng",
+    "scientificName": "Osphronemus goramy",
+    "family": "tankbuster",
+    "description": "CÁ KÍCH THƯỚC LỚN · Có thể dài trên 50cm",
+    "group": "tropical",
+    "level": "medium",
+    "category": "NƯỚC NGỌT · CÁ KÍCH THƯỚC LỚN",
+    "difficulty": "Cá khổng lồ, cần hồ chuyên dụng",
+    "summary": "Có thể dài trên 50cm",
+    "tank": "Hồ nuôi rất lớn; không phù hợp bể gia đình thông thường",
+    "minTankLiters": 1000,
+    "temperature": "20–30°C",
+    "ph": "6.0–8.0",
+    "temperament": "semi-aggressive",
+    "compatibilityGroup": "large-community",
+    "groupSize": "Cá trưởng thành cần không gian rất rộng; cân nhắc kỹ trước khi nuôi.",
+    "food": "Thức ăn viên cỡ lớn và khẩu phần đa dạng phù hợp cá ăn tạp.",
+    "compatibility": "Chỉ ghép cá lớn tương thích trong hồ chuyên dụng; không thả vào bể cộng đồng nhỏ.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Giant%20Gourami.jpg?width=1200",
+    "imageCredit": "Wikimedia Commons · xem tác giả và giấy phép tại trang nguồn",
+    "imageSource": "https://commons.wikimedia.org/wiki/File:Giant%20Gourami.jpg",
+    "reviewedAt": "",
+    "dataStatus": "needs-review",
+    "sources": [
+      {
+        "label": "OATA — hướng dẫn chăm sóc nhóm cá kích thước lớn (mốc tham khảo theo nhóm)",
+        "url": "https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/"
+      },
+      {
+        "label": "Đại học Nông Lâm TP.HCM — khảo sát loài cá cảnh được nuôi tại Việt Nam (tài liệu nghiên cứu)",
+        "url": "https://fof.hcmuaf.edu.vn/data/file/51_%20DTQ%20Ngan%20_%20NM%20Duc-DHNL-Hien%20trang%20nuoi%20ca%20canh.pdf"
       }
     ]
   }

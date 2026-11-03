@@ -452,8 +452,24 @@ p {
 .fish-image {
   height: 235px;
   position: relative;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
+  background: #d7e9df;
+}
+
+.fish-card-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fish-image::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  background: linear-gradient(0deg, #102c273b, transparent 45%);
 }
 
 .card-tag {
@@ -465,6 +481,7 @@ p {
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 1px;
+  z-index: 1;
 }
 
 .heart.MuiIconButton-root {
@@ -475,6 +492,7 @@ p {
   height: 32px;
   color: var(--ink);
   background: rgb(255 255 255 / 87%);
+  z-index: 1;
 }
 
 .heart.MuiIconButton-root:hover {
@@ -486,9 +504,14 @@ p {
 .fish-info {
   padding: 16px 16px 12px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.fish-info > div {
+  width: 100%;
+  min-width: 0;
 }
 
 .fish-info h3 {
@@ -501,11 +524,25 @@ p {
   margin: 0;
   color: #819087;
   font-size: 10px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 
 .difficulty.MuiChip-root {
-  height: 25px;
+  height: auto;
+  min-height: 25px;
+  max-width: 100%;
+  align-self: flex-start;
   font-size: 9px;
+}
+
+.difficulty.MuiChip-root .MuiChip-label {
+  display: block;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
 }
 
 .difficulty.easy.MuiChip-root {
@@ -1547,6 +1584,59 @@ p {
 .admin-fish-info h2 { margin: 0 0 5px; font-size: 14px; }
 .admin-fish-info p { margin: 0; color: #74847a; font-size: 10px; }
 .admin-row-actions { display: flex; gap: 8px; }
+
+.customer-workspace { padding-top: 70px; border-top: 1px solid var(--line); }
+.workspace-notice { padding: 12px 15px; color: #276144; background: #edf6e3; font-size: 12px; }
+.workspace-create, .workspace-aquarium { padding: 22px; background: white; border: 1px solid var(--line); }
+.workspace-create { margin-bottom: 20px; }
+.workspace-create h3, .workspace-aquarium h3 { margin: 0 0 15px; font-size: 18px; }
+.workspace-form-row { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
+.workspace-form-row label, .workspace-log-form label, .content-report label { display: grid; gap: 7px; color: #617269; font-size: 11px; }
+.workspace-create input:not([type="checkbox"]), .workspace-inline-form input, .workspace-log-form input, .workspace-log-form textarea, .content-report textarea, .admin-report-controls input, .admin-report-controls select { min-width: 0; padding: 10px 11px; border: 1px solid #d8e1d8; background: #fff; color: var(--ink); font: inherit; }
+.workspace-fish-picker { margin: 17px 0; padding: 12px; display: flex; flex-wrap: wrap; gap: 8px 15px; border: 1px solid var(--line); }
+.workspace-fish-picker legend { padding: 0 5px; color: #617269; font-size: 11px; }
+.workspace-fish-picker label { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; }
+.workspace-aquariums { display: grid; gap: 16px; }
+.workspace-aquarium > header { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+.workspace-aquarium > header p { margin: -7px 0 0; color: #74847a; font-size: 11px; line-height: 1.7; }
+.workspace-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.workspace-columns h4 { margin: 14px 0 10px; font-size: 13px; }
+.workspace-inline-form { display: grid; grid-template-columns: minmax(130px,1fr) auto 100px auto; gap: 6px; }
+.workspace-inline-form input { width: 100%; }
+.workspace-inline-form button, .workspace-log-form button, .workspace-create > button, .admin-report-controls button, .content-report form button { padding: 9px 12px; border: 1px solid transparent; cursor: pointer; font-size: 11px; }
+.workspace-list { margin: 10px 0 0; padding: 0; list-style: none; }
+.workspace-list li { padding: 9px 0; display: flex; justify-content: space-between; gap: 12px; align-items: center; border-bottom: 1px solid var(--line); }
+.workspace-list li span { min-width: 0; display: grid; gap: 4px; }
+.workspace-list strong { font-size: 11px; }
+.workspace-list small { color: #74847a; font-size: 10px; line-height: 1.5; }
+.workspace-log-form { display: grid; gap: 7px; }
+.workspace-log-form textarea, .content-report textarea { min-height: 64px; resize: vertical; }
+.workspace-log-list { max-height: 220px; overflow: auto; }
+.content-report { margin-top: 12px; }
+.report-link { padding: 0; color: #567263; background: transparent; border: 0; text-decoration: underline; cursor: pointer; font: inherit; font-size: 10px; }
+.content-report form { max-width: 460px; margin-top: 10px; display: grid; gap: 8px; }
+.content-report > small { display: block; margin-top: 5px; color: #276144; font-size: 10px; }
+.admin-report-queue { margin-top: 60px; }
+.admin-report-queue > h2 { margin: 8px 0 20px; font-size: 23px; }
+.admin-report-card { margin: 10px 0; padding: 17px; background: white; border: 1px solid var(--line); }
+.admin-report-card header { display: flex; justify-content: space-between; gap: 15px; font-size: 11px; }
+.admin-report-card header span { color: #74847a; font-size: 10px; }
+.admin-report-card > p { margin: 12px 0; font-size: 12px; line-height: 1.7; }
+.admin-report-controls { display: grid; grid-template-columns: 150px 1fr auto; gap: 8px; }
+.admin-shop-manager { margin-top: 58px; }
+.admin-shop-manager > .admin-heading { margin-bottom: 20px; }
+.admin-shop-manager > .admin-heading h2 { margin: 8px 0; font-size: 24px; }
+.admin-shop-manager > .admin-heading p { margin: 0; color: #75837a; font-size: 12px; }
+.admin-shop-active { display: flex; align-items: center; gap: 9px; }
+.admin-shop-active input { accent-color: var(--green); }
+.admin-shop-hidden { padding: 4px 7px; background: #fff1d7; color: #86612d; font-size: 9px; font-weight: 600; vertical-align: middle; }
+.admin-shop-row { min-height: 72px; }
+@media (max-width: 760px) {
+  .workspace-form-row, .workspace-columns { grid-template-columns: 1fr; }
+  .workspace-inline-form { grid-template-columns: 1fr 1fr; }
+  .admin-report-card header { flex-direction: column; }
+  .admin-report-controls { grid-template-columns: 1fr; }
+}
 
 @media (max-width: 720px) {
   .shop-results { padding: 32px 8%; }

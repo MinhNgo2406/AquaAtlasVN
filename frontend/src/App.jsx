@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import CareSection from './components/CareSection.jsx';
+import CustomerWorkspace from './components/CustomerWorkspace.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
 import AuthPage from './components/AuthPage.jsx';
 import FishDetailPage from './components/FishDetailPage.jsx';
@@ -10,12 +11,15 @@ import SiteFooter from './components/SiteFooter.jsx';
 import SiteHeader from './components/SiteHeader.jsx';
 import SpeciesSection from './components/SpeciesSection.jsx';
 import fishList from './data/fish.js';
+import shopList from './data/shops.js';
 
 export default function App() {
   const [fish, setFish] = useState(loadFish);
+  const [shops, setShops] = useState(shopList);
   const [apiReady, setApiReady] = useState(false);
   const [query, setQuery] = useState('');
   const [group, setGroup] = useState('all');
+  const [family, setFamily] = useState('all');
   const [level, setLevel] = useState('all');
   const [tankSize, setTankSize] = useState('all');
   const [temperament, setTemperament] = useState('all');
@@ -41,6 +45,14 @@ export default function App() {
       .finally(() => {
         if (active) setApiReady(true);
       });
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    apiRequest('/api/shops')
+      .then((items) => { if (active && Array.isArray(items)) setShops(items); })
+      .catch(() => { if (active) setShops(shopList); });
     return () => { active = false; };
   }, []);
 
@@ -121,12 +133,13 @@ export default function App() {
   const visibleFish = fish.filter((item) => {
     const matchesName = !normalizedQuery || normalize(`${item.name} ${item.scientificName}`).includes(normalizedQuery);
     const matchesGroup = group === 'all' || item.group === group;
+    const matchesFamily = family === 'all' || item.family === family;
     const matchesLevel = level === 'all' || item.level === level;
     const matchesTank = tankSize === 'all' || Number(item.minTankLiters) <= Number(tankSize);
     const matchesTemperament = temperament === 'all' || item.temperament === temperament;
     const matchesCompatibility = compatibility === 'all' || item.compatibilityGroup === compatibility;
     const matchesFavorite = !showFavorites || favorites.includes(item.id);
-    return matchesName && matchesGroup && matchesLevel && matchesTank && matchesTemperament && matchesCompatibility && matchesFavorite;
+    return matchesName && matchesGroup && matchesFamily && matchesLevel && matchesTank && matchesTemperament && matchesCompatibility && matchesFavorite;
   });
 
   function openFish(fish) {
@@ -208,6 +221,7 @@ export default function App() {
   function toggleFavoritesView() {
     setQuery('');
     setGroup('all');
+    setFamily('all');
     setLevel('all');
     setTankSize('all');
     setTemperament('all');
@@ -230,31 +244,52 @@ export default function App() {
     setFish((current) => current.filter((item) => item.id !== id));
   }
 
+  async function saveShop(shop) {
+    const { shop: savedShop } = await apiRequest('/api/admin/shops', {
+      method: 'PUT',
+      body: JSON.stringify(shop),
+    });
+    setShops((current) => (current.some((item) => item.id === savedShop.id)
+      ? current.map((item) => item.id === savedShop.id ? savedShop : item)
+      : [...current, savedShop]).filter((item) => item.isActive !== false));
+    return savedShop;
+  }
+
+  async function setShopActive(id, isActive) {
+    const { shop: updatedShop } = await apiRequest(`/api/admin/shops/${encodeURIComponent(id)}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ isActive }),
+    });
+    setShops((current) => current.map((item) => item.id === id ? updatedShop : item).filter((item) => item.isActive !== false));
+  }
+
   if (isAuthPage || (isAdminPage && user?.role !== 'admin')) {
     return <AuthPage onSuccess={finishLogin} onExit={goHome} />;
   }
 
   if (isAdminPage && user?.role === 'admin') {
-    return <AdminDashboard fish={fish} onSaveFish={saveFish} onDeleteFish={deleteFish} onExit={goHome} onLogout={logout} user={user} />;
+    return <AdminDashboard fish={fish} shops={shops} onSaveFish={saveFish} onDeleteFish={deleteFish} onSaveShop={saveShop} onSetShopActive={setShopActive} onExit={goHome} onLogout={logout} user={user} />;
   }
 
   return (
     <>
       <SiteHeader compact={Boolean(activeFish)} onHome={goHome} user={user} onLogin={showLogin} onLogout={logout} />
       {activeFish ? (
-        <main><FishDetailPage fish={activeFish} onBack={goHome} /></main>
+        <main><FishDetailPage fish={activeFish} onBack={goHome} user={user} /></main>
       ) : (
         <main>
           <HeroSection />
           <QuickSearch
             query={query}
             group={group}
+            family={family}
             level={level}
             tankSize={tankSize}
             temperament={temperament}
             compatibility={compatibility}
             onQueryChange={setQuery}
             onGroupChange={setGroup}
+            onFamilyChange={setFamily}
             onLevelChange={setLevel}
             onTankSizeChange={setTankSize}
             onTemperamentChange={setTemperament}
@@ -275,8 +310,9 @@ export default function App() {
             onToggleFavorite={toggleFavorite}
             onToggleFavoriteView={toggleFavoritesView}
           />
+          <CustomerWorkspace fish={fish} user={user} />
           <CareSection />
-          <HealthAndShops />
+          <HealthAndShops user={user} shops={shops} />
         </main>
       )}
       <SiteFooter />
