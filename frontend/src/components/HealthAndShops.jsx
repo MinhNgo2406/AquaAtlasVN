@@ -3,7 +3,7 @@ import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { shopCities } from '../data/shops.js';
 import ContentReportButton from './ContentReportButton.jsx';
 
@@ -19,6 +19,8 @@ const healthSteps = [
   ['02', 'Kiểm tra nước trước', 'Đo ammonia, nitrite, nitrate, pH và nhiệt độ bằng bộ test phù hợp. Ammonia và nitrite nên ở mức 0 mg/L; nếu bất thường, kiểm tra lọc và xử lý nước an toàn.'],
   ['03', 'Giảm lây lan và hỏi chuyên môn', 'Không tự trộn thuốc. Chỉ cách ly khi có bể cách ly đã chuẩn bị phù hợp; nếu nhiều cá khó thở, chết nhanh hoặc tình trạng xấu đi, liên hệ bác sĩ thú y thủy sản/người có chuyên môn.'],
 ];
+
+const INITIAL_SHOP_COUNT = 3;
 
 function HealthSection() {
   return (
@@ -63,8 +65,14 @@ function HealthSection() {
 function ShopSection({ user, shops = [] }) {
   const [city, setCity] = useState('hcm');
   const [shopQuery, setShopQuery] = useState('');
+  const [showAllShops, setShowAllShops] = useState(false);
   const selectedCity = shopCities.find((item) => item.id === city);
   const cityShops = shops.filter((shop) => (city === 'all' || shop.city === city) && `${shop.name} ${shop.address}`.toLocaleLowerCase('vi').includes(shopQuery.trim().toLocaleLowerCase('vi')));
+  const visibleShops = showAllShops ? cityShops : cityShops.slice(0, INITIAL_SHOP_COUNT);
+
+  useEffect(() => {
+    setShowAllShops(false);
+  }, [city, shopQuery]);
 
   return (
     <section className="shop-section" id="shops">
@@ -105,7 +113,7 @@ function ShopSection({ user, shops = [] }) {
       <div className="shop-results" id="shop-results" aria-live="polite">
         <div className="eyebrow"><span /> {city === 'all' ? 'TOÀN BỘ KHU VỰC CÓ DỮ LIỆU' : selectedCity?.name.toLocaleUpperCase('vi')}</div>
         <div className="shop-card-grid">
-          {cityShops.map((shop) => (
+          {visibleShops.map((shop) => (
             <article className="shop-card" key={shop.id}>
               <div className="shop-card-top"><h3>{shop.name}</h3><span>{shop.verification}</span></div>
               <p>{shop.address}</p>
@@ -124,6 +132,18 @@ function ShopSection({ user, shops = [] }) {
           ))}
           {!cityShops.length && <div className="empty-state"><p>Chưa có cửa hàng khớp khu vực tìm kiếm này.</p>{user?.role === 'customer' && <><p>Biết một cửa hàng cá cảnh đáng tin cậy ở khu vực này?</p><ContentReportButton user={user} targetType="shop" targetId="directory-suggestion" targetLabel={`Gợi ý cửa hàng — ${shopQuery || selectedCity?.name || 'toàn quốc'}`} /></>}</div>}
         </div>
+        {cityShops.length > INITIAL_SHOP_COUNT && (
+          <div className="list-expand-actions">
+            <Button
+              className="list-expand-button"
+              onClick={() => setShowAllShops((current) => !current)}
+              aria-expanded={showAllShops}
+            >
+              {showAllShops ? 'Thu gọn danh sách' : `Xem thêm ${cityShops.length - INITIAL_SHOP_COUNT} cửa hàng`}
+              <span aria-hidden="true">{showAllShops ? '↑' : '↓'}</span>
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

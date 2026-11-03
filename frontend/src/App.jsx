@@ -8,6 +8,7 @@ import FishDetailPage from './components/FishDetailPage.jsx';
 import HealthAndShops from './components/HealthAndShops.jsx';
 import HeroSection from './components/HeroSection.jsx';
 import QuickSearch from './components/QuickSearch.jsx';
+import RevealOnScroll from './components/RevealOnScroll.jsx';
 import SiteFooter from './components/SiteFooter.jsx';
 import SiteHeader from './components/SiteHeader.jsx';
 import SpeciesSection from './components/SpeciesSection.jsx';
@@ -296,6 +297,7 @@ export default function App() {
             onTemperamentChange={setTemperament}
             onCompatibilityChange={setCompatibility}
           />
+          <RevealOnScroll>
           <SpeciesSection
             fish={visibleFish}
             user={user}
@@ -311,9 +313,10 @@ export default function App() {
             onToggleFavorite={toggleFavorite}
             onToggleFavoriteView={toggleFavoritesView}
           />
-          <CustomerWorkspace fish={fish} user={user} />
-          <CareSection />
-          <HealthAndShops user={user} shops={shops} />
+          </RevealOnScroll>
+          <RevealOnScroll><CustomerWorkspace fish={fish} user={user} /></RevealOnScroll>
+          <RevealOnScroll><CareSection /></RevealOnScroll>
+          <RevealOnScroll><HealthAndShops user={user} shops={shops} /></RevealOnScroll>
         </main>
       )}
       <SiteFooter />

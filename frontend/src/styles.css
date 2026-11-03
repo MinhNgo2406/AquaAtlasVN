@@ -77,9 +77,30 @@ a {
 
 .main-nav a,
 .footer-links a {
+  position: relative;
   color: #607169;
   font-size: 12px;
   transition: color 0.2s;
+}
+
+.main-nav a::after,
+.footer-links a::after {
+  position: absolute;
+  right: 0;
+  bottom: -5px;
+  left: 0;
+  height: 1px;
+  content: '';
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+.main-nav a:hover::after,
+.main-nav a.active::after,
+.footer-links a:hover::after {
+  transform: scaleX(1);
 }
 
 .main-nav a:hover,
@@ -142,6 +163,15 @@ a {
   left: 12.2%;
   max-width: 550px;
 }
+
+.hero-content > * {
+  animation: hero-enter 0.75s both;
+}
+
+.hero-content > :nth-child(2) { animation-delay: 90ms; }
+.hero-content > :nth-child(3) { animation-delay: 170ms; }
+.hero-content > :nth-child(4) { animation-delay: 250ms; }
+.hero-content > :nth-child(5) { animation-delay: 330ms; }
 
 .eyebrow {
   display: flex;
@@ -211,11 +241,12 @@ p {
   gap: 12px;
   border-radius: 0;
   font-size: 11px;
-  transition: transform 0.2s, background 0.2s;
+  transition: transform 0.25s cubic-bezier(.2,.7,.2,1), background 0.2s, box-shadow 0.25s;
 }
 
 .button.MuiButton-root:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgb(10 35 28 / 16%);
 }
 
 .button-lime.MuiButton-root {
@@ -308,6 +339,7 @@ p {
 .hero-scroll span {
   margin-left: 4px;
   font-size: 14px;
+  animation: scroll-nudge 1.6s ease-in-out infinite;
 }
 
 .quick-search {
@@ -437,15 +469,46 @@ p {
   gap: 20px;
 }
 
+.list-expand-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.list-expand-button.MuiButton-root {
+  min-width: 190px;
+  padding: 11px 17px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--ink);
+  border: 1px solid #cfdacf;
+  border-radius: 0;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: none;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.list-expand-button.MuiButton-root:hover {
+  border-color: #9ebf45;
+  background: #eff7dd;
+  transform: translateY(-2px);
+}
+
 .fish-card.MuiCard-root {
   padding-bottom: 15px;
   overflow: visible;
   background: white;
-  transition: transform 0.25s, box-shadow 0.25s;
+  transition: transform 0.35s cubic-bezier(.2,.7,.2,1), box-shadow 0.35s;
+  animation: card-enter 0.55s both;
+  animation-delay: calc(var(--card-index, 0) * 45ms);
+  will-change: transform;
 }
 
 .fish-card.MuiCard-root:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
   box-shadow: 0 15px 35px rgb(25 61 48 / 7%);
 }
 
@@ -462,6 +525,38 @@ p {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.7s cubic-bezier(.2,.7,.2,1), filter 0.5s;
+}
+
+.fish-card:hover .fish-card-photo {
+  transform: scale(1.055);
+  filter: saturate(1.08);
+}
+
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.2,.7,.2,1);
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes hero-enter {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes card-enter {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scroll-nudge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
 }
 
 .fish-image::after {
@@ -599,8 +694,18 @@ p {
 }
 
 .care-photo {
+  position: relative;
+  overflow: hidden;
   min-height: 420px;
   background: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=85') center / cover;
+}
+
+.care-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .care-copy {
@@ -1347,7 +1452,9 @@ p {
     animation: none !important;
   }
 
-  .shop-video { display: none; }
+  .shop-video,
+  .care-video { display: none; }
+  .reveal-on-scroll { opacity: 1; transform: none; }
 }
 
 .detail-back.MuiButton-root,
