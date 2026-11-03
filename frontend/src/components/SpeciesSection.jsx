@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import Favorite from '@mui/icons-material/Favorite';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 
-function FishCard({ fish, saved, onSelectFish, onToggleFavorite, canSave }) {
+function FishCard({ fish, saved, onSelectFish, onToggleFavorite, canSave, comparing, onToggleCompare }) {
   return (
     <Card className="fish-card" elevation={0}>
       <div className="fish-image" style={{ backgroundImage: `linear-gradient(0deg, #102c273b, transparent 45%), url("${fish.image}")` }}>
@@ -24,12 +24,21 @@ function FishCard({ fish, saved, onSelectFish, onToggleFavorite, canSave }) {
       <div className="fish-meta">
         <span>✧ {fish.summary}</span>
         <Button className="fish-open" onClick={() => onSelectFish(fish)}>Xem hồ sơ ↗</Button>
+        <Button className={`compare-button ${comparing ? 'selected' : ''}`} onClick={() => onToggleCompare(fish.id)} aria-pressed={comparing}>
+          {comparing ? 'Đã chọn so sánh' : '＋ So sánh'}
+        </Button>
       </div>
     </Card>
   );
 }
 
-export default function SpeciesSection({ fish, onSelectFish, user, favorites, onToggleFavorite, showFavorites, onToggleFavoriteView }) {
+export default function SpeciesSection({ fish, allFish, onSelectFish, user, favorites, onToggleFavorite, showFavorites, onToggleFavoriteView, compareIds, onToggleCompare, onClearCompare }) {
+  const comparedFish = allFish.filter((item) => compareIds.includes(item.id));
+  const compareRows = [
+    ['Kích thước bể tham khảo', 'tank'], ['Nhiệt độ', 'temperature'], ['pH', 'ph'],
+    ['Độ khó', 'difficulty'], ['Tính cách', 'temperamentLabel'], ['Nuôi theo nhóm', 'groupSize'], ['Sống chung', 'compatibility'],
+  ];
+  const temperamentLabels = { peaceful: 'Hiền', active: 'Bơi khỏe', independent: 'Độc lập', 'semi-aggressive': 'Cần chọn bạn bể kỹ' };
   return (
     <section className="section species-section" id="species">
       <div className="section-heading">
@@ -41,7 +50,12 @@ export default function SpeciesSection({ fish, onSelectFish, user, favorites, on
       </div>
 
       <div className="species-grid">
-        {fish.length ? fish.map((item) => <FishCard fish={item} key={item.id} saved={favorites.includes(item.id)} canSave={user?.role === 'admin' ? 'hidden' : user?.role === 'customer'} onSelectFish={onSelectFish} onToggleFavorite={onToggleFavorite} />) : <p className="empty-state">{showFavorites ? 'Bạn chưa có cá yêu thích nào. Hãy bấm biểu tượng trái tim trên một hồ sơ cá để lưu lại nhé.' : 'Chưa tìm thấy loài cá phù hợp. Hãy thử đổi từ khóa hoặc bộ lọc nhé.'}</p>}
+        {fish.length ? fish.map((item) => <FishCard fish={item} key={item.id} saved={favorites.includes(item.id)} canSave={user?.role === 'admin' ? 'hidden' : user?.role === 'customer'} comparing={compareIds.includes(item.id)} onToggleCompare={onToggleCompare} onSelectFish={onSelectFish} onToggleFavorite={onToggleFavorite} />) : <p className="empty-state">{showFavorites ? 'Bạn chưa có cá yêu thích nào. Hãy bấm biểu tượng trái tim trên một hồ sơ cá để lưu lại nhé.' : 'Chưa tìm thấy loài cá phù hợp. Hãy thử đổi từ khóa hoặc bộ lọc nhé.'}</p>}
+      </div>
+
+      <div className="compare-area" aria-live="polite">
+        <div className="compare-heading"><div><strong>So sánh loài cá</strong><small>Chọn tối đa 3 loài để đối chiếu thông số.</small></div>{compareIds.length > 0 && <Button onClick={onClearCompare}>Bỏ chọn</Button>}</div>
+        {comparedFish.length >= 2 ? <div className="compare-table-wrap"><table className="compare-table"><thead><tr><th>Tiêu chí</th>{comparedFish.map((item) => <th key={item.id}>{item.name}<em>{item.scientificName}</em></th>)}</tr></thead><tbody>{compareRows.map(([label, key]) => <tr key={key}><th>{label}</th>{comparedFish.map((item) => <td key={item.id}>{key === 'temperamentLabel' ? temperamentLabels[item.temperament] || 'Chưa cập nhật' : item[key] || 'Chưa cập nhật'}</td>)}</tr>)}</tbody></table></div> : <p className="compare-hint">Đã chọn {comparedFish.length}/3 loài. Chọn ít nhất hai loài trong danh mục để xem bảng.</p>}
       </div>
 
       <div className="center-link"><Button className="text-link" href="#species">Xem tất cả loài cá <span>↗</span></Button></div>

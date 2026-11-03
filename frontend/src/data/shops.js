@@ -1,47 +1,47 @@
+// Store details are sourced from official store pages where available.
+// Verify stock and opening hours directly with each shop before visiting.
 const shops = [
   {
-    id: 'cacanh180',
-    name: 'Cá Cảnh 180',
-    city: 'hcm',
-    address: '180 Nguyễn Văn Công, phường 3, quận Gò Vấp, TP. Hồ Chí Minh',
-    note: 'Cửa hàng cá cảnh và phụ kiện; gọi trước để hỏi loài cá đang có.',
-    source: 'https://cacanh180.com/pages/he-thong-cua-hang',
-    sourceLabel: 'Trang hệ thống cửa hàng',
+    id: 'thuysinhtim-nghia-do', name: 'Thủy Sinh Tím — Nghĩa Đô', city: 'hanoi',
+    address: 'Cuối ngõ 26 phố Nghĩa Đô, Cầu Giấy, Hà Nội', phone: '0865 313 256',
+    hours: '09:00–21:00, hằng ngày', verifiedAt: '2026-11-03', verification: 'Nguồn chính thức',
+    note: 'Cửa hàng cá cảnh, cây thủy sinh và phụ kiện.', source: 'https://thuysinhtim.vn/he-thong-cua-hang', sourceLabel: 'Hệ thống cửa hàng Thủy Sinh Tím',
   },
   {
-    id: 'hong-anh-hanoi',
-    name: 'Cửa hàng cá cảnh Hồng Anh',
-    city: 'hanoi',
-    address: '7/131 Thái Hà, Hà Nội',
-    note: 'Danh bạ địa phương ghi nhận cá cảnh và phụ kiện; vui lòng xác nhận địa chỉ trước khi đi.',
-    source: 'https://thuysinhaqua.com/ca-canh-ha-noi/',
-    sourceLabel: 'Danh sách cửa hàng tại Hà Nội',
+    id: 'thuysinhtim-dai-la', name: 'Thủy Sinh Tím — Đại La', city: 'hanoi',
+    address: '123 Đại La, Hai Bà Trưng, Hà Nội', phone: '0708 888 102',
+    hours: '09:00–21:00, hằng ngày', verifiedAt: '2026-11-03', verification: 'Nguồn chính thức',
+    note: 'Chi nhánh trong hệ thống Thủy Sinh Tím; gọi hỏi tồn cá trước khi đến.', source: 'https://thuysinhtim.vn/he-thong-cua-hang', sourceLabel: 'Hệ thống cửa hàng Thủy Sinh Tím',
   },
   {
-    id: 'hung-tony-danang',
-    name: 'Cá cảnh Hùng Tony',
-    city: 'danang',
-    address: '99 Hải Phòng, Hải Châu, Đà Nẵng',
-    note: 'Địa chỉ được một danh bạ địa phương liệt kê; nên gọi xác nhận trước khi đến.',
-    source: 'https://khamphadanang.vn/top-8-dia-diem-ban-ca-canh-da-nang-dep-va-uy-tin/',
-    sourceLabel: 'Danh sách địa điểm cá cảnh Đà Nẵng',
+    id: 'ht-aquarium', name: 'HT Aquarium', city: 'hcm',
+    address: '58/5 Lê Hồng Phong, Quận 5, TP. Hồ Chí Minh', phone: '',
+    hours: 'Chưa xác minh', verifiedAt: '2026-11-03', verification: 'Danh bạ hãng Seachem',
+    note: 'Đại lý vật tư thủy sinh; danh bạ hãng ghi nhận sản phẩm nước ngọt. Trang danh bạ không cho số hotline ở định dạng đủ chắc chắn, nên liên hệ qua danh bạ hoặc hỏi cửa hàng trước khi đến.', source: 'https://www.seachem.com/SDL/SDLDealerDetail.php?recID=213454', sourceLabel: 'Danh bạ đại lý Seachem',
   },
   {
-    id: 'nguyen-de-cantho',
-    name: 'Cá Cảnh – Phụ Kiện Nguyễn Đệ',
-    city: 'cantho',
-    address: '545 Quốc lộ 91, khu vực Long Thạnh 2, Thốt Nốt, Cần Thơ',
-    note: 'Trang cửa hàng được cập nhật trong năm 2026; vẫn nên xác nhận tình trạng cá và giờ mở cửa.',
-    source: 'https://www.petshops1.com/VN/Can-Tho/108929985386310/C%E1%BB%ADa-h%C3%A0ng-C%C3%A1-C%E1%BA%A3nh---Ph%E1%BB%A5-Ki%E1%BB%87n-Nguy%E1%BB%85n-%C4%90%E1%BB%86',
-    sourceLabel: 'Thông tin cửa hàng và bài đăng gần đây',
+    id: 'trung-tin', name: 'Cá Cảnh Thủy Sinh Trung Tín', city: 'hcm',
+    address: '718 Trường Chinh, TP. Hồ Chí Minh', phone: '0983 278 508',
+    hours: '08:00–21:00, theo website cửa hàng', verifiedAt: '2026-11-03', verification: 'Website cửa hàng',
+    note: 'Cửa hàng cá cảnh và thủy sinh. Chỉ dùng kênh chính thức của cửa hàng để xác minh trước khi giao dịch.', source: 'https://cacanhthuysinhtrungtin.com/canh-bao-gia-mao-thuong-hieu-ca-canh-trung-tin/', sourceLabel: 'Thông tin và cảnh báo từ Trung Tín',
+  },
+  {
+    id: 'thuysinhtim-nguyen-thai-binh', name: 'Thủy Sinh Tím — Nguyễn Thái Bình', city: 'hcm',
+    address: '373 Nguyễn Thái Bình, phường 12, Tân Bình, TP. Hồ Chí Minh', phone: '0785 111 988',
+    hours: '09:00–21:00, hằng ngày', verifiedAt: '2026-11-03', verification: 'Nguồn chính thức',
+    note: 'Chi nhánh trong hệ thống Thủy Sinh Tím; gọi hỏi cá đang có trước khi đi.', source: 'https://thuysinhtim.vn/he-thong-cua-hang', sourceLabel: 'Hệ thống cửa hàng Thủy Sinh Tím',
+  },
+  {
+    id: 'thuysinhtim-nguyen-binh-khiem', name: 'Thủy Sinh Tím — Nguyễn Bỉnh Khiêm', city: 'hcm',
+    address: '26/43 Nguyễn Bỉnh Khiêm, Đa Kao, Quận 1, TP. Hồ Chí Minh', phone: '0945 551 088',
+    hours: '09:00–21:00, hằng ngày', verifiedAt: '2026-11-03', verification: 'Nguồn chính thức',
+    note: 'Chi nhánh trong hệ thống Thủy Sinh Tím; gọi hỏi cá đang có trước khi đi.', source: 'https://thuysinhtim.vn/he-thong-cua-hang', sourceLabel: 'Hệ thống cửa hàng Thủy Sinh Tím',
   },
 ];
 
 export const shopCities = [
   { id: 'hcm', name: 'TP. Hồ Chí Minh' },
   { id: 'hanoi', name: 'Hà Nội' },
-  { id: 'danang', name: 'Đà Nẵng' },
-  { id: 'cantho', name: 'Cần Thơ' },
 ];
 
 export default shops;

@@ -5,14 +5,16 @@ AquaAtlas Vietnam là website tiếng Việt dành cho người yêu cá cảnh.
 ## Tính năng hiện có
 
 - Danh mục 10 loài cá nước ngọt: betta, bảy màu, neon, cardinal tetra, tetra lửa, tetra mũi đỏ, cầu vồng Boesemani, mún, vàng và thần tiên.
-- Hồ sơ từng loài với điều kiện bể, thức ăn, cách nuôi theo nhóm, gợi ý cá sống chung và nguồn đọc thêm.
+- Hồ sơ từng loài với điều kiện bể, thức ăn, cách nuôi theo nhóm, gợi ý cá sống chung, ngày đối chiếu và nguồn đọc thêm.
+- Bộ lọc theo nhóm nước, độ khó, thể tích bể, tính cách và loại bể nuôi chung.
+- Chọn tối đa ba loài để so sánh dung tích bể, nhiệt độ, pH, độ khó và chăm sóc.
 - Có thể chuyển ảnh hồ sơ giữa video cá bơi và ảnh tĩnh.
-- Hướng dẫn theo dõi các dấu hiệu sức khỏe bất thường.
-- Danh sách cửa hàng tham khảo ở TP. Hồ Chí Minh, Hà Nội, Đà Nẵng và Cần Thơ.
+- Hướng dẫn theo dõi sức khỏe: ghi triệu chứng, kiểm tra nước trước, nhận biết khi cần hỗ trợ chuyên môn; không thay chẩn đoán thú y.
+- Tìm cửa hàng theo TP. Hồ Chí Minh/Hà Nội, tìm theo tên hoặc quận, mở bản đồ, gọi điện và xem nguồn/ngày đối chiếu. Có Thủy Sinh Tím, HT Aquarium và Trung Tín.
 - Đăng nhập chung cho khách/admin; tài khoản, phiên đăng nhập và cá yêu thích được lưu qua backend/PostgreSQL.
-- Dashboard admin thêm, sửa, xóa hồ sơ; ảnh, video, ghi công và nguồn tham khảo của mỗi loài cũng được lưu.
+- Dashboard admin thêm, sửa, xóa hồ sơ; có kiểm tra ảnh, video, ghi công, thông số bể, nhóm tương thích và nguồn trước khi lưu.
 
-Thông tin cá và cửa hàng ban đầu là dữ liệu mẫu; hãy kiểm tra nguồn và xác nhận cửa hàng trước khi đến. PostgreSQL lưu tài khoản, phiên đăng nhập, hồ sơ cá và yêu thích. Nội dung cửa hàng, chăm sóc và sức khỏe vẫn là dữ liệu mẫu trong frontend. Hướng dẫn sức khỏe không thay thế chẩn đoán thú y.
+PostgreSQL lưu tài khoản, phiên đăng nhập, hồ sơ cá và yêu thích. Danh sách cửa hàng, hướng dẫn chăm sóc và sức khỏe nằm trong frontend; cửa hàng cần xác nhận tồn cá/giờ mở cửa trước khi đi. Ngày đối chiếu ghi trong hồ sơ cho biết lần xem lại nguồn, không bảo đảm thông tin hoặc hàng còn hiện tại. Hướng dẫn sức khỏe không thay thế chẩn đoán thú y.
 
 ## Chạy toàn bộ bằng Docker
 
@@ -87,3 +89,9 @@ Vite chuyển tiếp `/api` tới backend; mở địa chỉ frontend mà Vite i
 Ảnh và video tải từ nguồn bên ngoài nên cần kết nối Internet. Ảnh hồ sơ hiện dùng nguồn ảnh cụ thể theo từng loài và hiển thị liên kết ghi công ngay trên ảnh. Các giấy phép CC BY yêu cầu ghi tác giả và liên kết giấy phép; CC BY-SA có thêm điều kiện chia sẻ tương tự. Hãy mở trang nguồn trước khi tái sử dụng hoặc chỉnh sửa ảnh.
 
 Thông số cá tetra và cầu vồng có ghi rõ khi nào là hướng dẫn chung theo nhóm. Chúng không thay thế yêu cầu riêng của cá tại cửa hàng hoặc nguồn nuôi.
+
+## Cửa hàng tham khảo
+
+- [Thủy Sinh Tím — hệ thống cửa hàng](https://thuysinhtim.vn/he-thong-cua-hang) — bốn chi nhánh tại Hà Nội và TP. Hồ Chí Minh; trang chính thức công bố số liên hệ và giờ 09:00–21:00.
+- [HT Aquarium — danh bạ đại lý Seachem](https://www.seachem.com/SDL/SDLDealerDetail.php?recID=213454) — nguồn hãng ghi địa chỉ tại Quận 5, TP. Hồ Chí Minh. Tồn kho trên nguồn được ghi nhận lần cuối năm 2025; hỏi lại trước khi mua.
+- [Cá Cảnh Thủy Sinh Trung Tín](https://cacanhthuysinhtrungtin.com/) — website cửa hàng và [cảnh báo kênh giả mạo](https://cacanhthuysinhtrungtin.com/canh-bao-gia-mao-thuong-hieu-ca-canh-trung-tin/); chỉ liên hệ qua kênh chính thức.

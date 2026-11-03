@@ -3,6 +3,7 @@ import { useState } from 'react';
 const emptyFish = {
   id: '', name: '', scientificName: '', description: '', group: 'tropical', level: 'easy',
   category: 'NƯỚC NGỌT · NHIỆT ĐỚI', difficulty: 'Dễ bắt đầu', summary: '', tank: '',
+  minTankLiters: '', temperament: 'peaceful', compatibilityGroup: 'community',
   temperature: '', ph: '', groupSize: '', food: '', compatibility: '', image: '', video: '',
   videoType: 'video/mp4', videoCredit: '', videoSource: '', imageCredit: '', imageSource: '',
   sources: [], sourceLabel: '', sourceUrl: '',
@@ -19,6 +20,8 @@ const editableFields = [
   ['imageCredit', 'Tác giả / giấy phép ảnh'], ['imageSource', 'Trang nguồn ảnh'],
   ['sourceLabel', 'Tên nguồn tham khảo'], ['sourceUrl', 'Liên kết nguồn tham khảo'],
 ];
+
+const urlFields = new Set(['image', 'video', 'imageSource', 'videoSource', 'sourceUrl']);
 
 function createSlug(value) {
   return value.toLocaleLowerCase('vi').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -62,7 +65,10 @@ export default function AdminDashboard({ fish, onSaveFish, onDeleteFish, onExit,
           <form className="admin-editor" onSubmit={handleSave}>
             <div className="admin-editor-title"><h2>{form.id ? 'Chỉnh sửa hồ sơ' : 'Thêm loài cá'}</h2><button type="button" className="admin-secondary" onClick={() => setForm(null)}>Đóng</button></div>
             <div className="admin-form-grid">
-              {editableFields.map(([key, label]) => <label key={key}>{label}<input value={form[key] ?? ''} onChange={(event) => setForm({ ...form, [key]: event.target.value })} required={['name', 'scientificName', 'tank', 'temperature', 'ph'].includes(key)} /></label>)}
+              {editableFields.map(([key, label]) => <label key={key}>{label}<input type={urlFields.has(key) ? 'url' : 'text'} value={form[key] ?? ''} onChange={(event) => setForm({ ...form, [key]: event.target.value })} required={['name', 'scientificName', 'tank', 'temperature', 'ph', 'image', 'imageCredit', 'imageSource', 'sourceLabel', 'sourceUrl'].includes(key)} /></label>)}
+              <label>Dung tích tối thiểu để lọc (L)<input type="number" min="1" max="100000" value={form.minTankLiters ?? ''} onChange={(event) => setForm({ ...form, minTankLiters: Number(event.target.value) })} required /></label>
+              <label>Tính cách<select value={form.temperament} onChange={(event) => setForm({ ...form, temperament: event.target.value })}><option value="peaceful">Hiền</option><option value="active">Bơi khỏe, hoạt động nhiều</option><option value="independent">Độc lập</option><option value="semi-aggressive">Cần chọn bạn bể kỹ</option></select></label>
+              <label>Phân loại bể nuôi chung<select value={form.compatibilityGroup} onChange={(event) => setForm({ ...form, compatibilityGroup: event.target.value })}><option value="community">Bể cộng đồng hiền</option><option value="separate">Nên nuôi riêng</option><option value="coldwater-community">Bể cộng đồng nước mát</option><option value="large-community">Bể cộng đồng cá lớn</option></select></label>
               <label>Nhóm<select value={form.group} onChange={(event) => setForm({ ...form, group: event.target.value })}><option value="tropical">Nhiệt đới</option><option value="coldwater">Nước mát</option></select></label>
               <label>Độ khó<select value={form.level} onChange={(event) => setForm({ ...form, level: event.target.value, difficulty: event.target.value === 'easy' ? 'Dễ bắt đầu' : 'Cần chú ý' })}><option value="easy">Dễ bắt đầu</option><option value="medium">Cần chú ý</option></select></label>
             </div>

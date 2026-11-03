@@ -17,6 +17,10 @@ export default function App() {
   const [query, setQuery] = useState('');
   const [group, setGroup] = useState('all');
   const [level, setLevel] = useState('all');
+  const [tankSize, setTankSize] = useState('all');
+  const [temperament, setTemperament] = useState('all');
+  const [compatibility, setCompatibility] = useState('all');
+  const [compareIds, setCompareIds] = useState([]);
   const [activeFishId, setActiveFishId] = useState(() => new URLSearchParams(window.location.search).get('fish'));
   const [isAdminPage, setIsAdminPage] = useState(() => new URLSearchParams(window.location.search).get('admin') === '1');
   const [isAuthPage, setIsAuthPage] = useState(() => new URLSearchParams(window.location.search).get('auth') === '1');
@@ -118,8 +122,11 @@ export default function App() {
     const matchesName = !normalizedQuery || normalize(`${item.name} ${item.scientificName}`).includes(normalizedQuery);
     const matchesGroup = group === 'all' || item.group === group;
     const matchesLevel = level === 'all' || item.level === level;
+    const matchesTank = tankSize === 'all' || Number(item.minTankLiters) <= Number(tankSize);
+    const matchesTemperament = temperament === 'all' || item.temperament === temperament;
+    const matchesCompatibility = compatibility === 'all' || item.compatibilityGroup === compatibility;
     const matchesFavorite = !showFavorites || favorites.includes(item.id);
-    return matchesName && matchesGroup && matchesLevel && matchesFavorite;
+    return matchesName && matchesGroup && matchesLevel && matchesTank && matchesTemperament && matchesCompatibility && matchesFavorite;
   });
 
   function openFish(fish) {
@@ -202,6 +209,9 @@ export default function App() {
     setQuery('');
     setGroup('all');
     setLevel('all');
+    setTankSize('all');
+    setTemperament('all');
+    setCompatibility('all');
     setShowFavorites((current) => !current);
   }
 
@@ -240,15 +250,27 @@ export default function App() {
             query={query}
             group={group}
             level={level}
+            tankSize={tankSize}
+            temperament={temperament}
+            compatibility={compatibility}
             onQueryChange={setQuery}
             onGroupChange={setGroup}
             onLevelChange={setLevel}
+            onTankSizeChange={setTankSize}
+            onTemperamentChange={setTemperament}
+            onCompatibilityChange={setCompatibility}
           />
           <SpeciesSection
             fish={visibleFish}
             user={user}
             favorites={favorites}
             showFavorites={showFavorites}
+            compareIds={compareIds}
+            allFish={fish}
+            onToggleCompare={(id) => setCompareIds((current) => current.includes(id)
+              ? current.filter((item) => item !== id)
+              : current.length < 3 ? [...current, id] : current)}
+            onClearCompare={() => setCompareIds([])}
             onSelectFish={openFish}
             onToggleFavorite={toggleFavorite}
             onToggleFavoriteView={toggleFavoritesView}

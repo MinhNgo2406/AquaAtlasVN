@@ -5,6 +5,95 @@ Tệp này dùng để học code và ghi lại các đợt cập nhật. README
 website và cách chạy dự án.
 
 
+BẢN 14 — BỘ LỌC, SO SÁNH, SỨC KHỎE VÀ CỬA HÀNG — 03/11/2026
+
+Đã làm:
+  - Thêm bộ lọc cá theo dung tích bể, tính cách và loại bể tương thích. Các bộ
+    lọc cũ theo tên, nhóm nước, độ khó và yêu thích vẫn hoạt động cùng nhau.
+  - Thêm nút chọn loài ở từng thẻ và bảng so sánh tối đa ba cá: bể, nhiệt độ,
+    pH, mức chăm sóc, tính cách, nuôi đàn và tương thích.
+  - Mở rộng hướng dẫn sức khỏe thành ba bước dễ làm theo: ghi dấu hiệu, kiểm tra
+    chất lượng nước, rồi giảm nguy cơ lây lan và hỏi người có chuyên môn. Giao
+    diện nhắc người dùng không tự phối hợp thuốc và không xem nội dung là chẩn
+    đoán thú y.
+  - Thêm cửa hàng theo Hà Nội/TP. Hồ Chí Minh, ô lọc theo tên hoặc quận, link
+    gọi điện, mở Google Maps, giờ mở cửa, nguồn và ngày đối chiếu.
+  - Thêm các chi nhánh Thủy Sinh Tím, HT Aquarium và Cá Cảnh Thủy Sinh Trung Tín.
+    Dùng website chính thức của Thủy Sinh Tím/Trung Tín và danh bạ hãng Seachem
+    cho HT Aquarium; trường chưa xác minh được ghi thẳng là chưa xác minh.
+  - Chuẩn hóa hồ sơ cá với dung tích lọc, tính cách, kiểu bể tương thích, trạng
+    thái rà soát và ngày rà soát. Hồ sơ chi tiết hiển thị ngày và ghi chú phạm vi
+    của thông số.
+  - Thêm kiểm tra admin ở cả giao diện lẫn API: ảnh, nguồn ảnh, ghi công, thông
+    số chăm sóc, nhóm lọc, và ít nhất một nguồn có URL an toàn. Video nếu có phải
+    kèm nguồn và ghi công. API là nơi kiểm tra cuối cùng, nên dữ liệu không thể
+    vượt kiểm tra chỉ bằng cách bỏ qua HTML form.
+  - Cập nhật README.md và migration cơ sở dữ liệu để các hồ sơ đã có cũng dùng
+    được với bộ lọc mới.
+
+Code liên quan:
+  - `frontend/src/App.jsx` giữ trạng thái của bộ lọc, chỉ hiển thị cá khớp mọi
+    điều kiện đã chọn, và quản lý tập cá so sánh.
+  - `frontend/src/components/QuickSearch.jsx` hiển thị lựa chọn lọc. Mỗi Select
+    gọi callback để báo tiêu chí mới về App.jsx.
+  - `frontend/src/components/SpeciesSection.jsx` gắn nút so sánh vào từng thẻ
+    và dựng bảng HTML với các dòng thông tin chung để người dùng đối chiếu.
+  - `frontend/src/data/fish.js` chứa thuộc tính lọc như `minTankLiters`,
+    `temperament`, `compatibilityGroup`, `reviewedAt`, `dataStatus`.
+  - `frontend/src/components/FishDetailPage.jsx` thông báo ngày hồ sơ được rà
+    soát, hiển thị từng nguồn và nhắc thông số có thể là mốc chung theo nhóm.
+  - `frontend/src/components/HealthAndShops.jsx` chứa checklist sức khỏe, bộ lọc
+    cửa hàng, link `tel:` và bản đồ, cũng như ngày/nguồn cho từng cửa tiệm.
+  - `frontend/src/data/shops.js` là danh sách cửa hàng mẫu. Từng địa chỉ có thành
+    phố, hotline nếu có, giờ, ngày kiểm tra, loại nguồn và liên kết gốc.
+  - `frontend/src/components/AdminDashboard.jsx` thêm trường cho bộ lọc và nguồn.
+    URL được kiểm tra ở trình duyệt bằng `type=url`; đây chỉ là trợ giúp nhập,
+    không phải lớp bảo vệ cuối cùng.
+  - `backend/server.js` xác thực nội dung cá ở `saveFish`. Hàm dùng URL parser để
+    chỉ nhận HTTP/HTTPS, bắt buộc đủ nguồn và metadata lọc, rồi tự đặt ngày rà soát
+    khi admin lưu. Import dữ liệu cũ có đường xử lý riêng để không làm mất dữ liệu;
+    hồ sơ thiếu nguồn được đánh dấu `needs-review`.
+  - `backend/db/migrations/005_add_fish_quality_fields.sql` bổ sung metadata vào
+    hồ sơ đang ở PostgreSQL mà vẫn giữ giá trị đã có. Bảng `schema_migrations`
+    giúp cùng migration không chạy lặp lại.
+  - `backend/db/migrations/006_complete_initial_fish_catalog.sql` bù sáu loài
+    nền nếu migration thêm bốn loài mới chạy trước seed. Mỗi mã cá chỉ thêm khi
+    chưa có; version đánh dấu để việc admin xóa loài sau này không bị hoàn tác
+    khi backend khởi động lại.
+
+Cách hoạt động:
+  - Ví dụ chọn bể 45L nghĩa là danh sách chỉ giữ hồ sơ có `minTankLiters` không
+    lớn hơn 45. Đây là tiêu chí sàng lọc của trang, không phải lời khuyên rằng
+    dung tích đó đủ cho mọi cách bố trí bể hoặc cá trưởng thành.
+  - Mỗi thao tác “So sánh” thêm/bỏ id cá khỏi mảng `compareIds`. Khi có ít nhất
+    hai lựa chọn, component lấy dữ liệu đầy đủ từ `allFish` và dựng bảng; lựa chọn
+    được giới hạn tối đa ba loài.
+  - Nguồn cửa hàng được gắn trực tiếp lên từng thẻ. Nút bản đồ tạo URL tìm kiếm
+    với tên và địa chỉ; nút điện thoại dùng `tel:` khi có hotline.
+  - Khi admin lưu hồ sơ, browser validation hỗ trợ nhập. Backend kiểm tra lại
+    các trường bắt buộc độc lập với trình duyệt, sau đó ghi hồ sơ JSONB như trước.
+  - Migration 005 chỉ lấp các metadata còn thiếu trong từng hồ sơ. Toán tử hợp
+    JSONB được dùng để giữ các giá trị admin đã lưu trước đó.
+  - Migration 006 giải quyết thứ tự seed: migration 003 có thể thêm bốn loài mới
+    khi bảng cá đang trống, khiến điều kiện “chỉ seed khi bảng rỗng” không còn
+    đúng. Migration 006 thêm các hồ sơ nền còn thiếu đúng một lần.
+
+Điều cần hiểu / giới hạn:
+  - Ngày rà soát cho biết nguồn được mở và đối chiếu, không bảo đảm cửa hàng còn
+    hàng hoặc cá còn khỏe. Nên gọi trước; giờ mở cửa chưa có nguồn chắc chắn được
+    ghi “Chưa xác minh”.
+  - HT Aquarium được xác nhận qua danh bạ hãng vật tư Seachem; nguồn đó ghi lần
+    kiểm tra mặt hàng năm 2025 và điện thoại theo định dạng cũ. Trang hiện không
+    tự suy ra hoặc hiển thị số điện thoại khi chưa định dạng chắc chắn.
+  - Nhiều thông số chăm sóc là hướng dẫn nhóm, hoặc mốc sàng lọc để lọc cá. Kích
+    thước bể còn tùy kích thước trưởng thành, diện tích mặt nước, lọc, số lượng cá
+    và yêu cầu của dòng cá cụ thể.
+  - Hướng dẫn sức khỏe là bước quan sát ban đầu; triệu chứng giống nhau có thể
+    có nhiều nguyên nhân. Website không chẩn đoán bệnh hoặc kê thuốc.
+  - Các hồ sơ do admin nhập qua luồng chuyển dữ liệu cũ được giữ lại ngay cả khi
+    thiếu nguồn. Trạng thái `needs-review` báo cho người xem biết cần kiểm tra.
+
+
 BẢN 13 — CHUẨN HÓA HỒ SƠ VÀ THÊM CÁ TETRA, CẦU VỒNG — 30/10/2026
 
 Đã làm:

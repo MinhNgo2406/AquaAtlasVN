@@ -78,9 +78,10 @@ export default function FishDetailPage({ fish, onBack }) {
 
       <aside className="detail-sources">
         <h2>Nguồn tham khảo</h2>
-        <p>Thông số là hướng dẫn tham khảo. Nhu cầu có thể khác giữa từng dòng cá và nguồn nuôi; hãy đối chiếu yêu cầu của cá tại nơi bán trước khi thả vào bể.</p>
+        <p className="data-review-note">{fish.dataStatus === 'reviewed' ? `Hồ sơ được đối chiếu nguồn lần gần nhất: ${fish.reviewedAt || 'chưa ghi ngày'}.` : 'Hồ sơ đang cần kiểm tra thêm nguồn và thông số.'} Thông số chăm sóc là hướng dẫn tham khảo; một số mốc có thể là hướng dẫn chung theo nhóm, không phải tối ưu riêng cho mọi dòng cá.</p>
+        {fish.minTankLiters && <p className="data-review-note">Bể tối thiểu đang dùng để lọc danh mục: khoảng {fish.minTankLiters}L cho nhóm/cá theo hướng dẫn hồ sơ. Đây là mốc sàng lọc, không thay thế việc tính bể theo cá trưởng thành, kích thước bể và lọc.</p>}
         <ul>
-          {fish.sources.map((source) => (
+          {(fish.sources || []).map((source) => (
             <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.label} ↗</a></li>
           ))}
         </ul>

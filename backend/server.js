@@ -116,12 +116,45 @@ async function requireUser(request, role) {
   return user;
 }
 
-async function saveFish(fish) {
+async function saveFish(inputFish, { allowIncomplete = false } = {}) {
+  const fish = inputFish && typeof inputFish === 'object' ? { ...inputFish } : inputFish;
   if (!fish || typeof fish !== 'object' || !/^[a-z0-9-]{1,80}$/.test(fish.id || '')) {
     throw new HttpError(400, 'Mã loài cá không hợp lệ.');
   }
   if (!fish.name?.trim() || !fish.scientificName?.trim()) {
     throw new HttpError(400, 'Vui lòng nhập tên thường gọi và tên khoa học.');
+  }
+  if (!allowIncomplete) {
+    const isWebUrl = (value) => {
+      try { return ['http:', 'https:'].includes(new URL(value).protocol); } catch { return false; }
+    };
+    const requiredText = ['description', 'summary', 'tank', 'temperature', 'ph', 'groupSize', 'food', 'compatibility', 'imageCredit'];
+    if (requiredText.some((key) => typeof fish[key] !== 'string' || !fish[key].trim())) {
+      throw new HttpError(400, 'Hãy điền đủ mô tả, thông số, chăm sóc và ghi công ảnh trước khi lưu.');
+    }
+    if (!isWebUrl(fish.image) || !isWebUrl(fish.imageSource)) {
+      throw new HttpError(400, 'Ảnh và trang nguồn ảnh cần là liên kết HTTP hoặc HTTPS hợp lệ.');
+    }
+    if (fish.video && (!isWebUrl(fish.video) || !isWebUrl(fish.videoSource) || !fish.videoCredit?.trim())) {
+      throw new HttpError(400, 'Nếu thêm video, hãy nhập URL video, trang nguồn và ghi công video hợp lệ.');
+    }
+    if (!Array.isArray(fish.sources) || !fish.sources.length || fish.sources.some((source) => !source.label?.trim() || !isWebUrl(source.url))) {
+      throw new HttpError(400, 'Thêm ít nhất một nguồn tham khảo có tên và URL HTTP/HTTPS hợp lệ.');
+    }
+    if (!Number.isInteger(Number(fish.minTankLiters)) || Number(fish.minTankLiters) < 1) {
+      throw new HttpError(400, 'Dung tích bể dùng để lọc cần là số lít nguyên lớn hơn 0.');
+    }
+    if (!['peaceful', 'active', 'independent', 'semi-aggressive'].includes(fish.temperament)) {
+      throw new HttpError(400, 'Chọn một giá trị tính cách trong danh sách.');
+    }
+    if (!['community', 'separate', 'coldwater-community', 'large-community'].includes(fish.compatibilityGroup)) {
+      throw new HttpError(400, 'Chọn một nhóm tương thích trong danh sách.');
+    }
+    fish.dataStatus = 'reviewed';
+    fish.reviewedAt = new Date().toISOString().slice(0, 10);
+  } else if (!fish.imageSource || !fish.imageCredit || !Array.isArray(fish.sources) || !fish.sources.length
+    || !Number.isInteger(Number(fish.minTankLiters)) || !fish.temperament || !fish.compatibilityGroup) {
+    fish.dataStatus = 'needs-review';
   }
   const result = await pool.query(
     `INSERT INTO fish (id, data, sort_order)
@@ -258,7 +291,7 @@ async function route(request, response) {
     const body = await readBody(request);
     if (!Array.isArray(body.fish) || body.fish.length > 500) throw new HttpError(400, 'Danh sách hồ sơ cần nhập không hợp lệ.');
     const imported = [];
-    for (const item of body.fish) imported.push(await saveFish(item));
+    for (const item of body.fish) imported.push(await saveFish(item, { allowIncomplete: true }));
     send(response, 200, { imported: imported.length });
     return;
   }
@@ -296,6 +329,10 @@ async function start() {
   await pool.query(fishMigration);
   const attributionMigration = await readFile(new URL('./db/migrations/004_correct_image_attributions.sql', import.meta.url), 'utf8');
   await pool.query(attributionMigration);
+  const qualityMigration = await readFile(new URL('./db/migrations/005_add_fish_quality_fields.sql', import.meta.url), 'utf8');
+  await pool.query(qualityMigration);
+  const catalogMigration = await readFile(new URL('./db/migrations/006_complete_initial_fish_catalog.sql', import.meta.url), 'utf8');
+  await pool.query(catalogMigration);
 
   const seedResult = await pool.query('SELECT COUNT(*)::int AS count FROM fish');
   if (seedResult.rows[0].count === 0) {

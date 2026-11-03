@@ -13,6 +13,12 @@ const warningSigns = [
   ['Bơi bất thường, sưng bụng', 'Cách ly nếu có thể mà không gây thêm stress, rồi hỏi bác sĩ thú y thủy sản hoặc người có chuyên môn.'],
 ];
 
+const healthSteps = [
+  ['01', 'Ghi nhận thay đổi', 'Thời điểm bắt đầu, số cá bị ảnh hưởng, nhịp thở, khả năng bơi và lượng ăn. Chụp ảnh/video dưới ánh sáng bình thường.'],
+  ['02', 'Kiểm tra nước trước', 'Đo ammonia, nitrite, nitrate, pH và nhiệt độ bằng bộ test phù hợp. Ammonia và nitrite nên ở mức 0 mg/L; nếu bất thường, kiểm tra lọc và xử lý nước an toàn.'],
+  ['03', 'Giảm lây lan và hỏi chuyên môn', 'Không tự trộn thuốc. Chỉ cách ly khi có bể cách ly đã chuẩn bị phù hợp; nếu nhiều cá khó thở, chết nhanh hoặc tình trạng xấu đi, liên hệ bác sĩ thú y thủy sản/người có chuyên môn.'],
+];
+
 function HealthSection() {
   return (
     <>
@@ -39,8 +45,15 @@ function HealthSection() {
             </article>
           ))}
         </div>
+        <div className="health-checklist">
+          <h3>Ba bước kiểm tra an toàn ban đầu</h3>
+          <div>{healthSteps.map(([number, title, detail]) => <article key={number}><span>{number}</span><section><strong>{title}</strong><p>{detail}</p></section></article>)}</div>
+        </div>
         <p className="health-caution">Không tự phối hợp thuốc hoặc tăng liều theo mẹo trên mạng. Chẩn đoán bệnh cá thường cần thêm thông tin về chất lượng nước và có thể cần kiểm tra chuyên môn.</p>
-        <a className="health-source" href="https://www.merckvetmanual.com/multimedia/table/common-signs-of-illness-in-fish" target="_blank" rel="noreferrer">Nguồn tham khảo: Merck Veterinary Manual — dấu hiệu cá mắc bệnh ↗</a>
+        <div className="health-sources">
+          <a className="health-source" href="https://www.merckvetmanual.com/multimedia/table/common-signs-of-illness-in-fish" target="_blank" rel="noreferrer">Merck Veterinary Manual — dấu hiệu cá mắc bệnh ↗</a>
+          <a className="health-source" href="https://ornamentalfish.org/what-we-do/advice-information/care-sheets/caresheets-tropical-freshwater-fish/how-to-look-after-tetras-and-pencilfish/" target="_blank" rel="noreferrer">OATA — kiểm tra nước và chăm sóc cá nhiệt đới ↗</a>
+        </div>
       </section>
     </>
   );
@@ -48,8 +61,9 @@ function HealthSection() {
 
 function ShopSection() {
   const [city, setCity] = useState('hcm');
+  const [shopQuery, setShopQuery] = useState('');
   const selectedCity = shopCities.find((item) => item.id === city);
-  const cityShops = shops.filter((shop) => shop.city === city);
+  const cityShops = shops.filter((shop) => shop.city === city && `${shop.name} ${shop.address}`.toLocaleLowerCase('vi').includes(shopQuery.trim().toLocaleLowerCase('vi')));
 
   return (
     <section className="shop-section" id="shops">
@@ -67,8 +81,9 @@ function ShopSection() {
             </FormControl>
             <Button aria-label="Xem cửa hàng" onClick={() => document.querySelector('#shop-results')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}>↗</Button>
           </div>
+          <TextField className="shop-area-search" label="Tên tiệm hoặc quận" size="small" value={shopQuery} onChange={(event) => setShopQuery(event.target.value)} placeholder="Ví dụ: Quận 5" />
         </div>
-        <small>Thông tin có thể thay đổi; gọi hoặc nhắn cửa hàng trước khi đến.</small>
+        <small>Địa chỉ, giờ và tồn cá có thể thay đổi. Gọi tiệm trước khi đến. “Ngày kiểm tra” là ngày chúng tôi đối chiếu nguồn, không bảo đảm cửa hàng đang mở.</small>
       </div>
       <div className="shop-image shop-video-wrap" role="img" aria-label="Cá vàng bơi trong bể cá" >
         <video
@@ -90,13 +105,21 @@ function ShopSection() {
         <div className="shop-card-grid">
           {cityShops.map((shop) => (
             <article className="shop-card" key={shop.id}>
-              <h3>{shop.name}</h3><p>{shop.address}</p><small>{shop.note}</small>
+              <div className="shop-card-top"><h3>{shop.name}</h3><span>{shop.verification}</span></div>
+              <p>{shop.address}</p>
+              <dl className="shop-details">
+                <div><dt>Điện thoại</dt><dd>{shop.phone ? <a href={`tel:${shop.phone.replaceAll(' ', '')}`}>{shop.phone}</a> : 'Chưa có số đã xác minh'}</dd></div>
+                <div><dt>Giờ mở cửa</dt><dd>{shop.hours}</dd></div>
+                <div><dt>Đối chiếu nguồn</dt><dd>{shop.verifiedAt}</dd></div>
+              </dl>
+              <small>{shop.note}</small>
               <div className="shop-card-links">
                 <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${shop.name} ${shop.address}`)}`} target="_blank" rel="noreferrer">Mở bản đồ ↗</a>
                 <a href={shop.source} target="_blank" rel="noreferrer">{shop.sourceLabel} ↗</a>
               </div>
             </article>
           ))}
+          {!cityShops.length && <p className="empty-state">Chưa có cửa hàng khớp khu vực tìm kiếm này.</p>}
         </div>
       </div>
     </section>
