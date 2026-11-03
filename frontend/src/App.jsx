@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { apiRequest } from './api.js';
 import CareSection from './components/CareSection.jsx';
 import CustomerWorkspace from './components/CustomerWorkspace.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
@@ -341,17 +342,6 @@ function mergeFishDefaults(savedItem) {
     ...savedItem,
     image: savedItem.image === previousFishImages[savedItem.id] ? defaultFish.image : savedItem.image,
   };
-}
-
-async function apiRequest(path, options = {}) {
-  const response = await fetch(path, {
-    credentials: 'same-origin',
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...options.headers },
-  });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error || 'Máy chủ chưa thể xử lý yêu cầu.');
-  return data;
 }
 
 async function saveRemoteFavorites(fishIds) {

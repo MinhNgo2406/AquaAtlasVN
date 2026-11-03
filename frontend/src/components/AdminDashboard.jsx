@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { apiRequest } from '../api.js';
 
 const emptyFish = {
   id: '', name: '', scientificName: '', description: '', group: 'tropical', level: 'easy',
@@ -48,29 +49,36 @@ export default function AdminDashboard({ fish, shops, onSaveFish, onDeleteFish, 
   const [adminShops, setAdminShops] = useState(shops);
 
   async function loadReports() {
-    const response = await fetch('/api/admin/reports', { credentials: 'same-origin' });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || 'Không tải được góp ý.');
-    setReports(data.reports || []);
+    const { reports: savedReports } = await apiRequest(
+      '/api/admin/reports',
+      {},
+      'Không tải được góp ý.',
+    );
+    setReports(savedReports || []);
   }
 
   useEffect(() => { loadReports().catch((error) => setNotice(error.message)); }, []);
 
-  useEffect(() => {
-    fetch('/api/admin/shops', { credentials: 'same-origin' })
-      .then(async (response) => {
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(data.error || 'Không tải được danh sách cửa hàng.');
-        setAdminShops(data.shops || []);
-      })
-      .catch((error) => setNotice(error.message));
-  }, []);
+  async function loadAdminShops() {
+    const { shops: savedShops } = await apiRequest(
+      '/api/admin/shops',
+      {},
+      'Không tải được danh sách cửa hàng.',
+    );
+    setAdminShops(savedShops || []);
+  }
+
+  useEffect(() => { loadAdminShops().catch((error) => setNotice(error.message)); }, []);
 
   async function updateReport(report, status, adminNote) {
-    const response = await fetch(`/api/admin/reports/${report.id}`, { method: 'PATCH', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status, adminNote }) });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || 'Không cập nhật được góp ý.');
-    setReports((current) => current.map((item) => item.id === report.id ? { ...item, ...data.report } : item));
+    const { report: updatedReport } = await apiRequest(
+      `/api/admin/reports/${report.id}`,
+      { method: 'PATCH', body: JSON.stringify({ status, adminNote }) },
+      'Không cập nhật được góp ý.',
+    );
+    setReports((current) => current.map((item) => (
+      item.id === report.id ? { ...item, ...updatedReport } : item
+    )));
     setNotice(`Đã cập nhật góp ý về “${report.targetLabel}”.`);
   }
 
