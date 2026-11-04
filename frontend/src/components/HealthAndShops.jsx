@@ -150,21 +150,13 @@ function ShopSection({ user, shops = [] }) {
 }
 
 function NewsletterSection() {
-  const [message, setMessage] = useState('Chỉ gửi nội dung hữu ích, bạn có thể hủy đăng ký bất cứ lúc nào.');
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    setMessage('Cảm ơn bạn! Tính năng đăng ký sẽ được kết nối khi hoàn thiện phiên bản tiếp theo.');
-  }
-
   return (
     <section className="newsletter">
       <div><div className="eyebrow"><span /> MỖI TUẦN MỘT CHÚT KIẾN THỨC</div><h2>Để bể cá của bạn<br />luôn <em>tràn sức sống.</em></h2></div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="newsletter-email">Nhận mẹo chăm sóc cá và bài viết mới</label>
-        <div className="email-field"><TextField id="newsletter-email" type="email" placeholder="Email của bạn" variant="standard" fullWidth required /><Button type="submit" aria-label="Đăng ký nhận tin">↗</Button></div>
-        <small aria-live="polite">{message}</small>
-      </form>
+      <div className="newsletter-coming-soon">
+        <strong>Tính năng nhận tin sắp ra mắt</strong>
+        <small>Website hiện chưa thu thập hoặc lưu địa chỉ email.</small>
+      </div>
     </section>
   );
 }

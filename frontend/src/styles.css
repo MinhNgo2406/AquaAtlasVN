@@ -1700,6 +1700,12 @@ p {
 .admin-editor-title h2 { margin: 0; font-size: 18px; }
 .admin-form-grid { margin-top: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
 .admin-editor-actions { justify-content: flex-start; margin-top: 20px; }
+.admin-media-upload { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 16px; background: var(--surface-soft); border: 1px solid var(--line); }
+.admin-media-upload label { display: grid; gap: 8px; }
+.admin-media-upload input[type="file"] { width: 100%; min-width: 0; padding: 9px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; }
+.admin-media-upload img,
+.admin-media-upload video { width: 100%; max-height: 190px; object-fit: contain; background: #0b1312; }
+.admin-media-upload small { grid-column: 1 / -1; color: var(--muted); line-height: 1.6; }
 .admin-fish-list { display: grid; gap: 9px; }
 .admin-fish-row { padding: 12px 16px; display: flex; align-items: center; gap: 15px; background: white; border: 1px solid var(--line); }
 .admin-fish-row img { width: 65px; height: 54px; object-fit: cover; }
@@ -1770,6 +1776,8 @@ p {
   .admin-content { padding-top: 34px; }
   .admin-heading { align-items: start; flex-direction: column; }
   .admin-form-grid { grid-template-columns: 1fr; }
+  .admin-media-upload { grid-template-columns: 1fr; }
+  .admin-media-upload small { grid-column: auto; }
   .admin-fish-row { align-items: start; flex-wrap: wrap; }
   .admin-row-actions { width: 100%; justify-content: flex-end; }
   .admin-login { padding: 27px; }
@@ -2123,4 +2131,161 @@ body {
   .list-expand-button.MuiButton-root { width: 100%; }
   .shop-card-grid { grid-template-columns: 1fr; }
   .detail-media { height: 240px; }
+}
+
+/* Optional dark palette for the public site, account screens, and admin workspace. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #e2eee8;
+  --green: #a9d5c0;
+  --deep: #091b18;
+  --lime: #c9ef72;
+  --paper: #101b19;
+  --muted: #a0b2aa;
+  --line: #31443d;
+  --surface: #172522;
+  --surface-raised: #1d2c28;
+  --surface-soft: #22342d;
+}
+
+:root[data-theme="dark"] body { background: var(--paper); color: var(--ink); }
+:root[data-theme="dark"] .site-header.MuiAppBar-root,
+:root[data-theme="dark"] .quick-search,
+:root[data-theme="dark"] .fish-card.MuiCard-root,
+:root[data-theme="dark"] .compare-area,
+:root[data-theme="dark"] .detail-panel,
+:root[data-theme="dark"] .shop-card,
+:root[data-theme="dark"] .admin-login,
+:root[data-theme="dark"] .admin-topbar,
+:root[data-theme="dark"] .admin-editor,
+:root[data-theme="dark"] .admin-fish-row,
+:root[data-theme="dark"] .admin-report-card,
+:root[data-theme="dark"] .workspace-create,
+:root[data-theme="dark"] .workspace-aquarium { background: var(--surface); color: var(--ink); }
+:root[data-theme="dark"] .health-section,
+:root[data-theme="dark"] .health-checklist article,
+:root[data-theme="dark"] .auth-demo-note,
+:root[data-theme="dark"] .admin-security-note,
+:root[data-theme="dark"] .admin-warning,
+:root[data-theme="dark"] .compare-table,
+:root[data-theme="dark"] .compare-area { background: var(--surface-soft); color: var(--ink); }
+:root[data-theme="dark"] .quick-search .MuiOutlinedInput-root,
+:root[data-theme="dark"] .shop-search-controls,
+:root[data-theme="dark"] .shop-area-search .MuiOutlinedInput-root { color: var(--ink); background: var(--surface-raised); }
+:root[data-theme="dark"] .quick-search .MuiOutlinedInput-notchedOutline,
+:root[data-theme="dark"] .shop-area-search .MuiOutlinedInput-notchedOutline { border-color: var(--line); }
+:root[data-theme="dark"] .quick-search .MuiInputBase-input,
+:root[data-theme="dark"] .quick-search .MuiSelect-select,
+:root[data-theme="dark"] .shop-search-controls .MuiSelect-select,
+:root[data-theme="dark"] .shop-area-search .MuiInputBase-input { color: var(--ink); }
+:root[data-theme="dark"] .quick-search .MuiInputLabel-root,
+:root[data-theme="dark"] .shop-area-search .MuiInputLabel-root,
+:root[data-theme="dark"] .quick-search .MuiSvgIcon-root,
+:root[data-theme="dark"] .shop-search-controls .MuiSvgIcon-root { color: var(--muted); }
+:root[data-theme="dark"] .MuiMenu-paper,
+:root[data-theme="dark"] .MuiPopover-paper { color: var(--ink); background: var(--surface-raised); }
+:root[data-theme="dark"] .MuiMenuItem-root { color: var(--ink); }
+:root[data-theme="dark"] .health-copy > p,
+:root[data-theme="dark"] .health-sign p,
+:root[data-theme="dark"] .health-caution,
+:root[data-theme="dark"] .health-checklist p,
+:root[data-theme="dark"] .health-source,
+:root[data-theme="dark"] .tip-card p,
+:root[data-theme="dark"] .newsletter-coming-soon small { color: #afc0b7; }
+:root[data-theme="dark"] .health-guide { background: transparent; }
+:root[data-theme="dark"] .shop-section { color: var(--ink); background: var(--surface); }
+:root[data-theme="dark"] .shop-copy > p { color: #bdccc4; }
+:root[data-theme="dark"] .health-signs { border-color: rgb(226 238 232 / 22%); }
+:root[data-theme="dark"] .health-sign,
+:root[data-theme="dark"] .health-sign:nth-child(3),
+:root[data-theme="dark"] .health-sign:nth-child(4),
+:root[data-theme="dark"] .health-checklist article { border-color: rgb(226 238 232 / 22%); }
+:root[data-theme="dark"] .health-orbit { border-color: #526b56; }
+:root[data-theme="dark"] .health-center { color: #ddf2b9; background: #304b3a; }
+:root[data-theme="dark"] .bubble { color: #d7efad; background: #263b30; }
+:root[data-theme="dark"] .admin-warning { color: #f1dda2; }
+:root[data-theme="dark"] .admin-security-note { color: #efdda9; }
+:root[data-theme="dark"] .admin-error { color: #ff9b8e; }
+:root[data-theme="dark"] .auth-form label,
+:root[data-theme="dark"] .admin-form-grid label,
+:root[data-theme="dark"] .workspace-form-row label,
+:root[data-theme="dark"] .workspace-log-form label,
+:root[data-theme="dark"] .content-report label,
+:root[data-theme="dark"] .workspace-fish-picker legend { color: #bdccc4; }
+:root[data-theme="dark"] .auth-tabs button,
+:root[data-theme="dark"] .account-greeting,
+:root[data-theme="dark"] .data-review-note,
+:root[data-theme="dark"] .compare-heading small,
+:root[data-theme="dark"] .compare-hint,
+:root[data-theme="dark"] .report-link { color: #afc0b7; }
+:root[data-theme="dark"] .auth-demo-note { color: #d6e4dc; }
+:root[data-theme="dark"] .auth-demo-note code { color: #e2eee8; }
+:root[data-theme="dark"] .compare-table thead em { color: #afc0b7; }
+:root[data-theme="dark"] .detail-sources a,
+:root[data-theme="dark"] .shop-card-links a { color: #d3f28d; }
+:root[data-theme="dark"] .admin-success,
+:root[data-theme="dark"] .workspace-notice { color: #bce6c8; }
+:root[data-theme="dark"] .workspace-notice { background: #233d30; }
+:root[data-theme="dark"] .admin-page { background: var(--paper); color: var(--ink); }
+:root[data-theme="dark"] .fish-info,
+:root[data-theme="dark"] .detail-content,
+:root[data-theme="dark"] .shop-results,
+:root[data-theme="dark"] .newsletter { background-color: var(--paper); color: var(--ink); }
+:root[data-theme="dark"] .customer-workspace,
+:root[data-theme="dark"] .detail-hero,
+:root[data-theme="dark"] .detail-sources { border-color: var(--line); }
+:root[data-theme="dark"] .fish-name,
+:root[data-theme="dark"] .detail-panel h2,
+:root[data-theme="dark"] .detail-sources h2,
+:root[data-theme="dark"] .shop-card h3,
+:root[data-theme="dark"] .admin-login h1,
+:root[data-theme="dark"] .admin-heading h1,
+:root[data-theme="dark"] .admin-heading h2,
+:root[data-theme="dark"] .workspace-create h3,
+:root[data-theme="dark"] .workspace-aquarium h3 { color: var(--ink); }
+:root[data-theme="dark"] .main-nav a,
+:root[data-theme="dark"] .footer-links a,
+:root[data-theme="dark"] .fish-info p,
+:root[data-theme="dark"] .fish-meta,
+:root[data-theme="dark"] .detail-intro p,
+:root[data-theme="dark"] .detail-intro .scientific-name,
+:root[data-theme="dark"] .fish-fact dt,
+:root[data-theme="dark"] .detail-sources > p,
+:root[data-theme="dark"] .shop-card p,
+:root[data-theme="dark"] .admin-login > p,
+:root[data-theme="dark"] .admin-heading p,
+:root[data-theme="dark"] .admin-fish-info p,
+:root[data-theme="dark"] .admin-shop-manager > .admin-heading p,
+:root[data-theme="dark"] .workspace-aquarium > header p,
+:root[data-theme="dark"] .workspace-list small,
+:root[data-theme="dark"] .admin-report-card header span { color: #afc0b7; }
+:root[data-theme="dark"] .detail-sources a,
+:root[data-theme="dark"] .shop-card-links a,
+:root[data-theme="dark"] .admin-back-link { color: #c8ee86; }
+:root[data-theme="dark"] .account-action.MuiButton-root,
+:root[data-theme="dark"] .admin-secondary { color: var(--ink); border-color: var(--line); background: var(--surface-raised); }
+:root[data-theme="dark"] .admin-login input,
+:root[data-theme="dark"] .admin-form-grid input,
+:root[data-theme="dark"] .admin-form-grid select,
+:root[data-theme="dark"] .workspace-create input:not([type="checkbox"]),
+:root[data-theme="dark"] .workspace-inline-form input,
+:root[data-theme="dark"] .workspace-log-form input,
+:root[data-theme="dark"] .workspace-log-form textarea,
+:root[data-theme="dark"] .content-report textarea,
+:root[data-theme="dark"] .admin-report-controls input,
+:root[data-theme="dark"] .admin-report-controls select { color: var(--ink); border-color: var(--line); background: var(--surface-raised); }
+:root[data-theme="dark"] .newsletter-coming-soon { color: var(--ink); }
+.theme-toggle.MuiIconButton-root { color: var(--ink); border: 1px solid var(--line); }
+.auth-top-actions { display: flex; align-items: center; justify-content: space-between; }
+.newsletter-coming-soon { display: grid; gap: 7px; align-content: center; }
+.newsletter-coming-soon strong { font-size: 14px; }
+.newsletter-coming-soon small { color: var(--muted); font-size: 12px; line-height: 1.6; }
+.app-loading { min-height: 100vh; display: grid; place-items: center; color: var(--muted); background: var(--paper); }
+.app-error { min-height: 100vh; padding: 32px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; background: var(--paper); color: var(--ink); }
+.app-error h1 { margin: 8px 0; font-size: clamp(30px, 5vw, 48px); }
+.app-error > p:not(.eyebrow) { max-width: 520px; color: var(--muted); }
+.app-error button { margin-top: 12px; padding: 12px 18px; border: 0; color: #102e27; background: var(--lime); cursor: pointer; font: inherit; font-weight: 700; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiRequest } from '../api.js';
+import ThemeToggle from './ThemeToggle.jsx';
 
 const emptyFish = {
   id: '', name: '', scientificName: '', description: '', group: 'tropical', level: 'easy',
@@ -7,6 +8,7 @@ const emptyFish = {
   minTankLiters: '', temperament: 'peaceful', compatibilityGroup: 'community',
   family: 'other',
   temperature: '', ph: '', groupSize: '', food: '', compatibility: '', image: '', video: '',
+  animatedImage: '', animatedImageCredit: '', animatedImageSource: '',
   videoType: 'video/mp4', videoCredit: '', videoSource: '', imageCredit: '', imageSource: '',
   sources: [], sourceLabel: '', sourceUrl: '',
 };
@@ -27,8 +29,10 @@ const editableFields = [
   ['category', 'Nhãn nhóm hiển thị'],
   ['summary', 'Kích thước / đặc điểm'], ['tank', 'Kích thước bể'], ['temperature', 'Nhiệt độ'],
   ['ph', 'Độ pH'], ['groupSize', 'Nuôi theo nhóm'], ['food', 'Thức ăn'],
-  ['compatibility', 'Khả năng sống chung'], ['image', 'Đường dẫn ảnh'],
-  ['video', 'Đường dẫn video (MP4/WebM)'], ['videoType', 'Định dạng video'],
+  ['compatibility', 'Khả năng sống chung'], ['image', 'URL ảnh (hoặc tải file ở trên)'],
+  ['animatedImage', 'URL ảnh động (tuỳ chọn nếu đã tải file)'],
+  ['animatedImageCredit', 'Tác giả / ghi công ảnh động'], ['animatedImageSource', 'Trang nguồn ảnh động'],
+  ['video', 'URL video (tuỳ chọn nếu đã tải file)'], ['videoType', 'Định dạng video'],
   ['videoCredit', 'Tác giả / giấy phép video'], ['videoSource', 'Trang nguồn video'],
   ['imageCredit', 'Tác giả / giấy phép ảnh'], ['imageSource', 'Trang nguồn ảnh'],
   ['sourceLabel', 'Tên nguồn tham khảo'], ['sourceUrl', 'Liên kết nguồn tham khảo'],
@@ -41,10 +45,11 @@ function createSlug(value) {
     .replace(/đ/g, 'd').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
-export default function AdminDashboard({ fish, shops, onSaveFish, onDeleteFish, onSaveShop, onSetShopActive, onExit, onLogout, user }) {
+export default function AdminDashboard({ fish, shops, onSaveFish, onDeleteFish, onSaveShop, onSetShopActive, onExit, onLogout, user, themeMode, onToggleTheme }) {
   const [form, setForm] = useState(null);
   const [shopForm, setShopForm] = useState(null);
   const [notice, setNotice] = useState('');
+  const [uploading, setUploading] = useState('');
   const [reports, setReports] = useState([]);
   const [adminShops, setAdminShops] = useState(shops);
 
@@ -101,6 +106,41 @@ export default function AdminDashboard({ fish, shops, onSaveFish, onDeleteFish, 
     }
   }
 
+  async function handleMediaUpload(event, field) {
+    const input = event.currentTarget;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) return;
+    if (file.size > 50 * 1024 * 1024) {
+      setNotice('File tải lên tối đa 50 MB.');
+      return;
+    }
+    const data = new FormData();
+    data.append('kind', field);
+    data.append('file', file);
+    setUploading(field);
+    setNotice('Đang tải file lên thư mục media của project…');
+    try {
+      const response = await fetch('/api/admin/media', {
+        method: 'POST',
+        credentials: 'same-origin',
+        body: data,
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Không tải được file lên.');
+      setForm((current) => ({
+        ...current,
+        [field]: result.url,
+        ...(field === 'video' ? { videoType: result.mimeType } : {}),
+      }));
+      setNotice(`Đã lưu ${file.name} vào backend/uploads. Hoàn tất bằng cách lưu hồ sơ cá.`);
+    } catch (error) {
+      setNotice(error.message || 'Không tải được file lên.');
+    } finally {
+      setUploading('');
+    }
+  }
+
   async function handleSaveShop(event) {
     event.preventDefault();
     const shop = { ...shopForm, id: shopForm.id || createSlug(shopForm.name) };
@@ -130,7 +170,7 @@ export default function AdminDashboard({ fish, shops, onSaveFish, onDeleteFish, 
     <main className="admin-page">
       <header className="admin-topbar">
         <a className="brand" href="/" onClick={(event) => { event.preventDefault(); onExit(); }}><span className="brand-mark">≈</span><span>AquaAtlas<span className="brand-dot">.</span></span></a>
-        <div><span className="admin-user-name">Xin chào, {user?.name}</span><button className="admin-secondary" onClick={onLogout}>Đăng xuất</button><button className="admin-secondary" onClick={onExit}>Xem website ↗</button></div>
+        <div><span className="admin-user-name">Xin chào, {user?.name}</span><ThemeToggle mode={themeMode} onToggle={onToggleTheme} /><button className="admin-secondary" onClick={onLogout}>Đăng xuất</button><button className="admin-secondary" onClick={onExit}>Xem website ↗</button></div>
       </header>
       <section className="admin-content">
         <div className="admin-heading"><div><div className="eyebrow"><span /> DASHBOARD ADMIN</div><h1>Quản lý cá cảnh</h1><p>Thêm hoặc cập nhật hồ sơ. Thay đổi được lưu trong PostgreSQL và dùng chung cho khách truy cập.</p></div><button className="admin-primary" onClick={() => { setNotice(''); setForm({ ...emptyFish }); }}>+ Thêm loài cá</button></div>
@@ -140,7 +180,16 @@ export default function AdminDashboard({ fish, shops, onSaveFish, onDeleteFish, 
           <form className="admin-editor" onSubmit={handleSave}>
             <div className="admin-editor-title"><h2>{form.id ? 'Chỉnh sửa hồ sơ' : 'Thêm loài cá'}</h2><button type="button" className="admin-secondary" onClick={() => setForm(null)}>Đóng</button></div>
             <div className="admin-form-grid">
-              {editableFields.map(([key, label]) => <label key={key}>{label}<input type={urlFields.has(key) ? 'url' : 'text'} value={form[key] ?? ''} onChange={(event) => setForm({ ...form, [key]: event.target.value })} required={['name', 'scientificName', 'tank', 'temperature', 'ph', 'image', 'imageCredit', 'imageSource', 'sourceLabel', 'sourceUrl'].includes(key)} /></label>)}
+              <div className="admin-media-upload">
+                <label>Ảnh bìa tĩnh · JPG/PNG/WebP<input type="file" accept="image/jpeg,image/png,image/webp" disabled={Boolean(uploading)} onChange={(event) => handleMediaUpload(event, 'image')} /></label>
+                {form.image && <img src={form.image} alt="Xem trước ảnh cá" onError={(event) => { event.currentTarget.hidden = true; }} />}
+                <label>Ảnh động · GIF/WebP/APNG<input type="file" accept="image/gif,image/webp,image/apng,image/png" disabled={Boolean(uploading)} onChange={(event) => handleMediaUpload(event, 'animatedImage')} /></label>
+                {form.animatedImage && <img src={form.animatedImage} alt="Xem trước ảnh động cá" onError={(event) => { event.currentTarget.hidden = true; }} />}
+                <label>Video bơi · MP4/WebM<input type="file" accept="video/mp4,video/webm" disabled={Boolean(uploading)} onChange={(event) => handleMediaUpload(event, 'video')} /></label>
+                {form.video && <video src={form.video} controls muted aria-label="Xem trước video cá" />}
+                <small>File tối đa 50 MB. Ảnh động và video sẽ có nút chuyển đổi ở trang chi tiết. File được lưu trong thư mục backend/uploads của project.</small>
+              </div>
+              {editableFields.map(([key, label]) => <label key={key}>{label}<input type={urlFields.has(key) && !['image', 'animatedImage', 'video'].includes(key) ? 'url' : 'text'} value={form[key] ?? ''} onChange={(event) => setForm({ ...form, [key]: event.target.value })} required={['name', 'scientificName', 'tank', 'temperature', 'ph', 'image', 'imageCredit', 'sourceLabel', 'sourceUrl'].includes(key) || (key === 'animatedImageCredit' && Boolean(form.animatedImage)) || (key === 'videoCredit' && Boolean(form.video))} /></label>)}
               <label>Dung tích tối thiểu để lọc (L)<input type="number" min="1" max="100000" value={form.minTankLiters ?? ''} onChange={(event) => setForm({ ...form, minTankLiters: Number(event.target.value) })} required /></label>
               <label>Nhóm loài<select value={form.family || 'other'} onChange={(event) => setForm({ ...form, family: event.target.value })}><option value="livebearer">Cá đẻ con</option><option value="tetra">Tetra</option><option value="rainbowfish">Cá cầu vồng</option><option value="danio">Danio</option><option value="rasbora">Rasbora</option><option value="barb">Barb</option><option value="gourami">Cá sặc</option><option value="cichlid">Cichlid</option><option value="catfish">Cá da trơn</option><option value="loach">Cá chạch</option><option value="shark">Cá mập nước ngọt</option><option value="coldwater">Cá nước mát</option><option value="tankbuster">Cá kích thước lớn</option><option value="betta">Betta</option><option value="other">Khác</option></select></label>
               <label>Tính cách<select value={form.temperament} onChange={(event) => setForm({ ...form, temperament: event.target.value })}><option value="peaceful">Hiền</option><option value="active">Bơi khỏe, hoạt động nhiều</option><option value="independent">Độc lập</option><option value="semi-aggressive">Cần chọn bạn bể kỹ</option></select></label>
@@ -148,7 +197,7 @@ export default function AdminDashboard({ fish, shops, onSaveFish, onDeleteFish, 
               <label>Nhóm<select value={form.group} onChange={(event) => setForm({ ...form, group: event.target.value })}><option value="tropical">Nhiệt đới</option><option value="coldwater">Nước mát</option></select></label>
               <label>Độ khó<select value={form.level} onChange={(event) => setForm({ ...form, level: event.target.value, difficulty: event.target.value === 'easy' ? 'Dễ bắt đầu' : 'Cần chú ý' })}><option value="easy">Dễ bắt đầu</option><option value="medium">Cần chú ý</option></select></label>
             </div>
-            <div className="admin-editor-actions"><button type="submit" className="admin-primary">Lưu hồ sơ</button><button type="button" className="admin-secondary" onClick={() => setForm(null)}>Hủy</button></div>
+            <div className="admin-editor-actions"><button type="submit" className="admin-primary" disabled={Boolean(uploading)}>{uploading ? 'Đang tải file…' : 'Lưu hồ sơ'}</button><button type="button" className="admin-secondary" onClick={() => setForm(null)}>Hủy</button></div>
           </form>
         )}
         <div className="admin-fish-list">

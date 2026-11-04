@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/icons-material/Menu';
 import Close from '@mui/icons-material/Close';
+import ThemeToggle from './ThemeToggle.jsx';
 
 const links = [
   ['Trang chủ', '#home'],
@@ -13,7 +14,7 @@ const links = [
   ['Tìm cửa hàng', '#shops'],
 ];
 
-export default function SiteHeader({ compact = false, onHome, user, onLogin, onLogout }) {
+export default function SiteHeader({ compact = false, onHome, user, onLogin, onLogout, themeMode, onToggleTheme }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   function closeMenu() {
@@ -45,12 +46,13 @@ export default function SiteHeader({ compact = false, onHome, user, onLogin, onL
 
         {compact ? (
           <div className="header-account-actions">
+            <ThemeToggle mode={themeMode} onToggle={onToggleTheme} />
             <Button className="detail-back" onClick={onHome}>← Về danh mục cá</Button>
             {user ? <Button className="account-action" onClick={onLogout}>Đăng xuất</Button> : <Button className="account-action" onClick={onLogin}>Đăng nhập</Button>}
           </div>
         ) : (
           <>
-            {user ? <div className="header-account-actions"><span className="account-greeting">Xin chào, {user.name}</span><Button className="account-action" onClick={onLogout}>Đăng xuất</Button></div> : <Button className="account-action" onClick={onLogin}>Đăng nhập</Button>}
+            <div className="header-account-actions"><ThemeToggle mode={themeMode} onToggle={onToggleTheme} />{user ? <><span className="account-greeting">Xin chào, {user.name}</span><Button className="account-action" onClick={onLogout}>Đăng xuất</Button></> : <Button className="account-action" onClick={onLogin}>Đăng nhập</Button>}</div>
             <IconButton
               className="menu-toggle"
               aria-label={menuOpen ? 'Đóng menu' : 'Mở menu'}

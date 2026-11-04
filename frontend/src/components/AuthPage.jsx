@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ThemeToggle from './ThemeToggle.jsx';
 
 const ACCOUNTS_KEY = 'aqua-atlas-demo-accounts';
 
@@ -31,7 +32,7 @@ async function migrateLegacyAccount(email, password) {
   return response.ok ? data.user : null;
 }
 
-export default function AuthPage({ onSuccess, onExit }) {
+export default function AuthPage({ onSuccess, onExit, themeMode, onToggleTheme }) {
   const [mode, setMode] = useState('login');
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [message, setMessage] = useState('');
@@ -101,7 +102,7 @@ export default function AuthPage({ onSuccess, onExit }) {
   return (
     <main className="admin-page admin-login-page">
       <section className="admin-login auth-card">
-        <a className="admin-back-link" href="/" onClick={(event) => { event.preventDefault(); onExit(); }}>← Về website</a>
+        <div className="auth-top-actions"><a className="admin-back-link" href="/" onClick={(event) => { event.preventDefault(); onExit(); }}>← Về website</a><ThemeToggle mode={themeMode} onToggle={onToggleTheme} /></div>
         <div className="eyebrow"><span /> AQUAATLAS VIETNAM</div>
         <h1>{mode === 'login' ? 'Đăng nhập' : 'Tạo tài khoản khách'}</h1>
         <p>Dùng chung màn hình đăng nhập cho khách và nhân viên quản trị.</p>

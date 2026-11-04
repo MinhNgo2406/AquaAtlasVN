@@ -8,7 +8,7 @@ AquaAtlas Vietnam là website tiếng Việt dành cho người yêu cá cảnh.
 - Hồ sơ từng loài với điều kiện bể, thức ăn, cách nuôi theo nhóm, gợi ý cá sống chung, ngày đối chiếu và nguồn đọc thêm.
 - Tìm theo tên thường gọi/tên khoa học; lọc theo nhóm nước, họ cá, độ khó, thể tích bể, tính cách và loại bể nuôi chung.
 - Chọn tối đa ba loài để so sánh dung tích bể, nhiệt độ, pH, độ khó và chăm sóc.
-- Có thể chuyển ảnh hồ sơ giữa video cá bơi và ảnh tĩnh.
+- Có thể chuyển ảnh hồ sơ giữa video cá bơi và ảnh tĩnh; admin tải ảnh JPG/PNG/WebP/GIF và video MP4/WebM trực tiếp lên project.
 - Hướng dẫn theo dõi sức khỏe: ghi triệu chứng, kiểm tra nước trước, nhận biết khi cần hỗ trợ chuyên môn; không thay chẩn đoán thú y.
 - Tìm cửa hàng theo TP. Hồ Chí Minh, Hà Nội, Hải Phòng, Cần Thơ và Nha Trang; xem tất cả khu vực có dữ liệu, tìm theo tên/quận, mở bản đồ, gọi điện và xem nguồn/ngày đối chiếu. Hồ sơ chỉ hiển thị cửa hàng có nguồn; giờ và tồn cá cần được xác nhận trực tiếp.
 - Đăng nhập chung cho khách/admin; tài khoản, phiên đăng nhập và cá yêu thích được lưu qua backend/PostgreSQL.
@@ -19,7 +19,7 @@ AquaAtlas Vietnam là website tiếng Việt dành cho người yêu cá cảnh.
 
 PostgreSQL lưu tài khoản, phiên đăng nhập, hồ sơ cá, yêu thích, cửa hàng, bể cá, lịch chăm sóc, nhật ký và báo cáo nội dung. Migration 010 nhập danh sách cửa hàng mẫu một lần; migration 011 thêm mười loài mới, còn migration 011–012 sửa năm liên kết ảnh bị sai. Trạng thái dữ liệu được lưu theo từng loài; chỉnh sửa admin được giữ nguyên khi khởi động lại. Ảnh lấy từ Wikimedia Commons và trang nguồn liên kết tác giả/giấy phép. Nếu nguồn ảnh bên ngoài tạm thời lỗi, giao diện dùng ảnh minh họa dự phòng. Mốc bể/nhiệt độ ở hồ sơ mới là hướng dẫn tham khảo cần kiểm tra thêm; ngày đối chiếu cửa hàng không bảo đảm tiệm đang mở/còn cá. Hướng dẫn sức khỏe không thay thế chẩn đoán thú y.
 
-## Chạy toàn bộ bằng Docker
+## Chạy toàn bộ bằng Docker để phát triển
 
 Cài Docker Desktop, mở ứng dụng đó, rồi mở Terminal ở thư mục dự án và chạy:
 
@@ -27,7 +27,9 @@ Cài Docker Desktop, mở ứng dụng đó, rồi mở Terminal ở thư mục 
 docker compose up --build
 ```
 
-Khi quá trình khởi động hoàn tất, mở [http://localhost:8080](http://localhost:8080). Frontend chạy trong Nginx; yêu cầu `/api/` được chuyển tiếp tới backend. Chân trang báo trạng thái backend và database. PostgreSQL tạo bảng tài khoản ở lần khởi động database đầu tiên; backend tự tạo các bảng còn lại, thêm dữ liệu cá mẫu nếu database chưa có cá, rồi giữ dữ liệu trong Docker volume. Để dừng, nhấn `Ctrl+C`; `docker compose down` giữ nguyên volume.
+Khi quá trình khởi động hoàn tất, mở [http://localhost:8080](http://localhost:8080). Frontend chạy trong Nginx; yêu cầu `/api/` và `/media/` được chuyển tiếp tới backend. Chân trang báo trạng thái backend và database. PostgreSQL tạo bảng tài khoản ở lần khởi động database đầu tiên; backend tự tạo các bảng còn lại, thêm dữ liệu cá mẫu nếu database chưa có cá, rồi giữ dữ liệu trong Docker volume. Để dừng, nhấn `Ctrl+C`; `docker compose down` giữ nguyên volume.
+
+Trong dashboard, chọn ảnh bìa (JPG/PNG/WebP), ảnh động (GIF/WebP/APNG) hoặc video (MP4/WebM). File tối đa 50 MB được lưu vào `backend/uploads/` trong project; URL `/media/...` được ghi vào hồ sơ cá trong PostgreSQL. Thư mục này được giữ nguyên qua lần rebuild Docker. Khi muốn đưa file media lên GitHub, xem chúng trong `git status` rồi commit cùng thay đổi; dữ liệu hồ sơ trong PostgreSQL cần được lưu/chuyển riêng nếu triển khai một máy chủ khác. Khi chạy production, stack dùng Docker volume riêng `aqua_atlas_media` để giữ file qua lần triển khai; sao lưu volume media cùng với database.
 
 Backend cung cấp endpoint kiểm tra trạng thái:
 
@@ -37,19 +39,44 @@ http://localhost:8080/api/health
 
 Kết quả thành công có dạng `{"status":"ok","service":"aqua-atlas-backend","database":"connected"}`. Backend cũng cung cấp API đăng nhập, hồ sơ cá admin, danh bạ cửa hàng công khai và quản trị, yêu thích, bể/lịch/nhật ký của khách và hàng chờ báo cáo dành cho admin. Migration 007 tạo các bảng dữ liệu cá nhân; migration 008 gắn nhóm họ cá cho hồ sơ cũ; migration 009 đưa 25 hồ sơ cá vào danh mục; migration 010 tạo danh bạ cửa hàng; migration 011 thêm 10 loài và sửa hai ảnh, migration 012 sửa thêm ba ảnh đã xác nhận URL sai. Các lần khởi động sau không nạp lại loài đã bị admin xóa.
 
-Lần chạy đầu dùng tài khoản admin local `admin` / `aqua-demo`. Trước khi đưa website lên mạng, tạo tệp `.env` từ `.env.example`, đặt mật khẩu PostgreSQL và admin riêng, rồi bật `COOKIE_SECURE=true` khi đã dùng HTTPS. Không dùng thông tin mẫu ở môi trường công khai. Chỉ chạy `docker compose down -v` nếu chủ ý xóa dữ liệu database local.
+Lần chạy đầu dùng tài khoản admin local `admin` / `aqua-demo`. Đây chỉ là thông tin để chạy local. Không dùng Compose phát triển hoặc tài khoản này trên mạng công khai. Chỉ chạy `docker compose down -v` nếu chủ ý xóa dữ liệu database local.
 
 Tài khoản cũ đã đăng ký trong trình duyệt có thể được chuyển lên máy chủ khi đăng nhập lần đầu bằng mật khẩu cũ. Dữ liệu cá admin đã lưu được chuyển lên khi admin đăng nhập lần đầu trên trình duyệt đó. Giữ browser data cho tới khi đã xác nhận nội dung xuất hiện trên website sau lần đăng nhập.
 
 Các bảng chính gồm `users`, `auth_sessions`, `fish`, `favorites`, `aquariums`, `care_tasks`, `care_logs` và `content_reports`. API chỉ trả bể/lịch/nhật ký có `user_id` thuộc phiên đang đăng nhập; admin có quyền xem và đổi trạng thái báo cáo. Cookie phiên có cờ HttpOnly; mật khẩu được băm ở backend trước khi lưu. PostgreSQL không mở cổng ra mạng công khai.
+
+## Chuẩn bị triển khai công khai
+
+Repo có cấu hình production riêng qua Caddy HTTPS, frontend Nginx, backend và PostgreSQL trong mạng riêng. Trước khi chạy, cần một máy chủ Docker có IP công khai, tên miền trỏ A/AAAA tới máy đó và cho phép inbound cổng 80/443. TLS được Caddy cấp tự động sau khi DNS hoạt động. Không đưa cổng PostgreSQL hoặc backend ra Internet.
+
+Tạo `.env` bằng cách sao chép `.env.example`; thay tên miền thật, tên đăng nhập admin và tạo hai mật khẩu ngẫu nhiên. Ví dụ trên macOS/Linux:
+
+```bash
+cp .env.example .env
+openssl rand -hex 32
+```
+
+Dùng một chuỗi tạo ra cho `POSTGRES_PASSWORD`, chuỗi khác cho `ADMIN_PASSWORD` (ít nhất 16 ký tự), và đặt `ADMIN_USERNAME` khác `admin`. Không chép mật khẩu vào Git hoặc gửi mật khẩu lên chat. Sau đó kiểm tra cấu hình và khởi chạy:
+
+```bash
+docker compose --env-file .env -f compose.production.yaml config
+docker compose --env-file .env -f compose.production.yaml up -d --build
+```
+
+Mở `https://<tên-miền-của-bạn>` và kiểm tra `/api/health`. Có thể chạy kiểm tra khói chỉ đọc bằng `node scripts/smoke-test.mjs` (hoặc đặt `BASE_URL=https://<tên-miền>`). Để xem log: `docker compose --env-file .env -f compose.production.yaml logs -f`. Để dừng mà vẫn giữ dữ liệu: `docker compose --env-file .env -f compose.production.yaml down`.
+
+**Sao lưu trước khi nâng cấp và định kỳ.** Chạy `./scripts/backup-production.sh` để tạo bản dump PostgreSQL, xác nhận dump đọc được và xóa bản lưu cũ hơn 30 ngày. Lưu thêm bản sao ngoài máy chủ (ví dụ kho lưu trữ riêng tư); thư mục `backups/` đã bị loại khỏi Git vì chứa dữ liệu tài khoản. `down` giữ volume, còn `down -v` xóa volume. Cấu hình này là nền tảng triển khai một máy chủ; hãy thử khôi phục bản sao trước khi phụ thuộc vào dữ liệu thật. Tính năng email nhận tin chưa kết nối, và nhiều hồ sơ cá còn được đánh dấu cần rà soát nguồn; hãy xem trạng thái từng hồ sơ trước khi dùng nội dung như hướng dẫn chuyên môn.
 
 ## Cấu trúc dự án
 
 - `frontend/` — ứng dụng React + Vite + Material UI; Docker build thành trang tĩnh bằng Nginx.
 - `backend/` — API Node.js, driver PostgreSQL, migration database và dữ liệu mẫu ban đầu.
 - `docker-compose.yml` — khởi động frontend, backend, PostgreSQL và volume database.
+- `compose.production.yaml` / `Caddyfile` — stack HTTPS production, không mở trực tiếp backend/database ra Internet.
+- `scripts/smoke-test.mjs` — kiểm tra HTTP/API/ủy quyền cơ bản sau khi khởi chạy.
+- `scripts/backup-production.sh` — sao lưu PostgreSQL production và kiểm tra tính đọc được của bản dump.
 - `README.md` — giới thiệu website và cách chạy.
-- `CODE-WALKTHROUGH.txt` — ghi chú học code và lịch sử từng đợt cập nhật.
+- `CODE-WALKTHROUGH.html` — cẩm nang học code có sơ đồ, liên kết tới tệp nguồn và lịch sử cập nhật.
 
 ## Chạy frontend riêng để phát triển
 

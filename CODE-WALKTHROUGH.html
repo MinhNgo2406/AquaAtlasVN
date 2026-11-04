@@ -1,0 +1,1217 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Hướng dẫn đọc code AquaAtlas Vietnam, có sơ đồ luồng và giải thích các lần cập nhật.">
+<title>CODE-WALKTHROUGH · AquaAtlas</title>
+<style>
+:root{--ink:#19392f;--text:#43594f;--muted:#71847a;--paper:#f3f7f2;--white:#fff;--line:#dce5dc;--green:#235748;--lime:#c9ef72;--soft:#e9f1e7;font-family:Inter,"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);background:var(--paper);line-height:1.7}.layout{display:grid;grid-template-columns:245px minmax(0,1fr);max-width:1450px;margin:auto}.side{position:sticky;top:0;height:100vh;overflow:auto;padding:24px 18px;background:#fafcf9;border-right:1px solid var(--line)}.brand{color:var(--ink);text-decoration:none;font-weight:800}.brand i{display:inline-grid;place-items:center;width:34px;height:34px;margin-right:7px;border-radius:50%;background:var(--lime);font-style:normal}.side nav{display:grid;gap:5px;margin-top:34px}.side nav a{padding:7px 9px;border-radius:6px;color:#53675d;text-decoration:none;font-size:12px}.side nav a:hover{background:var(--soft)}.side small{display:block;margin-top:28px;color:var(--muted);font-size:10px}.main{min-width:0;padding:34px clamp(18px,5vw,70px) 80px}.hero{padding:clamp(26px,5vw,58px);border-radius:15px;color:white;background:linear-gradient(115deg,#16382f,#245b4a)}.hero .eyebrow{color:var(--lime)}.eyebrow{color:#779d58;font-size:10px;font-weight:800;letter-spacing:.16em}.hero h1{margin:0;color:#fff;font-size:clamp(34px,5.3vw,58px);line-height:1.08;letter-spacing:-.04em}.hero p:not(.eyebrow){max-width:650px;color:#d0dfd7;font-size:14px}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}.button{padding:9px 14px;border:1px solid #ffffff52;border-radius:5px;color:#fff;text-decoration:none;font-size:12px;font-weight:700}.button.primary{border-color:var(--lime);background:var(--lime);color:var(--ink)}.section{margin-top:52px;scroll-margin-top:18px}.heading{margin-bottom:18px}.heading h2{margin:0;color:var(--ink);font-size:clamp(24px,3vw,33px);line-height:1.2}.heading p{margin:6px 0;color:var(--muted);font-size:12px}.flow{margin:12px 0;border:1px solid var(--line);border-radius:9px;background:#fff;overflow:hidden}.flow h3{margin:0;padding:17px 19px 0;color:var(--ink);font-size:16px}.flow>p{margin:3px 19px;color:var(--muted);font-size:11px}.flow-row{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:16px;align-items:center;padding:14px 18px 18px}.svg{width:100%;height:auto}.svg .box{fill:#f8faf6;stroke:#9bb6a4;stroke-width:1.4}.svg .title{fill:#19392f;font-size:14px;font-weight:700}.svg .sub{fill:#71847a;font-size:10px}.svg .arr{stroke:#84a393;stroke-width:2;marker-end:url(#a)}.svg .n{fill:var(--lime);stroke:white;stroke-width:2}.svg .ntext{fill:var(--ink);font-size:10px;font-weight:900}.key{display:grid;gap:9px}.key div{display:grid;grid-template-columns:26px 1fr;gap:8px}.key b{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--lime);color:var(--ink);font-size:10px}.key strong{display:block;color:var(--ink);font-size:11px}.key small{color:var(--muted);font-size:10px}.file-map{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.file-map a{padding:13px;border:1px solid var(--line);border-radius:7px;background:#fff;text-decoration:none}.file-map b{display:block;color:var(--ink);font-size:11px}.file-map code{display:block;margin-top:4px;color:#64806e;font-size:9px;overflow-wrap:anywhere}.learning{display:grid;gap:10px}.learn{display:grid;grid-template-columns:38px 1fr;gap:12px;padding:18px;border:1px solid var(--line);border-radius:8px;background:#fff;scroll-margin-top:18px}.num{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:var(--soft);color:var(--green);font-size:11px;font-weight:800}.learn h3{margin:0;color:var(--ink);font-size:17px}.learn p,.learn li{font-size:11px}.note{margin:11px 0;padding:10px 13px;border-left:3px solid var(--lime);background:#f8faf6}.note h3{margin:0;color:var(--ink);font-size:10px;letter-spacing:.04em}.note ul{margin:5px 0 0;padding-left:18px}.note li{margin:5px 0;font-size:11px}.note.code{border-color:#83b39a}.note.how{border-color:#81a0d3}.note.limits{border-color:#e3b35e;background:#fffbf2}.file-link{text-decoration:none}.file-link:hover{text-decoration:underline}code{padding:1px 4px;border-radius:3px;background:#edf4e9;color:#205c47;font-size:.9em;overflow-wrap:anywhere}.tools{display:flex;justify-content:space-between;gap:12px;align-items:end}.search{width:min(320px,100%);padding:10px;border:1px solid var(--line);border-radius:5px;background:#fff;font:inherit;font-size:12px}.release{margin:8px 0;border:1px solid var(--line);border-radius:8px;background:#fff}.release summary{display:grid;grid-template-columns:86px 1fr 18px;align-items:center;gap:10px;padding:13px 15px;cursor:pointer;list-style:none}.release summary::-webkit-details-marker{display:none}.release summary time{color:#718d63;font-size:9px;font-weight:800}.release summary strong{color:var(--ink);font-size:12px;line-height:1.5}.release summary span{color:#779174}.release-body{padding:0 17px 16px;border-top:1px solid var(--line)}.release-body p,.release-body li{font-size:11px}.empty{display:none;padding:18px;border:1px dashed var(--line);text-align:center;color:var(--muted)}footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:10px}@media(max-width:850px){.layout{grid-template-columns:1fr}.side{position:relative;height:auto;padding:12px 16px;border-right:0;border-bottom:1px solid var(--line)}.side nav{display:flex;overflow:auto;margin-top:8px}.side nav a{white-space:nowrap}.side small{display:none}.main{padding-top:20px}.flow-row{grid-template-columns:1fr}.key{grid-template-columns:repeat(3,1fr)}}@media(max-width:580px){.main{padding:14px 12px 50px}.hero{padding:25px 20px}.file-map{grid-template-columns:1fr 1fr}.tools{align-items:stretch;flex-direction:column}.search{width:100%}.release summary{grid-template-columns:65px 1fr 15px;gap:7px;padding:11px}.release summary strong{font-size:10px}.key{grid-template-columns:1fr}.svg{min-width:540px}.flow-row{overflow:auto}.learn{grid-template-columns:30px 1fr;padding:13px;gap:8px}.num{width:28px;height:28px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="layout" id="top">
+<aside class="side">
+<a href="#top" class="brand">
+<i>≈</i>AquaAtlas<br>CODE-WALKTHROUGH</a>
+<nav>
+<a href="#overview">Bắt đầu</a>
+<a href="#flows">Sơ đồ luồng</a>
+<a href="#project-map">Bản đồ tệp</a>
+<a href="#basics">Kiến thức cơ bản</a>
+<a href="#history">Lịch sử cập nhật</a>
+</nav>
+<small>Mẹo học: xem sơ đồ trước, sau đó bấm tên file để mở code tương ứng.</small>
+</aside>
+<main class="main">
+<header class="hero" id="overview">
+<p class="eyebrow">CẨM NANG HỌC CODE AQUAATLAS</p>
+<h1>Đọc website<br>từ màn hình đến code.</h1>
+<p>Giải thích dự án bằng lời dễ hiểu, sơ đồ chỉ đường đi của dữ liệu và liên kết tới đúng tệp code. Phần cuối lưu lại các lần website được nâng cấp.</p>
+<div class="actions">
+<a class="button primary" href="#flows">Xem sơ đồ ↓</a>
+<a class="button" href="#history">Tìm trong lịch sử</a>
+</div>
+</header>
+<section class="section" id="flows">
+<div class="heading">
+<p class="eyebrow">NHÌN TOÀN CẢNH</p>
+<h2>Một thao tác đi qua những đâu?</h2>
+<p>Các chấm số trên hình tương ứng với phần giải thích bên phải.</p>
+</div>
+<article class="flow">
+<h3>01 · Khách xem danh sách cá</h3>
+<p>React gọi API; backend lấy dữ liệu từ PostgreSQL.</p>
+<div class="flow-row">
+<svg class="svg" viewBox="0 0 740 180" role="img" aria-label="Trình duyệt, App.jsx, SpeciesSection, backend server.js và PostgreSQL">
+<defs>
+<marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+<path d="M0 0L8 4L0 8" fill="#84a393"/>
+</marker>
+</defs>
+<rect class="box" x="15" y="48" width="145" height="72" rx="8"/>
+<circle class="n" cx="30" cy="42" r="12"/>
+<text class="ntext" x="27" y="46">1</text>
+<text class="title" x="45" y="78">App.jsx</text>
+<text class="sub" x="45" y="99">gọi /api/fish</text>
+<rect class="box" x="205" y="48" width="155" height="72" rx="8"/>
+<circle class="n" cx="220" cy="42" r="12"/>
+<text class="ntext" x="217" y="46">2</text>
+<text class="title" x="235" y="78">SpeciesSection</text>
+<text class="sub" x="235" y="99">vẽ thẻ cá</text>
+<rect class="box" x="410" y="48" width="135" height="72" rx="8"/>
+<circle class="n" cx="425" cy="42" r="12"/>
+<text class="ntext" x="422" y="46">3</text>
+<text class="title" x="440" y="78">server.js</text>
+<text class="sub" x="440" y="99">trả JSON</text>
+<rect class="box" x="590" y="48" width="135" height="72" rx="8"/>
+<circle class="n" cx="605" cy="42" r="12"/>
+<text class="ntext" x="602" y="46">4</text>
+<text class="title" x="620" y="78">PostgreSQL</text>
+<text class="sub" x="620" y="99">bảng fish</text>
+<path class="arr" d="M160 84H195"/>
+<path class="arr" d="M360 84H400"/>
+<path class="arr" d="M545 84H580"/>
+<text class="sub" x="230" y="150">Dữ liệu quay về giao diện theo chiều ngược lại</text>
+</svg>
+<div class="key">
+<div>
+<b>1</b>
+<span>
+<strong>App.jsx</strong>
+<small>Gọi API và giữ danh sách chung.</small>
+</span>
+</div>
+<div>
+<b>2</b>
+<span>
+<strong>SpeciesSection.jsx</strong>
+<small>Hiển thị từng thẻ cá.</small>
+</span>
+</div>
+<div>
+<b>3–4</b>
+<span>
+<strong>server.js → database</strong>
+<small>Đọc hồ sơ trong bảng fish.</small>
+</span>
+</div>
+</div>
+</div>
+</article>
+<article class="flow">
+<h3>02 · Admin tải ảnh động hoặc video</h3>
+<p>File được lưu thành tệp; hồ sơ giữ URL để mọi thiết bị xem được.</p>
+<div class="flow-row">
+<svg class="svg" viewBox="0 0 740 180" role="img" aria-label="AdminDashboard gửi file tới API, backend/uploads giữ file và PostgreSQL giữ đường dẫn">
+<defs>
+<marker id="b" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+<path d="M0 0L8 4L0 8" fill="#84a393"/>
+</marker>
+</defs>
+<rect class="box" x="15" y="48" width="150" height="72" rx="8"/>
+<circle class="n" cx="30" cy="42" r="12"/>
+<text class="ntext" x="27" y="46">1</text>
+<text class="title" x="45" y="78">AdminDashboard</text>
+<text class="sub" x="45" y="99">gửi file</text>
+<rect class="box" x="210" y="48" width="155" height="72" rx="8"/>
+<circle class="n" cx="225" cy="42" r="12"/>
+<text class="ntext" x="222" y="46">2</text>
+<text class="title" x="240" y="78">POST media API</text>
+<text class="sub" x="240" y="99">xác nhận admin</text>
+<rect class="box" x="420" y="48" width="130" height="72" rx="8"/>
+<circle class="n" cx="435" cy="42" r="12"/>
+<text class="ntext" x="432" y="46">3</text>
+<text class="title" x="450" y="78">uploads/</text>
+<text class="sub" x="450" y="99">lưu file</text>
+<rect class="box" x="590" y="48" width="135" height="72" rx="8"/>
+<circle class="n" cx="605" cy="42" r="12"/>
+<text class="ntext" x="602" y="46">4</text>
+<text class="title" x="620" y="78">PostgreSQL</text>
+<text class="sub" x="620" y="99">lưu URL hồ sơ</text>
+<path class="arr" marker-end="url(#b)" d="M165 84H200"/>
+<path class="arr" marker-end="url(#b)" d="M365 84H410"/>
+<path class="arr" marker-end="url(#b)" d="M550 84H580"/>
+<text class="sub" x="400" y="150">Khách xem file qua đường dẫn /media/...</text>
+</svg>
+<div class="key">
+<div>
+<b>1–2</b>
+<span>
+<strong>Form admin → API</strong>
+<small>Server kiểm tra quyền và loại file.</small>
+</span>
+</div>
+<div>
+<b>3</b>
+<span>
+<strong>backend/uploads</strong>
+<small>Nơi lưu file trong project local.</small>
+</span>
+</div>
+<div>
+<b>4</b>
+<span>
+<strong>fish trong PostgreSQL</strong>
+<small>Lưu đường dẫn và thông tin cá.</small>
+</span>
+</div>
+</div>
+</div>
+</article>
+</section>
+<section class="section" id="project-map">
+<div class="heading">
+<p class="eyebrow">TÌM ĐÚNG TỆP</p>
+<h2>Bản đồ các phần code</h2>
+<p>Bấm vào tên tệp để mở code. Sơ đồ bên trên dùng cùng số thứ tự để bạn dễ dò.</p>
+</div>
+<div class="file-map">
+<a href="frontend/src/App.jsx" target="_blank">
+<b>① Điều phối trang</b>
+<code>frontend/src/App.jsx</code>
+</a>
+<a href="frontend/src/components/SpeciesSection.jsx" target="_blank">
+<b>② Thẻ cá</b>
+<code>frontend/src/components/SpeciesSection.jsx</code>
+</a>
+<a href="frontend/src/components/FishDetailPage.jsx" target="_blank">
+<b>③ Chi tiết loài cá</b>
+<code>frontend/src/components/FishDetailPage.jsx</code>
+</a>
+<a href="frontend/src/components/AdminDashboard.jsx" target="_blank">
+<b>④ Form admin/media</b>
+<code>frontend/src/components/AdminDashboard.jsx</code>
+</a>
+<a href="backend/server.js" target="_blank">
+<b>⑤ API/quyền đăng nhập</b>
+<code>backend/server.js</code>
+</a>
+<a href="docker-compose.yml" target="_blank">
+<b>⑥ Docker services</b>
+<code>docker-compose.yml</code>
+</a>
+<a href="backend/db/migrations/007_customer_workspace.sql" target="_blank">
+<b>⑦ Bảng hồ cá/lịch</b>
+<code>backend/db/migrations/007_customer_workspace.sql</code>
+</a>
+<a href="frontend/src/styles.css" target="_blank">
+<b>⑧ Giao diện/nền tối</b>
+<code>frontend/src/styles.css</code>
+</a>
+<a href="backend/uploads/" target="_blank">
+<b>⑨ File tải lên</b>
+<code>backend/uploads/</code>
+</a>
+</div>
+</section>
+<section class="section" id="basics">
+<div class="heading">
+<p class="eyebrow">NỀN TẢNG</p>
+<h2>Giải thích những khái niệm chính</h2>
+</div>
+<div class="learning">
+<article class="learn" id="folder-structure">
+<span class="num">01</span>
+<div>
+<p class="eyebrow">KIẾN THỨC CƠ BẢN</p>
+<h3>CẤU TRÚC THƯ MỤC VÀ CÁC TỆP QUAN TRỌNG</h3>
+<p>docker-compose.yml Cấu hình để Docker chạy frontend, backend và PostgreSQL; frontend gọi API backend, backend có thông tin kết nối database.</p>
+<p>backend/server.js API Node.js quản lý đăng ký/đăng nhập, phiên, danh sách cá, mục yêu thích và quyền admin bằng các route /api/....</p>
+<p>backend/db/init/001_create_users.sql Schema PostgreSQL tạo bảng users khi database được khởi tạo lần đầu.</p>
+<p>backend/db/migrations/002_create_app_data.sql Tạo bảng hồ sơ cá, phiên đăng nhập và cá yêu thích. Backend chạy migration này khi khởi động, kể cả khi volume database đã được tạo trước đó.</p>
+<p>backend/db/seeds/fish.json Bản dữ liệu khởi tạo cho sáu loài mẫu. Backend chép dữ liệu này vào bảng fish khi bảng chưa có hồ sơ nào.</p>
+<p>backend/package.json và backend/package-lock.json Khai báo và khóa phiên bản thư viện pg để backend gửi truy vấn tới PostgreSQL.</p>
+<p>backend/Dockerfile Chỉ dẫn đóng gói backend thành image Docker.</p>
+<p>frontend/index.html Khung HTML tối giản. React sẽ gắn website vào phần tử có id="root".</p>
+<p>frontend/src/main.jsx Điểm bắt đầu của ứng dụng React. Tệp này nạp giao diện, theme MUI và CSS.</p>
+<p>frontend/src/App.jsx Ghép các trang, quản lý bộ lọc, gọi API lấy cá/tài khoản/yêu thích và chuyển dữ liệu admin cũ từ trình duyệt lên backend trong lần đăng nhập admin đầu tiên.</p>
+<p>frontend/src/components/SiteHeader.jsx Thanh điều hướng. useState điều khiển menu mở/đóng trên điện thoại.</p>
+<p>frontend/src/components/HeroSection.jsx Ảnh bìa, video nền và các nút dẫn tới nội dung.</p>
+<p>frontend/src/components/QuickSearch.jsx Ô tìm tên và hai lựa chọn MUI cho nhóm nước ngọt (nhiệt đới/nước mát) cùng mức chăm sóc. Gửi các lựa chọn về App.jsx.</p>
+<p>frontend/src/components/SpeciesSection.jsx Lưới cá. Mỗi FishCard hiển thị một loài, có nút yêu thích và nút mở hồ sơ. Người chưa đăng nhập bấm tim sẽ được chuyển tới màn đăng nhập.</p>
+<p>frontend/src/components/FishDetailPage.jsx Trang chi tiết: thông số tham khảo, cách nuôi theo nhóm, thức ăn, bạn cùng bể và liên kết nguồn.</p>
+<p>frontend/src/components/CareSection.jsx Hướng dẫn dựng bể và các thẻ kiến thức chăm sóc.</p>
+<p>frontend/src/components/HealthAndShops.jsx Dấu hiệu sức khỏe cần theo dõi, danh sách cửa hàng có lọc thành phố, và đăng ký email minh họa.</p>
+<p>frontend/src/components/AdminDashboard.jsx Dashboard admin có thể tạo, đọc, sửa, xóa hồ sơ và nhập URL video/nguồn clip.</p>
+<p>frontend/src/components/AuthPage.jsx Màn hình chung gửi đăng nhập/đăng ký tới backend. Tài khoản cũ trong trình duyệt được chuyển lên máy chủ khi khách nhập đúng email và mật khẩu cũ.</p>
+<p>frontend/src/components/SiteFooter.jsx Chân trang và các liên kết tới khu vực khác.</p>
+<p>frontend/src/data/fish.js Dữ liệu hồ sơ mặc định của sáu loài nước ngọt; backend/db/seeds/fish.json là bản được dùng để tạo dữ liệu ban đầu trong database.</p>
+<p>frontend/src/data/shops.js Lưu cửa hàng mẫu theo thành phố, địa chỉ, nguồn thông tin và liên kết bản đồ.</p>
+<p>frontend/src/theme.js Đặt màu và kiểu mặc định cho các component Material UI.</p>
+<p>frontend/src/styles.css Chứa kiểu dáng riêng của AquaAtlas, bao gồm bố cục responsive cho điện thoại.</p>
+<p>.gitignore Nói cho Git bỏ qua node_modules, dist và tệp hệ thống macOS.</p>
+<p>frontend/package-lock.json Ghi lại chính xác phiên bản thư viện đã cài để các máy khác cài cùng phiên bản.</p>
+<p>frontend/package.json Khai báo thư viện và lệnh npm để chạy hoặc tạo bản dựng website.</p>
+<p>frontend/vite.config.js Kết nối Vite với plugin React; khi chạy local, Vite proxy đường dẫn /api tới backend ở localhost:3000.</p>
+<p>frontend/Dockerfile và frontend/nginx.conf Dockerfile build React rồi giao diện Nginx phục vụ tệp tĩnh; Nginx proxy /api đến service backend trong mạng Docker.</p>
+</div>
+</article>
+<article class="learn" id="react-basics">
+<span class="num">02</span>
+<div>
+<p class="eyebrow">KIẾN THỨC CƠ BẢN</p>
+<h3>REACT HOẠT ĐỘNG NHƯ THẾ NÀO?</h3>
+<p>Component là một phần giao diện có thể đặt tên và tái sử dụng. Trong dự án, SiteHeader là thanh điều hướng, HeroSection là ảnh bìa, SpeciesSection hiển thị loài cá, còn SiteFooter là chân trang.</p>
+<p>frontend/src/App.jsx đặt các component cạnh nhau để tạo trang. Ví dụ:</p>
+<p>&lt;SiteHeader /&gt; &lt;HeroSection /&gt; &lt;SpeciesSection fish={visibleFish} /&gt;</p>
+<p>Tên component viết hoa để React nhận ra đây là component. Các component nhỏ giúp người học tìm đúng phần cần sửa, thay vì đọc một tệp chứa cả website.</p>
+<p>Props là dữ liệu hoặc hàm component cha gửi cho component con. Ví dụ, &lt;SpeciesSection fish={visibleFish} onSelectFish={openFish} /&gt; gửi danh sách cá và hàm mở hồ sơ xuống component con.</p>
+<p>useState lưu trạng thái có thể thay đổi khi người dùng thao tác. App.jsx lưu từ khóa tìm kiếm, nhóm cá và độ khó đã chọn. FishCard lưu trạng thái yêu thích của riêng thẻ đó. Khi state thay đổi, React tự cập nhật phần giao diện liên quan.</p>
+<p>Dashboard dùng state để điền biểu mẫu và cập nhật danh sách cá. App.jsx là nơi giữ danh sách chung để danh mục ngoài trang chủ cập nhật ngay sau khi admin lưu.</p>
+<p>App.jsx dùng filter() trực tiếp để tính danh sách cá đang khớp với bộ lọc. Với danh sách mẫu nhỏ, cách viết thẳng giúp code dễ đọc; chỉ nên thêm useMemo khi việc tính toán thật sự nặng hoặc đã đo thấy ảnh hưởng hiệu năng.</p>
+<p>map() lặp qua mảng và tạo một phần tử giao diện cho mỗi dữ liệu. Ví dụ, fish.map(...) tạo một FishCard cho mỗi loài. Thuộc tính key={item.id} giúp React nhận diện ổn định từng thẻ khi danh sách thay đổi.</p>
+</div>
+</article>
+<article class="learn" id="mui">
+<span class="num">03</span>
+<div>
+<p class="eyebrow">KIẾN THỨC CƠ BẢN</p>
+<h3>MATERIAL UI (MUI)</h3>
+<p>MUI là thư viện component giao diện cho React. Dự án dùng Button cho nút, Select/MenuItem cho lựa chọn, Card cho thẻ cá, Chip cho nhãn độ khó, TextField cho ô email và IconButton cho nút menu/yêu thích.</p>
+<p>frontend/src/theme.js tạo theme chung. Theme đặt màu chính, màu nhấn, font, góc vuông và kiểu mặc định cho nút. Khi muốn đổi màu hoặc cách hiển thị mặc định của MUI, bắt đầu từ tệp này. frontend/src/styles.css tinh chỉnh để các component MUI khớp thiết kế riêng của website.</p>
+</div>
+</article>
+<article class="learn" id="fish-data">
+<span class="num">04</span>
+<div>
+<p class="eyebrow">KIẾN THỨC CƠ BẢN</p>
+<h3>DỮ LIỆU, BỘ LỌC VÀ HỒ SƠ CÁ</h3>
+<p>frontend/src/data/fish.js xuất một mảng các loài cá nước ngọt. Mỗi loài có id, tên thường gọi, tên khoa học, nhóm cá, mức chăm sóc, thông số, ảnh và liên kết nguồn. Tách dữ liệu khỏi giao diện giúp thêm cá mà không phải viết lại component.</p>
+<p>Trong App.jsx, filter() tìm theo tên thường gọi hoặc tên khoa học rồi áp dụng bộ lọc nhóm cá và độ khó. filter() không sửa mảng gốc; nó tạo danh sách kết quả mới và truyền xuống SpeciesSection.</p>
+<p>Để thêm cá, thêm một đối tượng mới vào frontend/src/data/fish.js và đặt id duy nhất. group phải là tropical hoặc coldwater; level phải khớp với các giá trị trong lựa chọn bộ lọc. Thêm nguồn để người đọc kiểm tra thông tin.</p>
+<p>Khi người dùng mở hồ sơ, App.jsx thêm mã loài vào URL, ví dụ ?fish=betta, rồi hiển thị FishDetailPage. Người dùng có thể tải lại hoặc chia sẻ URL đó. Sự kiện Back của trình duyệt cũng đọc URL và đưa giao diện về đúng trang.</p>
+</div>
+</article>
+<article class="learn" id="design">
+<span class="num">05</span>
+<div>
+<p class="eyebrow">KIẾN THỨC CƠ BẢN</p>
+<h3>GIAO DIỆN VÀ RESPONSIVE</h3>
+<p>frontend/src/styles.css dùng className trong JSX để định dạng. Trong React, thuộc tính className tương đương thuộc tính class trong HTML.</p>
+<p>Các biến màu trong :root như --ink, --green và --lime giữ màu dùng chung. Đổi giá trị biến để đổi màu ở nhiều khu vực cùng lúc.</p>
+<p>@media (max-width: 720px) chứa các điều chỉnh cho điện thoại: menu chuyển thành menu mở/đóng, lưới cá thành một cột và các khu vực xếp theo chiều dọc.</p>
+<p>Theme MUI xử lý kiểu mặc định cho component thư viện; CSS riêng xử lý bố cục thương hiệu. Tách hai phần này giúp tránh phải viết lại toàn bộ kiểu dáng của các component MUI.</p>
+</div>
+</article>
+<article class="learn" id="run-project">
+<span class="num">06</span>
+<div>
+<p class="eyebrow">KIẾN THỨC CƠ BẢN</p>
+<h3>CHẠY DỰ ÁN</h3>
+<p>Sau khi cài Node.js, mở Terminal tại thư mục dự án và chạy:</p>
+<p>Terminal 1: cd backend npm start</p>
+<p>Terminal 2: cd frontend npm install npm run dev</p>
+<p>npm start khởi động API. npm install tải thư viện React được khai báo trong frontend/package.json. npm run dev khởi động Vite; mở địa chỉ localhost mà Terminal in ra để xem website. Vite chuyển tiếp yêu cầu /api đến cổng 3000.</p>
+<p>Để chạy hai phần bằng Docker, mở Docker Desktop rồi từ thư mục gốc chạy:</p>
+<p>docker compose up --build</p>
+<p>Mở http://localhost:8080. Docker build frontend thành tệp tĩnh, Nginx phục vụ trang và chuyển tiếp /api/ tới backend. PostgreSQL tạo bảng users và lưu dữ liệu trong named volume <code>aqua_atlas_db_data</code>. Nhấn Ctrl+C để dừng; <code>docker compose down</code> xóa container và network nhưng giữ volume dữ liệu. Chỉ dùng <code>docker compose down -v</code> khi chủ ý xóa database local.</p>
+<p>Để chỉ build frontend, chạy <code>npm run build</code> bên trong frontend/. Tệp đầu ra nằm trong frontend/dist/. node_modules/, dist/ và .env bị bỏ qua bởi Git.</p>
+</div>
+</article>
+</div>
+</section>
+<section class="section" id="history">
+<div class="heading tools">
+<div>
+<p class="eyebrow">THEO DÕI DỰ ÁN</p>
+<h2>Lịch sử cập nhật</h2>
+<p>Mở từng mục để xem phần đã làm, file liên quan và cách hoạt động.</p>
+</div>
+<input id="search" class="search" type="search" placeholder="Tìm: đăng nhập, video, tetra…" aria-label="Tìm lịch sử">
+</div>
+<div id="releases">
+<details class="release" data-title="bản 13 — admin tải media lên project — 04/11/2026" open>
+<summary>
+<time>04/11/2026</time>
+<strong>BẢN 13 — ADMIN TẢI MEDIA LÊN PROJECT — 04/11/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Thêm lựa chọn tải ảnh JPG/PNG/WebP, ảnh động GIF/WebP và video MP4/WebM ở form thêm/sửa hồ sơ cá trong dashboard admin.</li>
+<li>Backend lưu file vào backend/uploads thay vì giữ đường dẫn trên máy admin. File có giới hạn 50 MB; tên file do server tạo ngẫu nhiên.</li>
+<li>Hồ sơ cá trong PostgreSQL giữ URL /media/... để ảnh/video được dùng trên mọi thiết bị. Admin vẫn ghi nguồn tham khảo và quyền sử dụng media.</li>
+<li>Compose phát triển gắn backend/uploads từ project vào container. Compose production dùng Docker volume riêng để media còn sau khi thay container.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>backend/server.js đọc multipart form, chỉ chấp nhận một số MIME ảnh/video, giới hạn kích thước, bảo vệ endpoint tải lên bằng quyền admin và phục vụ file từ tên ngẫu nhiên đã xác thực.</li>
+<li>frontend/src/components/AdminDashboard.jsx gửi file bằng FormData, cập nhật URL trả về cho ảnh tĩnh, ảnh động hoặc video của hồ sơ và hiện bản xem trước. FishDetailPage.jsx cho khách chuyển ảnh tĩnh/ảnh động.</li>
+<li>frontend/nginx.conf chuyển tiếp /media/ tới backend. docker-compose.yml lưu file trên thư mục project; compose.production.yaml dùng volume bền vững.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>Trình duyệt gửi file tới POST /api/admin/media cùng cookie phiên đăng nhập. Backend xác nhận vai trò admin, kiểm tra loại file/kích thước, tạo tên ngẫu nhiên và ghi file vào uploads.</li>
+<li>Backend trả đường dẫn /media/&lt;tên-ngẫu-nhiên&gt;. Khi lưu hồ sơ, đường dẫn đó được ghi cùng JSON hồ sơ cá trong PostgreSQL. Khách tải file qua /media/.</li>
+</ul>
+</section>
+<section class="note limits">
+<h3>Điều cần hiểu / giới hạn</h3>
+<ul>
+<li>Chạy local, file mới nằm trong backend/uploads của project. Có thể thêm các file này vào commit GitHub nếu muốn lưu bản copy cùng source. PostgreSQL lưu nội dung hồ sơ; đẩy riêng file lên Git không tự chuyển hồ sơ cá sang database của máy chủ khác.</li>
+<li>Chạy production, media nằm trong volume aqua_atlas_media; cần sao lưu volume này riêng với PostgreSQL. File media công khai để trang cá tải và xem được.</li>
+<li>File tối đa 50 MB; định dạng được phép là JPG, PNG, WebP, GIF, MP4 và WebM.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 17 — thêm 10 loài cá, sửa ảnh hỏng và ảnh dự phòng — 03/11/2026" >
+<summary>
+<time>03/11/2026</time>
+<strong>BẢN 17 — THÊM 10 LOÀI CÁ, SỬA ẢNH HỎNG VÀ ẢNH DỰ PHÒNG — 03/11/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Tăng danh mục từ 35 lên 45 loài: cá hồng két, hắc ma, hề chạch, chuột panda/Sterbai, cầu vồng Parkinson/đỏ, ali vàng, bống vàng ăn rêu và tai tượng.</li>
+<li>Sửa năm đường dẫn ảnh đã dùng tên file sai: cá mây trắng, lau kiếng mũi lông, bút chì Thái, mập cầu vồng và cá rồng bạc. Nguồn ảnh Commons hiện có liên kết trang file và credit tác giả/giấy phép.</li>
+<li>Thêm ảnh minh họa tại <a href="frontend/public/images/fish-placeholder.svg" target="_blank" class="file-link">
+<code>frontend/public/images/fish-placeholder.svg</code>
+</a>; nếu ảnh ngoài bị gỡ hoặc mạng không tải được, thẻ, chi tiết và dashboard không còn để một khung ảnh trống.</li>
+<li>Migration 011 thêm profile mới đúng một lần, sửa hai ảnh; migration 012 cập nhật ba ảnh xác nhận thêm. Các hồ sơ cá khác admin đã sửa vẫn được giữ.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>
+<a href="frontend/src/data/fish.js" target="_blank" class="file-link">
+<code>frontend/src/data/fish.js</code>
+</a> định nghĩa thông tin 10 loài mới và tạo hồ sơ hiển thị thống nhất. <a href="backend/db/seeds/fish.json" target="_blank" class="file-link">
+<code>backend/db/seeds/fish.json</code>
+</a> đồng bộ dữ liệu cho backend.</li>
+<li>
+<a href="backend/db/seeds/fish-image-fixes.json" target="_blank" class="file-link">
+<code>backend/db/seeds/fish-image-fixes.json</code>
+</a> ghi mã cá, URL ảnh, trang nguồn và credit của cả năm ảnh đã sửa.</li>
+<li>
+<a href="backend/server.js" target="_blank" class="file-link">
+<code>backend/server.js</code>
+</a> dùng marker <code>011_freshwater_fish_and_images</code> để thêm profile chưa có, rồi cập nhật đúng các trường ảnh được khai báo.</li>
+<li>
+<a href="frontend/src/components/SpeciesSection.jsx" target="_blank" class="file-link">
+<code>frontend/src/components/SpeciesSection.jsx</code>
+</a>, <code>FishDetailPage.jsx</code> và <code>AdminDashboard.jsx</code> thay ảnh lỗi bằng tệp SVG ở thư mục <code>public</code>.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>Ảnh Commons được tham chiếu qua trang <code>Special:FilePath</code>; trang <code>imageSource</code> mở thông tin file, tác giả và giấy phép. Trang nguồn luôn là nơi cần kiểm tra điều khoản trước khi tái sử dụng.</li>
+<li>Hồ sơ mới vẫn mang nhãn cần rà soát. Số lít/nhiệt độ là mốc tham khảo và loài cá lớn như hắc ma, hề chạch, cá tai tượng không phù hợp bể nhỏ.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 16 — quản lý danh bạ cửa hàng trong dashboard — 03/11/2026" >
+<summary>
+<time>03/11/2026</time>
+<strong>BẢN 16 — QUẢN LÝ DANH BẠ CỬA HÀNG TRONG DASHBOARD — 03/11/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Chuyển danh sách cửa hàng từ dữ liệu frontend sang PostgreSQL. Khách vẫn thấy cửa hàng đang bật; cửa hàng ẩn không xuất hiện trên website.</li>
+<li>Admin thêm cửa hàng, sửa địa chỉ/số điện thoại/giờ/ghi chú/nguồn, và bật hoặc ẩn cửa hàng trong dashboard.</li>
+<li>Migration 010 tạo bảng <code>shops</code> và marker schema. Backend nhập danh sách mẫu từ <a href="backend/db/seeds/shops.json" target="_blank" class="file-link">
+<code>backend/db/seeds/shops.json</code>
+</a> một lần; lần khởi động tiếp theo không ghi đè nội dung đã sửa hoặc bật lại cửa hàng đã ẩn.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>
+<a href="frontend/src/data/shops.js" target="_blank" class="file-link">
+<code>frontend/src/data/shops.js</code>
+</a> là danh sách nguồn ban đầu. Tệp JSON trong backend là bản sao được nhập vào database khi migration lần đầu chạy.</li>
+<li>
+<a href="backend/server.js" target="_blank" class="file-link">
+<code>backend/server.js</code>
+</a> cung cấp <code>GET /api/shops</code> cho website khách; <code>GET /api/admin/shops</code>, <code>PUT /api/admin/shops</code> và <code>PATCH /api/admin/shops/:id/status</code> chỉ hoạt động với tài khoản admin.</li>
+<li>
+<a href="frontend/src/App.jsx" target="_blank" class="file-link">
+<code>frontend/src/App.jsx</code>
+</a> lấy danh sách công khai từ API và truyền nó tới <code>HealthAndShops</code>. Nếu API chưa chạy, website dùng danh sách mẫu frontend để vẫn xem được nội dung.</li>
+<li>
+<a href="frontend/src/components/AdminDashboard.jsx" target="_blank" class="file-link">
+<code>frontend/src/components/AdminDashboard.jsx</code>
+</a> tải cả cửa hàng đang bật và đang ẩn, rồi gửi thay đổi lên backend. Ẩn là đổi cột <code>is_active</code>, không xóa vĩnh viễn bản ghi hoặc lịch sử báo cáo.</li>
+<li>
+<a href="backend/db/migrations/010_shop_directory.sql" target="_blank" class="file-link">
+<code>backend/db/migrations/010_shop_directory.sql</code>
+</a> tạo bảng <code>shops</code>; mỗi hàng có mã ổn định, dữ liệu hiển thị JSON, trạng thái công khai và thứ tự.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>Server xác thực phiên và quyền admin trước mỗi thao tác thay đổi. Kiểm tra dữ liệu bắt buộc, thành phố và URL nguồn trước khi lưu.</li>
+<li>
+<code>schema_migrations</code> ghi dấu <code>010_shop_directory</code> sau khi nhập dữ liệu mẫu. Điều đó tránh việc seed chạy lại làm mất các sửa đổi trong dashboard.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 15 — bể cá cá nhân, lịch chăm sóc, góp ý, cửa hàng toàn quốc và danh mục 35 loài — 03/11/2026" >
+<summary>
+<time>03/11/2026</time>
+<strong>BẢN 15 — BỂ CÁ CÁ NHÂN, LỊCH CHĂM SÓC, GÓP Ý, CỬA HÀNG TOÀN QUỐC VÀ DANH MỤC 35 LOÀI — 03/11/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Mở rộng danh mục từ 10 lên 35 hồ sơ. Có thêm cá molly, kiếm, sọc ngựa, mây trắng, tam giác, barb anh đào/tứ vân, sặc gấm/lửa, dĩa, Oscar, Koi, cá chuột, lau kiếng, chạch, bút chì ăn rêu, mập cầu vồng, La Hán, cá rồng, thêm tetra và cá phượng hoàng. Hồ sơ mới hiển thị trạng thái cần rà soát; nguồn OATA thường là hướng dẫn chung theo nhóm, không khẳng định tối ưu cho mọi biến thể thương mại.</li>
+<li>Thêm bộ lọc “Nhóm loài”, giữ các lọc nhóm nước, độ khó, dung tích, tính cách và tương thích. Tên thường gọi và tên khoa học vẫn dùng chung ô tìm kiếm.</li>
+<li>Mở rộng cửa hàng đã có nguồn tại TP.HCM, Hà Nội, Nha Trang, Cần Thơ và Hải Phòng; có tùy chọn xem mọi khu vực đang có dữ liệu. Người dùng đã đăng nhập có thể gửi gợi ý cửa hàng cho admin nếu khu vực mình chưa có kết quả.</li>
+<li>Khách đăng nhập có thể lưu bể cá riêng theo dung tích và loài đang nuôi, thêm lịch việc lặp theo ngày, đánh dấu đã làm để lịch tiếp theo được dời, và ghi nhật ký kiểm tra nước/chăm sóc.</li>
+<li>Thêm nút báo sai thông tin ở hồ sơ cá và cửa hàng. Admin nhận danh sách, đổi trạng thái mới/đang xem/đã xử lý/không áp dụng, và lưu ghi chú nội bộ.</li>
+<li>Thêm migration 007 cho bể, lịch, nhật ký và báo cáo; migration 008 thêm nhóm loài vào hồ sơ cũ nếu chưa có.</li>
+<li>Migration dữ liệu 009 thêm hồ sơ mới đúng một lần, chỉ khi mã cá chưa có, giữ nguyên hồ sơ admin đã sửa. Marker <code>009_expand_freshwater_catalog</code> ngăn việc nạp lại và đưa cá admin đã xóa trở lại ở lần khởi động sau.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>
+<a href="frontend/src/components/CustomerWorkspace.jsx" target="_blank" class="file-link">
+<code>frontend/src/components/CustomerWorkspace.jsx</code>
+</a> cung cấp form bể cá, lịch, nút hoàn thành và nhật ký; component chỉ hiện cho tài khoản khách.</li>
+<li>
+<a href="frontend/src/components/ContentReportButton.jsx" target="_blank" class="file-link">
+<code>frontend/src/components/ContentReportButton.jsx</code>
+</a> gửi mô tả lỗi tới API, gồm loại nội dung, mã, tên và lời giải thích của khách.</li>
+<li>
+<a href="frontend/src/components/AdminDashboard.jsx" target="_blank" class="file-link">
+<code>frontend/src/components/AdminDashboard.jsx</code>
+</a> tải hàng chờ báo cáo và cho admin đổi trạng thái/ghi chú. Backend vẫn kiểm tra role admin trên mọi thao tác.</li>
+<li>
+<a href="backend/server.js" target="_blank" class="file-link">
+<code>backend/server.js</code>
+</a> xác minh quyền sở hữu <code>user_id</code> trước khi đọc/xóa bể, thêm lịch hoặc ghi nhật ký. Khi đánh dấu lịch lặp hoàn thành, cùng một transaction ghi log và dời hạn kế tiếp.</li>
+<li>
+<a href="backend/db/migrations/007_customer_workspace.sql" target="_blank" class="file-link">
+<code>backend/db/migrations/007_customer_workspace.sql</code>
+</a> tạo các bảng <code>aquariums</code>, <code>care_tasks</code>, <code>care_logs</code>, <code>content_reports</code>; các khóa ngoại xóa dữ liệu con cùng bể hoặc tài khoản.</li>
+<li>
+<a href="frontend/src/data/shops.js" target="_blank" class="file-link">
+<code>frontend/src/data/shops.js</code>
+</a> thêm 5 cửa hàng/điểm bán có nguồn tại 3 vùng, giữ riêng trạng thái nguồn chính thức, danh bạ, giờ mở cửa và ngày đối chiếu.</li>
+<li>
+<a href="frontend/src/data/fish.js" target="_blank" class="file-link">
+<code>frontend/src/data/fish.js</code>
+</a> thêm 25 hồ sơ. <a href="backend/db/seeds/fish.json" target="_blank" class="file-link">
+<code>backend/db/seeds/fish.json</code>
+</a> là bản sao dữ liệu mẫu mà backend dùng trong lần nâng cấp catalog.</li>
+<li>
+<a href="backend/db/migrations/009_expand_freshwater_catalog.sql" target="_blank" class="file-link">
+<code>backend/db/migrations/009_expand_freshwater_catalog.sql</code>
+</a> tạo bảng lưu version migration; backend ghi version sau khi nạp xong loài mới.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>Mỗi bể được lưu với <code>user_id</code> từ cookie phiên trên server; client không gửi user_id để tự chọn chủ sở hữu. Vì vậy thay đổi số ID trên URL không mở được bể của người khác.</li>
+<li>Lịch có <code>cadence_days</code> sẽ tăng ngày đến hạn khi hoàn thành. Lịch không lặp được đánh dấu <code>completed_at</code>. Cả hai trường hợp đều tạo bản ghi trong <code>care_logs</code>, tạo lịch sử hoạt động.</li>
+<li>Góp ý của khách ban đầu có status <code>open</code>. Admin chỉ chọn trạng thái và lưu ghi chú; bước này chưa tự chỉnh nội dung hồ sơ cá. Admin cần tự mở hồ sơ rồi sửa sau khi kiểm chứng nguồn.</li>
+<li>
+<code>ON CONFLICT (id) DO NOTHING</code> cho phép thêm profile mới mà không ghi đè dữ liệu admin. Marker chỉ chạy catalog upgrade một lần, nên admin xóa loài sau đó thì lần mở website tiếp theo cũng không tự thêm loài đó lại.</li>
+<li>Dung tích/tính cách của hồ sơ mới là giá trị sàng lọc tham khảo, không bảo đảm một bể thực tế có thể nuôi loài đó. Xem trạng thái và nguồn từng hồ sơ.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 14 — bộ lọc, so sánh, sức khỏe và cửa hàng — 03/11/2026" >
+<summary>
+<time>03/11/2026</time>
+<strong>BẢN 14 — BỘ LỌC, SO SÁNH, SỨC KHỎE VÀ CỬA HÀNG — 03/11/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Thêm bộ lọc cá theo dung tích bể, tính cách và loại bể tương thích. Các bộ lọc cũ theo tên, nhóm nước, độ khó và yêu thích vẫn hoạt động cùng nhau.</li>
+<li>Thêm nút chọn loài ở từng thẻ và bảng so sánh tối đa ba cá: bể, nhiệt độ, pH, mức chăm sóc, tính cách, nuôi đàn và tương thích.</li>
+<li>Mở rộng hướng dẫn sức khỏe thành ba bước dễ làm theo: ghi dấu hiệu, kiểm tra chất lượng nước, rồi giảm nguy cơ lây lan và hỏi người có chuyên môn. Giao diện nhắc người dùng không tự phối hợp thuốc và không xem nội dung là chẩn đoán thú y.</li>
+<li>Thêm cửa hàng theo Hà Nội/TP. Hồ Chí Minh, ô lọc theo tên hoặc quận, link gọi điện, mở Google Maps, giờ mở cửa, nguồn và ngày đối chiếu.</li>
+<li>Thêm các chi nhánh Thủy Sinh Tím, HT Aquarium và Cá Cảnh Thủy Sinh Trung Tín. Dùng website chính thức của Thủy Sinh Tím/Trung Tín và danh bạ hãng Seachem cho HT Aquarium; trường chưa xác minh được ghi thẳng là chưa xác minh.</li>
+<li>Chuẩn hóa hồ sơ cá với dung tích lọc, tính cách, kiểu bể tương thích, trạng thái rà soát và ngày rà soát. Hồ sơ chi tiết hiển thị ngày và ghi chú phạm vi của thông số.</li>
+<li>Thêm kiểm tra admin ở cả giao diện lẫn API: ảnh, nguồn ảnh, ghi công, thông số chăm sóc, nhóm lọc, và ít nhất một nguồn có URL an toàn. Video nếu có phải kèm nguồn và ghi công. API là nơi kiểm tra cuối cùng, nên dữ liệu không thể vượt kiểm tra chỉ bằng cách bỏ qua HTML form.</li>
+<li>Cập nhật README.md và migration cơ sở dữ liệu để các hồ sơ đã có cũng dùng được với bộ lọc mới.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>
+<a href="frontend/src/App.jsx" target="_blank" class="file-link">
+<code>frontend/src/App.jsx</code>
+</a> giữ trạng thái của bộ lọc, chỉ hiển thị cá khớp mọi điều kiện đã chọn, và quản lý tập cá so sánh.</li>
+<li>
+<a href="frontend/src/components/QuickSearch.jsx" target="_blank" class="file-link">
+<code>frontend/src/components/QuickSearch.jsx</code>
+</a> hiển thị lựa chọn lọc. Mỗi Select gọi callback để báo tiêu chí mới về App.jsx.</li>
+<li>
+<a href="frontend/src/components/SpeciesSection.jsx" target="_blank" class="file-link">
+<code>frontend/src/components/SpeciesSection.jsx</code>
+</a> gắn nút so sánh vào từng thẻ và dựng bảng HTML với các dòng thông tin chung để người dùng đối chiếu.</li>
+<li>
+<a href="frontend/src/data/fish.js" target="_blank" class="file-link">
+<code>frontend/src/data/fish.js</code>
+</a> chứa thuộc tính lọc như <code>minTankLiters</code>, <code>temperament</code>, <code>compatibilityGroup</code>, <code>reviewedAt</code>, <code>dataStatus</code>.</li>
+<li>
+<a href="frontend/src/components/FishDetailPage.jsx" target="_blank" class="file-link">
+<code>frontend/src/components/FishDetailPage.jsx</code>
+</a> thông báo ngày hồ sơ được rà soát, hiển thị từng nguồn và nhắc thông số có thể là mốc chung theo nhóm.</li>
+<li>
+<a href="frontend/src/components/HealthAndShops.jsx" target="_blank" class="file-link">
+<code>frontend/src/components/HealthAndShops.jsx</code>
+</a> chứa checklist sức khỏe, bộ lọc cửa hàng, link <code>tel:</code> và bản đồ, cũng như ngày/nguồn cho từng cửa tiệm.</li>
+<li>
+<a href="frontend/src/data/shops.js" target="_blank" class="file-link">
+<code>frontend/src/data/shops.js</code>
+</a> là danh sách cửa hàng mẫu. Từng địa chỉ có thành phố, hotline nếu có, giờ, ngày kiểm tra, loại nguồn và liên kết gốc.</li>
+<li>
+<a href="frontend/src/components/AdminDashboard.jsx" target="_blank" class="file-link">
+<code>frontend/src/components/AdminDashboard.jsx</code>
+</a> thêm trường cho bộ lọc và nguồn. URL được kiểm tra ở trình duyệt bằng <code>type=url</code>; đây chỉ là trợ giúp nhập, không phải lớp bảo vệ cuối cùng.</li>
+<li>
+<a href="backend/server.js" target="_blank" class="file-link">
+<code>backend/server.js</code>
+</a> xác thực nội dung cá ở <code>saveFish</code>. Hàm dùng URL parser để chỉ nhận HTTP/HTTPS, bắt buộc đủ nguồn và metadata lọc, rồi tự đặt ngày rà soát khi admin lưu. Import dữ liệu cũ có đường xử lý riêng để không làm mất dữ liệu; hồ sơ thiếu nguồn được đánh dấu <code>needs-review</code>.</li>
+<li>
+<a href="backend/db/migrations/005_add_fish_quality_fields.sql" target="_blank" class="file-link">
+<code>backend/db/migrations/005_add_fish_quality_fields.sql</code>
+</a> bổ sung metadata vào hồ sơ đang ở PostgreSQL mà vẫn giữ giá trị đã có. Bảng <code>schema_migrations</code> giúp cùng migration không chạy lặp lại.</li>
+<li>
+<a href="backend/db/migrations/006_complete_initial_fish_catalog.sql" target="_blank" class="file-link">
+<code>backend/db/migrations/006_complete_initial_fish_catalog.sql</code>
+</a> bù sáu loài nền nếu migration thêm bốn loài mới chạy trước seed. Mỗi mã cá chỉ thêm khi chưa có; version đánh dấu để việc admin xóa loài sau này không bị hoàn tác khi backend khởi động lại.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>Ví dụ chọn bể 45L nghĩa là danh sách chỉ giữ hồ sơ có <code>minTankLiters</code> không lớn hơn 45. Đây là tiêu chí sàng lọc của trang, không phải lời khuyên rằng dung tích đó đủ cho mọi cách bố trí bể hoặc cá trưởng thành.</li>
+<li>Mỗi thao tác “So sánh” thêm/bỏ id cá khỏi mảng <code>compareIds</code>. Khi có ít nhất hai lựa chọn, component lấy dữ liệu đầy đủ từ <code>allFish</code> và dựng bảng; lựa chọn được giới hạn tối đa ba loài.</li>
+<li>Nguồn cửa hàng được gắn trực tiếp lên từng thẻ. Nút bản đồ tạo URL tìm kiếm với tên và địa chỉ; nút điện thoại dùng <code>tel:</code> khi có hotline.</li>
+<li>Khi admin lưu hồ sơ, browser validation hỗ trợ nhập. Backend kiểm tra lại các trường bắt buộc độc lập với trình duyệt, sau đó ghi hồ sơ JSONB như trước.</li>
+<li>Migration 005 chỉ lấp các metadata còn thiếu trong từng hồ sơ. Toán tử hợp JSONB được dùng để giữ các giá trị admin đã lưu trước đó.</li>
+<li>Migration 006 giải quyết thứ tự seed: migration 003 có thể thêm bốn loài mới khi bảng cá đang trống, khiến điều kiện “chỉ seed khi bảng rỗng” không còn đúng. Migration 006 thêm các hồ sơ nền còn thiếu đúng một lần.</li>
+</ul>
+</section>
+<section class="note limits">
+<h3>Điều cần hiểu / giới hạn</h3>
+<ul>
+<li>Ngày rà soát cho biết nguồn được mở và đối chiếu, không bảo đảm cửa hàng còn hàng hoặc cá còn khỏe. Nên gọi trước; giờ mở cửa chưa có nguồn chắc chắn được ghi “Chưa xác minh”.</li>
+<li>HT Aquarium được xác nhận qua danh bạ hãng vật tư Seachem; nguồn đó ghi lần kiểm tra mặt hàng năm 2025 và điện thoại theo định dạng cũ. Trang hiện không tự suy ra hoặc hiển thị số điện thoại khi chưa định dạng chắc chắn.</li>
+<li>Nhiều thông số chăm sóc là hướng dẫn nhóm, hoặc mốc sàng lọc để lọc cá. Kích thước bể còn tùy kích thước trưởng thành, diện tích mặt nước, lọc, số lượng cá và yêu cầu của dòng cá cụ thể.</li>
+<li>Hướng dẫn sức khỏe là bước quan sát ban đầu; triệu chứng giống nhau có thể có nhiều nguyên nhân. Website không chẩn đoán bệnh hoặc kê thuốc.</li>
+<li>Các hồ sơ do admin nhập qua luồng chuyển dữ liệu cũ được giữ lại ngay cả khi thiếu nguồn. Trạng thái <code>needs-review</code> báo cho người xem biết cần kiểm tra.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 13 — chuẩn hóa hồ sơ và thêm cá tetra, cầu vồng — 30/10/2026" >
+<summary>
+<time>30/10/2026</time>
+<strong>BẢN 13 — CHUẨN HÓA HỒ SƠ VÀ THÊM CÁ TETRA, CẦU VỒNG — 30/10/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Mở rộng danh mục từ sáu lên mười loài: thêm cá cầu vồng Boesemani, cardinal tetra, tetra lửa và tetra mũi đỏ.</li>
+<li>Rà soát ảnh mặc định: thay các ảnh Unsplash/Pexels không chắc khớp cá bằng ảnh Commons có trang nguồn và giấy phép rõ ràng. Ảnh cá betta tiếp tục dùng trang Pexels đúng loài.</li>
+<li>Lưu tên tác giả/giấy phép (<code>imageCredit</code>) và trang nguồn ảnh (<code>imageSource</code>) ngay trong từng hồ sơ. Trang chi tiết có liên kết ghi công trên ảnh; admin cũng chỉnh sửa được hai trường này.</li>
+<li>Ghi nguồn chăm sóc theo loài và phân biệt thông số riêng với hướng dẫn chung cho cả nhóm tetra/cá cầu vồng. Ví dụ, 22–27°C và pH 6.5–8.0 là mốc nhóm do OATA đưa ra, không khẳng định đó là thông số tối ưu riêng cho mọi loài.</li>
+<li>Cập nhật README và dữ liệu seed để người mới cài project có cùng danh mục.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>
+<a href="frontend/src/data/fish.js" target="_blank" class="file-link">
+<code>frontend/src/data/fish.js</code>
+</a> là nguồn hồ sơ mặc định dùng bởi trang React. Mỗi object có mã <code>id</code>, tên thường gọi, tên khoa học, điều kiện bể, chăm sóc, ảnh và <code>sources</code> để người đọc kiểm tra thông tin.</li>
+<li>
+<a href="backend/db/seeds/fish.json" target="_blank" class="file-link">
+<code>backend/db/seeds/fish.json</code>
+</a> là bản JSON tương ứng cho database mới. Khi bảng fish còn trống backend nạp các hồ sơ này; seed không ghi đè nội dung admin.</li>
+<li>
+<a href="backend/db/migrations/003_add_freshwater_species.sql" target="_blank" class="file-link">
+<code>backend/db/migrations/003_add_freshwater_species.sql</code>
+</a> thêm bốn loài vào database đã có dữ liệu. Bảng <code>schema_migrations</code> đánh dấu bản cập nhật đã chạy, để lần khởi động sau không thêm lại loài mà admin đã xóa.</li>
+<li>
+<a href="backend/db/migrations/004_correct_image_attributions.sql" target="_blank" class="file-link">
+<code>backend/db/migrations/004_correct_image_attributions.sql</code>
+</a> sửa nhãn giấy phép của hai ảnh sau khi đối chiếu trang Commons. Nó chỉ đổi nhãn khi URL ảnh vẫn khớp ảnh Commons tương ứng; ảnh do admin thay sẽ không bị ảnh hưởng.</li>
+<li>Migration chỉ sửa ảnh của sáu hồ sơ cũ nếu URL trong database vẫn đúng bằng URL mẫu cũ. Nếu admin đã thay ảnh, câu <code>WHERE</code> không khớp nên ảnh riêng được giữ nguyên.</li>
+<li>
+<code>FishDetailPage.jsx</code> hiển thị <code>imageCredit</code>/<code>imageSource</code>; khi video đang chạy, nó vẫn hiện ghi công video như trước. <code>AdminDashboard.jsx</code> có trường để nhập/xem lại nguồn ảnh và nhãn nhóm hiển thị.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>Backend đọc file migration 003 mỗi lần khởi động. SQL kiểm tra version trong <code>schema_migrations</code>; chỉ lần đầu mới thêm cá và sửa các ảnh mặc định.</li>
+<li>JSON hồ sơ cá được lưu nguyên object trong cột JSONB. Vì vậy các trường ghi công mới đi cùng hồ sơ mà không cần thêm cột PostgreSQL.</li>
+<li>Ảnh Commons được tải trực tiếp từ Wikimedia qua <code>Special:FilePath</code>. Nếu chủ ảnh đổi tệp hoặc nguồn không truy cập được, trang có thể không tải ảnh; liên kết ghi công cho phép kiểm tra trang gốc.</li>
+</ul>
+</section>
+<section class="note limits">
+<h3>Điều cần hiểu / giới hạn</h3>
+<ul>
+<li>OATA cung cấp ngưỡng tham khảo chung theo nhóm. Cá bắt tự nhiên, cá từ trại khác nhau hoặc từng biến thể có thể cần điều kiện khác; hãy hỏi cửa hàng và theo dõi chất lượng nước trước khi thả cá.</li>
+<li>Ảnh có CC BY hoặc CC BY-SA cần giữ ghi công theo giấy phép. Đọc điều khoản trên trang Commons trước khi phân phối lại hoặc chỉnh sửa.</li>
+<li>Bước này thêm ảnh tĩnh có nguồn cho bốn loài mới. Video động riêng cho từng loài mới chưa được thêm nếu chưa tìm được clip xác nhận đúng loài và giấy phép rõ ràng; website tiếp tục hiện ảnh tĩnh thay cho video.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 12 — lưu tài khoản và hồ sơ cá trên postgresql — 30/10/2026" >
+<summary>
+<time>30/10/2026</time>
+<strong>BẢN 12 — LƯU TÀI KHOẢN VÀ HỒ SƠ CÁ TRÊN POSTGRESQL — 30/10/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Kết nối backend Node.js với PostgreSQL bằng thư viện pg.</li>
+<li>Đăng ký và đăng nhập khách/admin qua API; backend băm mật khẩu bằng scrypt, lưu tài khoản và tạo phiên đăng nhập phía máy chủ.</li>
+<li>Chuyển cookie phiên thành HttpOnly để JavaScript phía trang không đọc được mã phiên. Đăng xuất xóa phiên tương ứng khỏi bảng auth_sessions.</li>
+<li>Đọc danh mục cá từ database. Admin thêm/sửa/xóa hồ sơ qua API có kiểm tra vai trò; video, ảnh và nguồn tham khảo nằm chung trong dữ liệu hồ sơ.</li>
+<li>Lưu danh sách yêu thích theo tài khoản trong PostgreSQL.</li>
+<li>Chuyển dữ liệu cá cũ của admin lên database trong lần đăng nhập đầu tiên; tài khoản khách cũ được chuyển khi họ đăng nhập bằng mật khẩu đang dùng.</li>
+<li>Cập nhật giao diện admin, hướng dẫn cấu hình .env, Docker và các bảng database.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>backend/server.js thiết lập kết nối Pool, tạo phiên, kiểm tra cookie/quyền, xác thực API, đọc/ghi cá và yêu thích. Mọi dữ liệu từ người dùng đi vào SQL qua tham số <code>$1</code>, <code>$2</code> thay vì ghép trực tiếp vào câu truy vấn.</li>
+<li>backend/db/migrations/002_create_app_data.sql tạo <code>fish</code>, <code>auth_sessions</code> và <code>favorites</code>. <a href="backend/db/init/001_create_users.sql" target="_blank" class="file-link">
+<code>backend/db/init/001_create_users.sql</code>
+</a> tạo bảng users.</li>
+<li>backend/db/seeds/fish.json chứa sáu hồ sơ mẫu. Chỉ khi bảng fish rỗng backend mới thêm dữ liệu mẫu; các lần khởi động sau không ghi đè nội dung admin sửa.</li>
+<li>frontend/src/App.jsx tải dữ liệu qua API, gửi thay đổi admin lên server, lưu yêu thích cùng tài khoản và khởi tạo lại phiên từ cookie khi tải trang.</li>
+<li>frontend/src/components/AuthPage.jsx gửi form đăng nhập/đăng ký tới server. Frontend cũng có thể xác minh tài khoản legacy trong localStorage rồi đăng ký tài khoản đó trên server bằng mật khẩu người dùng vừa nhập.</li>
+<li>frontend/src/components/AdminDashboard.jsx chờ API lưu/xóa thành công rồi mới cập nhật thông báo; thêm trường video và ghi công clip.</li>
+<li>docker-compose.yml truyền cấu hình database và tài khoản admin vào backend; <code>.env.example</code> liệt kê các giá trị local cần thay trước khi triển khai.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>Khi Docker khởi động, PostgreSQL chạy script users khi volume mới. Backend sau đó chạy migration bảng còn lại, nạp dữ liệu cá nếu chưa có, rồi khởi động API khi database đã khỏe mạnh.</li>
+<li>Trình duyệt gửi tài khoản/mật khẩu qua API. Backend so sánh mật khẩu với hash scrypt trong bảng users, tạo chuỗi phiên ngẫu nhiên và chỉ lưu hash của chuỗi phiên vào bảng auth_sessions. Cookie HttpOnly gửi lại cho trình duyệt.</li>
+<li>Khi người dùng mở trang, App.jsx gọi <code>/api/auth/me</code>; backend kiểm tra cookie với session trong database để trả về danh tính và vai trò. Admin API từ chối yêu cầu nếu phiên thiếu hoặc vai trò không phải admin.</li>
+<li>Khi admin lưu cá, React gửi một hồ sơ JSON. Backend ghi hồ sơ vào cột JSONB trong bảng fish. Khách lưu yêu thích dưới dạng các hàng nối user_id với fish_id.</li>
+<li>Dữ liệu cũ được nâng cấp theo từng người dùng: admin truyền hồ sơ cũ sau khi đăng nhập; khách nhập đúng mật khẩu cũ để frontend đăng ký hồ sơ đó trên server.</li>
+</ul>
+</section>
+<section class="note limits">
+<h3>Điều cần hiểu / giới hạn</h3>
+<ul>
+<li>Dùng <code>docker compose up --build</code> để áp dụng backend mới. Volume hiện tại được giữ; migration thêm bảng mới và backend nạp cá mẫu nếu bảng fish còn trống.</li>
+<li>Admin local mặc định là <code>admin</code> / <code>aqua-demo</code>; đổi các giá trị trong <code>.env</code> trước khi mở website ra Internet. Bật <code>COOKIE_SECURE=true</code> khi chạy HTTPS.</li>
+<li>Database lưu cá, tài khoản, phiên và yêu thích; dữ liệu cửa hàng, hướng dẫn chăm sóc và sức khỏe vẫn đang nằm trong frontend.</li>
+<li>Cookie và truy vấn được thiết kế cho ứng dụng cùng origin. Trước khi triển khai công khai còn cần HTTPS, giới hạn thử mật khẩu và sao lưu database.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 1 — trang html tĩnh — 29/10/2026 (phiên bản cũ)" >
+<summary>
+<time>29/10/2026</time>
+<strong>BẢN 1 — TRANG HTML TĨNH — 29/10/2026 (PHIÊN BẢN CŨ)</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Tạo trang chủ AquaAtlas Vietnam tiếng Việt với các khu vực chính của cẩm nang.</li>
+<li>Thêm bộ lọc mẫu, thẻ cá, menu điện thoại và các tương tác minh họa.</li>
+<li>Chọn Be Vietnam Pro, thêm video nền và bố cục responsive.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>Khi đó toàn bộ nội dung nằm trong index.html, styles.css và script.js.</li>
+<li>Đây là ghi chép lịch sử; styles.css và script.js ở thư mục gốc đã được thay bằng frontend/src/styles.css và các component React. Git vẫn giữ lịch sử bản cũ.</li>
+<li>Dữ liệu và hành vi khi ấy được viết trực tiếp, chưa có cơ sở dữ liệu.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 2 — chuyển sang react + mui — 29/10/2026" >
+<summary>
+<time>29/10/2026</time>
+<strong>BẢN 2 — CHUYỂN SANG REACT + MUI — 29/10/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Chuyển trang HTML thành ứng dụng React chạy bằng Vite.</li>
+<li>Tách header, hero, tìm kiếm, danh sách cá, chăm sóc, sức khỏe/cửa hàng và footer thành các component riêng.</li>
+<li>Chuyển dữ liệu cá sang frontend/src/data/fish.js; bộ lọc đọc dữ liệu này và cập nhật danh sách hiển thị khi lựa chọn thay đổi.</li>
+<li>Dùng MUI cho Button, Select, Card, Chip, TextField và các nút biểu tượng.</li>
+<li>Tạo theme màu chung và định dạng responsive dễ đọc hơn.</li>
+<li>Thêm package.json, cấu hình Vite và .gitignore cho node_modules/dist.</li>
+<li>Cập nhật README.md để hướng dẫn chạy ứng dụng React.</li>
+<li>Tạo bản dựng production thành công bằng npm run build.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>frontend/src/main.jsx khởi chạy React và bọc ứng dụng bằng theme MUI.</li>
+<li>frontend/src/App.jsx giữ trạng thái bộ lọc và kết hợp các component.</li>
+<li>frontend/src/components/ chứa các phần giao diện nhỏ.</li>
+<li>frontend/src/data/fish.js giữ danh sách cá mẫu.</li>
+<li>frontend/src/theme.js và frontend/src/styles.css lần lượt định dạng component MUI và giao diện riêng của website.</li>
+<li>MUI components được import theo nhu cầu trong từng component. Vite có thể đóng gói phần thư viện được dùng cùng ứng dụng thay vì nạp cả CDN.</li>
+</ul>
+</section>
+<section class="note limits">
+<h3>Điều cần hiểu / giới hạn</h3>
+<ul>
+<li>Danh sách cá vẫn là dữ liệu mẫu trong JavaScript, chưa có cơ sở dữ liệu.</li>
+<li>Chọn tỉnh/thành chưa tra cứu cửa hàng thật; biểu mẫu email chưa gửi thư.</li>
+<li>Ảnh, video và font tải từ các dịch vụ bên ngoài và cần Internet.</li>
+<li>Chạy ứng dụng bằng npm run dev; không mở index.html trực tiếp như bản tĩnh.</li>
+<li>README.md chỉ mô tả website và cách chạy; ghi chú code nằm trong tệp này.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 3 — danh mục cá nước ngọt — 29/10/2026" >
+<summary>
+<time>29/10/2026</time>
+<strong>BẢN 3 — DANH MỤC CÁ NƯỚC NGỌT — 29/10/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Ưu tiên sáu loài cá nước ngọt: betta, bảy màu, neon, mún, vàng và thần tiên.</li>
+<li>Thêm tìm kiếm theo tên thường gọi/tên khoa học và bộ lọc nhóm nhiệt đới, nước mát cùng độ khó chăm sóc.</li>
+<li>Thêm trang hồ sơ từng loài với điều kiện bể, thông số nước, thức ăn, nuôi theo nhóm, tương thích và liên kết tới nguồn tham khảo.</li>
+<li>Gắn mã loài vào query string, ví dụ ?fish=betta, để mở trực tiếp hoặc chia sẻ URL hồ sơ.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>frontend/src/data/fish.js chứa sáu hồ sơ cá và các liên kết nguồn.</li>
+<li>frontend/src/App.jsx tìm/lọc cá, mở hồ sơ và đồng bộ trang đang xem với URL.</li>
+<li>QuickSearch.jsx nhận từ khóa/bộ lọc; SpeciesSection.jsx hiển thị kết quả; FishDetailPage.jsx trình bày hồ sơ của loài được chọn.</li>
+<li>frontend/src/styles.css định dạng danh mục và trang chi tiết trên máy tính/điện thoại.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>Khi nhập từ khóa hoặc đổi bộ lọc, App.jsx lọc mảng cá và gửi kết quả cho SpeciesSection. Khi bấm một loài, App.jsx thêm mã cá vào URL và render FishDetailPage. Nút quay lại và nút Back đồng bộ lại nội dung theo URL.</li>
+</ul>
+</section>
+<section class="note limits">
+<h3>Điều cần hiểu / giới hạn</h3>
+<ul>
+<li>Sáu loài là danh sách mẫu ban đầu; mỗi hồ sơ có nguồn để kiểm tra.</li>
+<li>Thông số là hướng dẫn tham khảo. Một số sheet OATA áp dụng cho cả nhóm cá, vì vậy cần đối chiếu theo dòng cá và nơi bán cụ thể.</li>
+<li>Danh sách cửa hàng, biểu mẫu email và cơ sở dữ liệu vẫn chưa kết nối.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 4 — cửa hàng, sức khỏe và dashboard admin — 29/10/2026" >
+<summary>
+<time>29/10/2026</time>
+<strong>BẢN 4 — CỬA HÀNG, SỨC KHỎE VÀ DASHBOARD ADMIN — 29/10/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Thêm cửa hàng tham khảo ở TP. Hồ Chí Minh, Hà Nội, Đà Nẵng và Cần Thơ. Mỗi thẻ có địa chỉ, link bản đồ và link nguồn để người đọc kiểm tra.</li>
+<li>Chọn thành phố sẽ lọc cửa hàng trong danh sách; đây là lọc tại trình duyệt, chưa gọi dịch vụ bản đồ hay API bên ngoài.</li>
+<li>Thêm phần dấu hiệu cần theo dõi ở cá như bỏ ăn, lờ đờ, thở gấp, đốm hoặc bơi bất thường. Nội dung hướng người nuôi quan sát và kiểm tra nước, không kê thuốc.</li>
+<li>Thêm trang admin ở URL ?admin=1. Tài khoản demo: admin / aqua-demo.</li>
+<li>Admin có thể xem danh sách, thêm hồ sơ, sửa hồ sơ và xóa hồ sơ. Danh sách cá cập nhật ngay trên trang và được lưu vào localStorage của trình duyệt.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>frontend/src/data/shops.js chứa dữ liệu cửa hàng, thành phố và liên kết nguồn.</li>
+<li>HealthAndShops.jsx hiển thị cửa hàng đã lọc và hướng dẫn theo dõi dấu hiệu.</li>
+<li>AdminDashboard.jsx hiển thị form đăng nhập demo, danh sách cá và biểu mẫu CRUD.</li>
+<li>App.jsx lưu trạng thái cá dùng chung, đồng bộ URL ?admin=1 và đọc/ghi localStorage dưới khóa aqua-atlas-fish.</li>
+<li>SiteFooter.jsx có liên kết mở dashboard; frontend/src/styles.css định dạng admin và thẻ cửa hàng trên máy tính/điện thoại.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>Khi App khởi động, hàm loadFish() đọc localStorage. Nếu chưa có dữ liệu lưu, app dùng danh sách mẫu từ frontend/src/data/fish.js.</li>
+<li>Dashboard gọi onSaveFish hoặc onDeleteFish. Hai hàm này cập nhật state cá ở App.jsx; useEffect sau đó lưu mảng mới vào localStorage.</li>
+<li>Đăng nhập demo chỉ đặt cờ trong sessionStorage để giữ trạng thái đến khi đóng phiên trình duyệt. Mật khẩu được viết trong mã phía trình duyệt.</li>
+<li>Cửa hàng lấy từ shops.js và Maps mở trang tìm kiếm theo tên + địa chỉ.</li>
+</ul>
+</section>
+<section class="note limits">
+<h3>Điều cần hiểu / giới hạn</h3>
+<ul>
+<li>Đây là prototype học React CRUD. localStorage chỉ thuộc một trình duyệt/máy; xóa dữ liệu website hoặc đổi trình duyệt có thể làm mất hồ sơ đã thêm.</li>
+<li>Tài khoản demo không bảo vệ website công khai vì mã và mật khẩu nằm ở frontend. Trước khi triển khai thật cần backend, cơ sở dữ liệu, xác thực máy chủ và phân quyền.</li>
+<li>Danh sách cửa hàng được tổng hợp từ nguồn công khai; cần liên hệ xác nhận địa chỉ, giờ hoạt động và loài cá còn bán trước khi đi.</li>
+<li>Phần sức khỏe chỉ hướng dẫn quan sát tổng quát. Dấu hiệu có thể do nhiều nguyên nhân; cần chuyên gia thú y thủy sản để chẩn đoán và chọn điều trị.</li>
+<li>Build đã chạy bằng npm run build; chưa có backend hay dịch vụ bản đồ/email.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 5 — đăng nhập chung cho khách và admin — 29/10/2026" >
+<summary>
+<time>29/10/2026</time>
+<strong>BẢN 5 — ĐĂNG NHẬP CHUNG CHO KHÁCH VÀ ADMIN — 29/10/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Thêm một màn đăng nhập dùng chung cho khách và admin, có hai tab: đăng nhập và tạo tài khoản khách.</li>
+<li>Khách đăng ký bằng tên, email và mật khẩu; sau khi đăng ký/đăng nhập sẽ về trang chủ. Tên người dùng được hiển thị trên thanh điều hướng.</li>
+<li>Tài khoản admin demo đăng nhập tại cùng màn hình; khi đúng vai trò admin, App chuyển tới dashboard quản lý cá.</li>
+<li>Khi chưa đăng nhập mà mở ?admin=1, app hiển thị màn chung. Khách không được vào dashboard; chỉ role admin mới thấy trang quản trị.</li>
+<li>Thêm đăng xuất cho khách và admin. Phiên đăng nhập được lưu trong sessionStorage.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>frontend/src/components/AuthPage.jsx xử lý đăng nhập, tạo tài khoản khách và chọn vai trò.</li>
+<li>frontend/src/App.jsx lưu người đang đăng nhập trong state, phân trang ?auth=1 / ?admin=1 và chuyển khách/admin tới đúng màn hình.</li>
+<li>SiteHeader.jsx hiển thị nút đăng nhập hoặc tên khách + đăng xuất.</li>
+<li>AdminDashboard.jsx chỉ còn phần dashboard; App chỉ render nó với role admin.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>Đăng ký khách lưu email, tên, muối (salt) và mã băm mật khẩu trong localStorage. Khi đăng nhập, trình duyệt băm mật khẩu nhập vào với salt rồi so sánh mã băm.</li>
+<li>Mật khẩu admin demo được khai báo trong frontend để kiểm tra luồng vai trò. Đây chỉ là ví dụ học tập, không phải cách xác thực tài khoản an toàn.</li>
+<li>App lưu phiên đăng nhập trong sessionStorage nên giữ trạng thái qua tải lại tab, nhưng kết thúc phiên trình duyệt thì người dùng cần đăng nhập lại.</li>
+</ul>
+</section>
+<section class="note limits">
+<h3>Điều cần hiểu / giới hạn</h3>
+<ul>
+<li>Tài khoản khách chỉ tồn tại trong trình duyệt hiện tại; chưa đăng nhập được trên thiết bị khác, chưa có email xác minh hoặc khôi phục mật khẩu.</li>
+<li>Vì toàn bộ app là frontend tĩnh, người dùng có thể xem/sửa mã hoặc dữ liệu lưu. Hash mật khẩu và role check ở trình duyệt không đủ bảo vệ hệ thống công khai.</li>
+<li>Muốn vận hành thật, cần máy chủ quản lý tài khoản, lưu dữ liệu trong database, xác thực phiên/token phía server và kiểm tra role trên từng API.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 6 — lưu cá yêu thích theo tài khoản — 29/10/2026" >
+<summary>
+<time>29/10/2026</time>
+<strong>BẢN 6 — LƯU CÁ YÊU THÍCH THEO TÀI KHOẢN — 29/10/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Khách đã đăng nhập có thể bấm trái tim trên thẻ cá để lưu hoặc bỏ lưu.</li>
+<li>Thêm nút “Cá yêu thích” để chỉ xem những loài đã lưu; nút hiển thị số lượng.</li>
+<li>Nếu khách chưa đăng nhập bấm trái tim, app mở màn đăng nhập và ghi nhớ loài đang muốn lưu. Sau khi đăng nhập/tạo tài khoản khách, loài đó được lưu tự động.</li>
+<li>Danh sách yêu thích tách theo email tài khoản trong localStorage của trình duyệt.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>frontend/src/components/SpeciesSection.jsx nhận <code>favorites</code>, trạng thái đăng nhập và các hàm thao tác từ App; component hiển thị tim và nút lọc yêu thích.</li>
+<li>frontend/src/App.jsx quản lý danh sách ID yêu thích, lưu vào localStorage và lọc cá.</li>
+<li>frontend/src/components/AuthPage.jsx không đổi giao diện đăng nhập; App giữ lại ID cá chờ lưu trong sessionStorage nếu người dùng cần đăng nhập trước.</li>
+<li>frontend/src/styles.css đổi màu trái tim đã lưu và định dạng nút yêu thích.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>Mỗi hồ sơ cá có id ổn định. Danh sách yêu thích chỉ cần lưu các id này, ví dụ ["betta", "guppy"], thay vì sao chép cả hồ sơ cá vào tài khoản.</li>
+<li>App dùng khóa dạng aqua-atlas-favorites:&lt;email&gt; để lưu riêng từng khách. Khi khách đăng nhập lại trên cùng trình duyệt, app đọc danh sách đó và tô tim.</li>
+<li>Bật nút “Cá yêu thích” thì bộ lọc chỉ giữ hồ sơ có id nằm trong danh sách. Nếu bỏ tim khi đang xem danh sách này, cá sẽ biến khỏi kết quả ngay lập tức.</li>
+</ul>
+</section>
+<section class="note limits">
+<h3>Điều cần hiểu / giới hạn</h3>
+<ul>
+<li>Dữ liệu chỉ lưu trên trình duyệt hiện tại; tài khoản và yêu thích chưa đồng bộ sang máy khác vì chưa có backend/database.</li>
+<li>Khách chưa đăng nhập vẫn xem được toàn bộ danh mục; chỉ thao tác lưu cần tài khoản.</li>
+<li>Build đã chạy bằng npm run build.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 7 — tách frontend/backend và docker — 29/10/2026" >
+<summary>
+<time>29/10/2026</time>
+<strong>BẢN 7 — TÁCH FRONTEND/BACKEND VÀ DOCKER — 29/10/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Chuyển ứng dụng React, package.json, package-lock.json, Vite config và src/ vào frontend/.</li>
+<li>Tạo backend/ bằng Node.js thuần, hiện có endpoint GET /api/health.</li>
+<li>Thêm Dockerfile riêng cho hai phần. Frontend build bằng Node rồi chạy trên Nginx; backend chạy trong container Node độc lập.</li>
+<li>Thêm docker-compose.yml để build/chạy cả hai dịch vụ bằng một lệnh.</li>
+<li>Nginx trong frontend chuyển tiếp /api/ đến backend; Vite cũng proxy API khi phát triển local.</li>
+<li>Chân trang gọi API health và báo trạng thái kết nối.</li>
+<li>Viết lại README.md với cấu trúc thư mục, lệnh Docker và cách chạy dev riêng.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>backend/server.js xử lý yêu cầu HTTP health check và trả JSON.</li>
+<li>frontend/Dockerfile tạo bản build React rồi chép vào image Nginx.</li>
+<li>frontend/nginx.conf phục vụ ứng dụng và proxy API nội bộ.</li>
+<li>docker-compose.yml nối frontend và backend trong mạng Docker; chỉ frontend mở cổng 8080 ra máy chủ.</li>
+<li>frontend/vite.config.js proxy /api tới backend khi chạy Vite local.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>
+<code>docker compose up --build</code> đọc Compose, build từng Dockerfile và khởi động hai container. Trình duyệt vào localhost:8080.</li>
+<li>Khi giao diện gọi /api/health, Nginx nhận yêu cầu và gửi nó nội bộ đến backend:3000. Backend trả {"status":"ok", ...}; footer hiện đã kết nối.</li>
+<li>Tên <code>backend</code> là DNS nội bộ do Compose cung cấp. Frontend không cần biết IP container thay đổi sau mỗi lần chạy.</li>
+</ul>
+</section>
+<section class="note limits">
+<h3>Điều cần hiểu / giới hạn</h3>
+<ul>
+<li>Backend hiện chỉ là khung API health; đăng nhập, cá, yêu thích, cửa hàng và dashboard vẫn chạy bằng dữ liệu phía trình duyệt, chưa gọi API.</li>
+<li>Chưa có database hay volume dữ liệu. Restart container không ảnh hưởng dữ liệu localStorage của trình duyệt, nhưng dữ liệu đó không đồng bộ.</li>
+<li>Docker cần được cài và chạy trên máy. Nếu cổng 8080 đang bận, đổi phần host trong <code>ports</code> của docker-compose.yml, ví dụ <code>8081:80</code>.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 8 — postgresql và bảng tài khoản — 29/10/2026" >
+<summary>
+<time>29/10/2026</time>
+<strong>BẢN 8 — POSTGRESQL VÀ BẢNG TÀI KHOẢN — 29/10/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Thêm dịch vụ PostgreSQL 17 vào Docker Compose.</li>
+<li>Thêm health check <code>pg_isready</code>; backend chỉ khởi động sau khi database sẵn sàng.</li>
+<li>Tạo named volume <code>aqua_atlas_db_data</code> để database còn sau <code>docker compose down</code>.</li>
+<li>Thêm script SQL tạo bảng users với email, tên hiển thị, password_hash, vai trò, thời gian tạo/cập nhật và các ràng buộc dữ liệu.</li>
+<li>Cấu hình backend nhận host, cổng, tên database, user và password từ môi trường.</li>
+<li>Cập nhật README.md và giải thích lệnh giữ/xóa volume.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>backend/db/init/001_create_users.sql định nghĩa bảng và chỉ mục email duy nhất.</li>
+<li>docker-compose.yml chạy database, truyền cấu hình vào backend, đặt thứ tự khởi động dựa trên health check và gắn volume bền vững.</li>
+<li>README.md hướng dẫn chạy, thay mật khẩu dev và phân biệt <code>down</code> với <code>down -v</code>.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>Khi volume database rỗng, image PostgreSQL chạy các file SQL được mount vào <code>/docker-entrypoint-initdb.d</code>; script tạo bảng users.</li>
+<li>Docker Compose đợi <code>pg_isready</code> báo database sẵn sàng trước khi khởi động backend. Frontend tiếp tục đợi backend khỏe mạnh trước khi mở trang.</li>
+<li>Volume tách dữ liệu khỏi container. Rebuild container không xóa volume; <code>docker compose down -v</code> sẽ xóa dữ liệu database local.</li>
+</ul>
+</section>
+<section class="note limits">
+<h3>Điều cần hiểu / giới hạn</h3>
+<ul>
+<li>Bước này chỉ tạo database và schema. Backend chưa có PostgreSQL driver và chưa đọc/ghi bảng users; đăng nhập vẫn là demo frontend.</li>
+<li>Script init chỉ chạy tự động khi PostgreSQL khởi tạo volume rỗng. Thay schema về sau cần migration riêng; không xóa volume có dữ liệu để chạy lại init.</li>
+<li>Mật khẩu mặc định trong Compose chỉ dùng local. Đổi mật khẩu trước khi chia sẻ môi trường; database không publish cổng ra máy host.</li>
+<li>Docker chưa cài trong môi trường Codex này, nên chưa thể khởi động Compose.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 11 — nút chuyển ảnh tĩnh / ảnh động — 29/10/2026" >
+<summary>
+<time>29/10/2026</time>
+<strong>BẢN 11 — NÚT CHUYỂN ẢNH TĨNH / ẢNH ĐỘNG — 29/10/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Thêm nút trong khung ảnh/video ở hồ sơ cá.</li>
+<li>Khi đang xem video, bấm nút để dừng video và xem ảnh tĩnh.</li>
+<li>Bấm lần nữa để phát video lặp lại. Loài chưa có video sẽ chỉ hiện ảnh và không có nút chuyển.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>frontend/src/components/FishDetailPage.jsx dùng state <code>isAnimated</code> để biết người xem đang chọn video hay ảnh tĩnh. State ban đầu bật nếu loài có video.</li>
+<li>frontend/src/styles.css đặt nút ở góc trên khung media, giúp dùng được trên cả màn hình lớn và điện thoại.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>Khi <code>isAnimated</code> là true, React tạo thẻ video và phát tự động. Khi bấm nút, setIsAnimated đổi state; React gỡ thẻ video khỏi trang và ảnh poster bên dưới sẽ lấp đầy khung.</li>
+<li>Bấm nút ở chế độ ảnh tĩnh sẽ đặt state lại thành true, tạo video mới và phát từ đầu. <code>aria-pressed</code> thông báo trạng thái nút cho công nghệ hỗ trợ.</li>
+</ul>
+</section>
+<section class="note limits">
+<h3>Điều cần hiểu / giới hạn</h3>
+<ul>
+<li>Chế độ ảnh động cần Internet và video từ máy chủ nguồn phải truy cập được.</li>
+<li>Mỗi lần bật lại video bắt đầu từ đầu; lựa chọn không được lưu sau khi tải lại trang.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 10 — video riêng cho từng hồ sơ cá — 29/10/2026" >
+<summary>
+<time>29/10/2026</time>
+<strong>BẢN 10 — VIDEO RIÊNG CHO TỪNG HỒ SƠ CÁ — 29/10/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Khi mở hồ sơ một loài, ảnh đầu trang được thay bằng video loài đó bơi lặp lại.</li>
+<li>Thêm video cho sáu loài mẫu: betta, bảy màu, neon, mún, cá vàng và thần tiên.</li>
+<li>Dùng ảnh hồ sơ làm poster và ảnh dự phòng; nếu video lỗi, ảnh vẫn hiện.</li>
+<li>Thay ảnh poster betta cũ bằng ảnh betta đúng loài.</li>
+<li>Nâng cấp dữ liệu cá cũ trong localStorage để các loài đã lưu từ bản trước nhận video mới mà vẫn giữ các thông tin admin đã sửa.</li>
+<li>Sửa poster bảy màu cũ vốn đang hiển thị ảnh cá betta.</li>
+<li>Gắn liên kết ghi công ở góc dưới của từng video; cập nhật nguồn trong README.md.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>frontend/src/data/fish.js giữ địa chỉ video, loại tệp, người làm video và trang nguồn theo từng đối tượng cá. Pexels cung cấp MP4; hai video Wikimedia Commons dùng WebM VP9 kích thước 360p.</li>
+<li>frontend/src/components/FishDetailPage.jsx hiển thị poster, video và liên kết ghi công. <code>autoPlay</code> tự chạy, <code>muted</code> tắt tiếng, <code>loop</code> phát lại, <code>playsInline</code> giữ video trong trang trên điện thoại; <code>preload=&quot;metadata&quot;</code> chỉ yêu cầu dữ liệu ban đầu cần để phát.</li>
+<li>frontend/src/App.jsx trong loadFish() ghép dữ liệu đang lưu với hồ sơ mặc định theo id. Các trường mới như video được bổ sung cho cá cũ; các trường đã chỉnh như tên, chế độ chăm sóc vẫn lấy từ bản đã lưu. Riêng URL poster bảy màu cũ được nhận diện và thay bằng ảnh guppy đúng loài.</li>
+<li>frontend/src/styles.css xếp video phủ poster, crop vừa khung và đặt dòng nguồn trên video. Bố cục khung chuyển thấp hơn trên màn hình điện thoại.</li>
+<li>README.md ghi trang nguồn và giấy phép của clip Wikimedia Commons.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>FishDetailPage nhận đối tượng <code>fish</code> từ App.jsx. <code>&amp;lt;source&amp;gt;</code> lấy URL video và định dạng từ đối tượng đang chọn, nên cùng một component dùng được cho nhiều cá.</li>
+<li>Trình duyệt vẽ poster trước; khi video tải và phát, khung video phủ lên poster. Nếu thẻ video gặp lỗi, onError ẩn video để poster phía sau lộ ra.</li>
+<li>
+<code>target=&quot;_blank&quot;</code> mở trang nguồn video ở tab khác để người xem xem tác giả, bản quyền và điều kiện giấy phép.</li>
+</ul>
+</section>
+<section class="note limits">
+<h3>Điều cần hiểu / giới hạn</h3>
+<ul>
+<li>Video được tải từ Pexels hoặc Wikimedia Commons nên cần Internet. Tốc độ mở hồ sơ phụ thuộc mạng và dịch vụ bên ngoài; poster giúp trang có hình ngay.</li>
+<li>Dữ liệu admin tạo mới chưa có trường nhập video, nên cá mới thêm trong dashboard sẽ hiển thị ảnh cho tới khi bổ sung URL và nguồn video.</li>
+<li>Video tự phát có thể bị trình duyệt hoặc chế độ tiết kiệm dữ liệu chặn. Khi đó ảnh poster vẫn là phương án dự phòng.</li>
+</ul>
+</section>
+</div>
+</details>
+<details class="release" data-title="bản 9 — video cá bơi ở khu vực cửa hàng — 29/10/2026" >
+<summary>
+<time>29/10/2026</time>
+<strong>BẢN 9 — VIDEO CÁ BƠI Ở KHU VỰC CỬA HÀNG — 29/10/2026</strong>
+<span>＋</span>
+</summary>
+<div class="release-body">
+<section class="note what">
+<h3>Đã làm</h3>
+<ul>
+<li>Thay ảnh tĩnh bên phải khu vực cửa hàng bằng video cá vàng bơi lặp lại.</li>
+<li>Giữ ảnh nền làm ảnh dự phòng nếu video không tải được.</li>
+<li>Tắt video khi thiết bị bật tùy chọn giảm chuyển động.</li>
+</ul>
+</section>
+<section class="note code">
+<h3>Code liên quan</h3>
+<ul>
+<li>frontend/src/components/HealthAndShops.jsx thêm thẻ video vào khu vực shop.</li>
+<li>frontend/src/styles.css định kích thước, crop video theo khung và lớp phủ màu.</li>
+<li>README.md ghi thêm nguồn video Pexels.</li>
+</ul>
+</section>
+<section class="note how">
+<h3>Cách hoạt động</h3>
+<ul>
+<li>Video dùng autoplay, muted, loop và playsInline để chạy nền không phát tiếng, tự lặp và không ép iPhone chuyển sang chế độ toàn màn hình.</li>
+<li>Thuộc tính poster không bắt buộc; CSS ảnh nền vẫn hiện trước khi video tải hoặc nếu thẻ video gặp lỗi. <code>object-fit: cover</code> lấp khung mà không làm méo hình.</li>
+</ul>
+</section>
+<section class="note limits">
+<h3>Điều cần hiểu / giới hạn</h3>
+<ul>
+<li>Video được tải từ Pexels nên cần Internet; nếu trình duyệt chặn autoplay hoặc người dùng bật giảm chuyển động, ảnh nền tĩnh sẽ được giữ lại.</li>
+<li>Build frontend đã chạy thành công.</li>
+</ul>
+</section>
+</div>
+</details>
+</div>
+<p id="empty" class="empty">Chưa thấy mục phù hợp. Thử từ khóa khác nhé.</p>
+</section>
+<footer>
+<p>Tài liệu học code AquaAtlas Vietnam. README.md vẫn giới thiệu website và hướng dẫn chạy.</p>
+<p>Tệp CODE-WALKTHROUGH.txt đã được chuyển thành trang HTML này.</p>
+<a href="#top">↑ Lên đầu trang</a>
+</footer>
+</main>
+</div>
+<script>const q=document.querySelector('#search'),items=[...document.querySelectorAll('.release')],empty=document.querySelector('#empty');q.addEventListener('input',()=>{let n=0;for(const x of items){x.hidden=!x.textContent.toLocaleLowerCase('vi').includes(q.value.trim().toLocaleLowerCase('vi'));if(!x.hidden)n++}empty.style.display=n?'none':'block'});</script>
+</body>
+</html>

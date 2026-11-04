@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { apiRequest } from './api.js';
 import CareSection from './components/CareSection.jsx';
 import CustomerWorkspace from './components/CustomerWorkspace.jsx';
-import AdminDashboard from './components/AdminDashboard.jsx';
-import AuthPage from './components/AuthPage.jsx';
+const AdminDashboard = lazy(() => import('./components/AdminDashboard.jsx'));
+const AuthPage = lazy(() => import('./components/AuthPage.jsx'));
 import FishDetailPage from './components/FishDetailPage.jsx';
 import HealthAndShops from './components/HealthAndShops.jsx';
 import HeroSection from './components/HeroSection.jsx';
@@ -16,6 +16,9 @@ import fishList from './data/fish.js';
 import shopList from './data/shops.js';
 
 export default function App() {
+  const [themeMode, setThemeMode] = useState(() => {
+    try { return localStorage.getItem('aqua-atlas-theme') || 'light'; } catch { return 'light'; }
+  });
   const [fish, setFish] = useState(loadFish);
   const [shops, setShops] = useState(shopList);
   const [apiReady, setApiReady] = useState(false);
@@ -34,6 +37,16 @@ export default function App() {
   const [favorites, setFavorites] = useState([]);
   const [showFavorites, setShowFavorites] = useState(false);
   const activeFish = fish.find((item) => item.id === activeFishId);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = themeMode;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeMode === 'dark' ? '#101b19' : '#f5f8f4');
+    try { localStorage.setItem('aqua-atlas-theme', themeMode); } catch { /* The selected theme still applies for this page view. */ }
+  }, [themeMode]);
+
+  function toggleTheme() {
+    setThemeMode((mode) => mode === 'dark' ? 'light' : 'dark');
+  }
 
   useEffect(() => {
     let active = true;
@@ -266,16 +279,36 @@ export default function App() {
   }
 
   if (isAuthPage || (isAdminPage && user?.role !== 'admin')) {
-    return <AuthPage onSuccess={finishLogin} onExit={goHome} />;
+    return (
+      <Suspense fallback={<div className="app-loading" role="status">Đang tải trang đăng nhập…</div>}>
+        <AuthPage themeMode={themeMode} onToggleTheme={toggleTheme} onSuccess={finishLogin} onExit={goHome} />
+      </Suspense>
+    );
   }
 
   if (isAdminPage && user?.role === 'admin') {
-    return <AdminDashboard fish={fish} shops={shops} onSaveFish={saveFish} onDeleteFish={deleteFish} onSaveShop={saveShop} onSetShopActive={setShopActive} onExit={goHome} onLogout={logout} user={user} />;
+    return (
+      <Suspense fallback={<div className="app-loading" role="status">Đang tải dashboard…</div>}>
+        <AdminDashboard
+          themeMode={themeMode}
+          onToggleTheme={toggleTheme}
+          fish={fish}
+          shops={shops}
+          onSaveFish={saveFish}
+          onDeleteFish={deleteFish}
+          onSaveShop={saveShop}
+          onSetShopActive={setShopActive}
+          onExit={goHome}
+          onLogout={logout}
+          user={user}
+        />
+      </Suspense>
+    );
   }
 
   return (
     <>
-      <SiteHeader compact={Boolean(activeFish)} onHome={goHome} user={user} onLogin={showLogin} onLogout={logout} />
+      <SiteHeader compact={Boolean(activeFish)} themeMode={themeMode} onToggleTheme={toggleTheme} onHome={goHome} user={user} onLogin={showLogin} onLogout={logout} />
       {activeFish ? (
         <main><FishDetailPage fish={activeFish} onBack={goHome} user={user} /></main>
       ) : (

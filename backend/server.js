@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { createHash, randomBytes, scrypt as scryptCallback, timingSafeEqual } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
+import { createReadStream } from 'node:fs';
+import { mkdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { promisify } from 'node:util';
 import pg from 'pg';
 
@@ -11,6 +12,15 @@ const sessionDays = 7;
 const sessionCookie = 'aqua_session';
 const adminUsername = (process.env.ADMIN_USERNAME || 'admin').trim().toLocaleLowerCase('vi');
 const adminEmail = `${adminUsername}@aquaatlas.local`;
+const publicDeployment = process.env.PUBLIC_DEPLOYMENT === 'true';
+const mediaDirectory = new URL('./uploads/', import.meta.url);
+const uploadLimitBytes = 50 * 1024 * 1024;
+const mediaTypes = new Map([
+  ['image/jpeg', 'jpg'], ['image/png', 'png'], ['image/webp', 'webp'], ['image/gif', 'gif'],
+  ['image/apng', 'png'],
+  ['video/mp4', 'mp4'], ['video/webm', 'webm'],
+]);
+const rateLimits = new Map();
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   port: Number(process.env.DB_PORT || 5432),
@@ -48,6 +58,93 @@ async function readBody(request) {
   } catch {
     throw new HttpError(400, 'Dữ liệu JSON không hợp lệ.');
   }
+}
+
+async function readUpload(request) {
+  const contentType = request.headers['content-type'] || '';
+  const boundary = contentType.match(/boundary=(?:"([^"]+)"|([^;]+))/i)?.slice(1).find(Boolean);
+  if (!contentType.toLowerCase().startsWith('multipart/form-data') || !boundary) {
+    throw new HttpError(400, 'Chọn một file ảnh hoặc video hợp lệ.');
+  }
+
+  const chunks = [];
+  let size = 0;
+  for await (const chunk of request) {
+    size += chunk.length;
+    if (size > uploadLimitBytes + 64 * 1024) throw new HttpError(413, 'File tải lên tối đa 50 MB.');
+    chunks.push(chunk);
+  }
+  const body = Buffer.concat(chunks);
+  const marker = Buffer.from(`--${boundary}`);
+  let position = body.indexOf(marker) + marker.length;
+
+  while (position >= marker.length) {
+    if (body.subarray(position, position + 2).equals(Buffer.from('--'))) break;
+    if (body.subarray(position, position + 2).equals(Buffer.from('\r\n'))) position += 2;
+    const headerEnd = body.indexOf(Buffer.from('\r\n\r\n'), position);
+    if (headerEnd < 0) break;
+    const headers = body.subarray(position, headerEnd).toString('utf8');
+    const nextBoundary = body.indexOf(Buffer.from(`\r\n--${boundary}`), headerEnd + 4);
+    if (nextBoundary < 0) break;
+    const file = body.subarray(headerEnd + 4, nextBoundary);
+    const filename = headers.match(/filename="([^"]*)"/i)?.[1];
+    const fieldName = headers.match(/name="([^"]+)"/i)?.[1];
+    if (!filename && fieldName === 'kind') request.uploadKind = body.subarray(headerEnd + 4, nextBoundary).toString('utf8');
+    if (filename) {
+      const mimeType = headers.match(/content-type:\s*([^\r\n]+)/i)?.[1]?.trim().toLowerCase();
+      const extension = mediaTypes.get(mimeType);
+      if (!extension) throw new HttpError(415, 'Định dạng hỗ trợ: JPG, PNG, WebP, GIF, MP4 hoặc WebM.');
+      if (!file.length) throw new HttpError(400, 'File đang trống.');
+      if (file.length > uploadLimitBytes) throw new HttpError(413, 'File tải lên tối đa 50 MB.');
+      return { file, mimeType, extension, kind: request.uploadKind };
+    }
+    position = nextBoundary + 2 + marker.length;
+  }
+  throw new HttpError(400, 'Không tìm thấy file cần tải lên.');
+}
+
+function isUploadedMedia(value, extensions = ['jpg', 'png', 'webp', 'gif', 'mp4', 'webm']) {
+  return typeof value === 'string' && new RegExp(`^/media/[a-f0-9]{24}\\.(${extensions.join('|')})$`).test(value);
+}
+
+async function sendMedia(request, response, pathname) {
+  const filename = pathname.slice('/media/'.length);
+  if (!/^[a-f0-9]{24}\.(jpg|png|webp|gif|mp4|webm)$/.test(filename)) throw new HttpError(404, 'Không tìm thấy file.');
+  let fileStat;
+  try { fileStat = await stat(new URL(filename, mediaDirectory)); } catch { throw new HttpError(404, 'Không tìm thấy file.'); }
+  if (!fileStat.isFile()) throw new HttpError(404, 'Không tìm thấy file.');
+  const mediaUrl = new URL(filename, mediaDirectory);
+  const extension = filename.split('.').pop();
+  const mimeType = [...mediaTypes].find(([, ext]) => ext === extension)?.[0] || 'application/octet-stream';
+  let start = 0;
+  let end = fileStat.size - 1;
+  let status = 200;
+  const range = request.headers.range?.match(/^bytes=(\d*)-(\d*)$/);
+  if (request.headers.range && !range) {
+    response.writeHead(416, { 'Content-Range': `bytes */${fileStat.size}` });
+    response.end();
+    return;
+  }
+  if (range) {
+    start = range[1] ? Number(range[1]) : Math.max(0, fileStat.size - Number(range[2]));
+    end = range[2] && range[1] ? Math.min(Number(range[2]), fileStat.size - 1) : fileStat.size - 1;
+    if (start > end || start >= fileStat.size) {
+      response.writeHead(416, { 'Content-Range': `bytes */${fileStat.size}` });
+      response.end();
+      return;
+    }
+    status = 206;
+  }
+  response.writeHead(status, {
+    'Content-Type': mimeType,
+    'Content-Length': end - start + 1,
+    'Accept-Ranges': 'bytes',
+    ...(status === 206 ? { 'Content-Range': `bytes ${start}-${end}/${fileStat.size}` } : {}),
+    'Cache-Control': 'public, max-age=31536000, immutable',
+    'X-Content-Type-Options': 'nosniff',
+    'Content-Disposition': 'inline',
+  });
+  createReadStream(mediaUrl, { start, end }).pipe(response);
 }
 
 function getCookie(request, name) {
@@ -116,6 +213,49 @@ async function requireUser(request, role) {
   return user;
 }
 
+function getClientAddress(request) {
+  if (process.env.TRUST_PROXY === 'true') {
+    const forwardedAddress = request.headers['x-real-ip'];
+    if (typeof forwardedAddress === 'string' && forwardedAddress.trim()) {
+      return forwardedAddress.split(',')[0].trim();
+    }
+  }
+  return request.socket.remoteAddress || 'unknown';
+}
+
+function enforceRateLimit(request, action, maxRequests, windowMs) {
+  const now = Date.now();
+  const key = `${getClientAddress(request)}:${action}`;
+  let limit = rateLimits.get(key);
+
+  if (!limit || limit.expiresAt <= now) {
+    limit = { count: 0, expiresAt: now + windowMs };
+    rateLimits.set(key, limit);
+  }
+
+  limit.count += 1;
+  if (limit.count > maxRequests) {
+    throw new HttpError(429, 'Bạn thao tác hơi nhanh. Vui lòng đợi một lúc rồi thử lại.');
+  }
+}
+
+function validateDeploymentConfig() {
+  if (!publicDeployment) return;
+
+  if (!process.env.DB_PASSWORD || process.env.DB_PASSWORD.length < 24) {
+    throw new Error('PUBLIC_DEPLOYMENT yêu cầu DB_PASSWORD có ít nhất 24 ký tự.');
+  }
+  if (!process.env.ADMIN_USERNAME || adminUsername === 'admin') {
+    throw new Error('PUBLIC_DEPLOYMENT yêu cầu ADMIN_USERNAME riêng, không dùng tên mặc định.');
+  }
+  if (!process.env.ADMIN_PASSWORD || process.env.ADMIN_PASSWORD.length < 16) {
+    throw new Error('PUBLIC_DEPLOYMENT yêu cầu ADMIN_PASSWORD có ít nhất 16 ký tự.');
+  }
+  if (process.env.COOKIE_SECURE !== 'true' || process.env.TRUST_PROXY !== 'true') {
+    throw new Error('PUBLIC_DEPLOYMENT yêu cầu COOKIE_SECURE=true và TRUST_PROXY=true.');
+  }
+}
+
 async function saveFish(inputFish, { allowIncomplete = false } = {}) {
   const fish = inputFish && typeof inputFish === 'object' ? { ...inputFish } : inputFish;
   if (!fish || typeof fish !== 'object' || !/^[a-z0-9-]{1,80}$/.test(fish.id || '')) {
@@ -132,11 +272,15 @@ async function saveFish(inputFish, { allowIncomplete = false } = {}) {
     if (requiredText.some((key) => typeof fish[key] !== 'string' || !fish[key].trim())) {
       throw new HttpError(400, 'Hãy điền đủ mô tả, thông số, chăm sóc và ghi công ảnh trước khi lưu.');
     }
-    if (!isWebUrl(fish.image) || !isWebUrl(fish.imageSource)) {
-      throw new HttpError(400, 'Ảnh và trang nguồn ảnh cần là liên kết HTTP hoặc HTTPS hợp lệ.');
+    if (!(isWebUrl(fish.image) || isUploadedMedia(fish.image, ['jpg', 'png', 'webp'])) || (fish.imageSource && !isWebUrl(fish.imageSource))) {
+      throw new HttpError(400, 'Ảnh cần là URL HTTP/HTTPS hoặc file đã tải lên; nếu nhập trang nguồn ảnh, URL phải hợp lệ.');
     }
-    if (fish.video && (!isWebUrl(fish.video) || !isWebUrl(fish.videoSource) || !fish.videoCredit?.trim())) {
-      throw new HttpError(400, 'Nếu thêm video, hãy nhập URL video, trang nguồn và ghi công video hợp lệ.');
+    if (fish.animatedImage && (!(isWebUrl(fish.animatedImage) || isUploadedMedia(fish.animatedImage, ['png', 'webp', 'gif']))
+      || (fish.animatedImageSource && !isWebUrl(fish.animatedImageSource)) || !fish.animatedImageCredit?.trim())) {
+      throw new HttpError(400, 'Ảnh động cần là GIF/WebP/PNG hợp lệ và có ghi công ảnh.');
+    }
+    if (fish.video && (!(isWebUrl(fish.video) || isUploadedMedia(fish.video, ['mp4', 'webm'])) || (fish.videoSource && !isWebUrl(fish.videoSource)) || !fish.videoCredit?.trim())) {
+      throw new HttpError(400, 'Nếu thêm video, hãy chọn file hoặc nhập URL video, ghi công và trang nguồn hợp lệ nếu có.');
     }
     if (!Array.isArray(fish.sources) || !fish.sources.length || fish.sources.some((source) => !source.label?.trim() || !isWebUrl(source.url))) {
       throw new HttpError(400, 'Thêm ít nhất một nguồn tham khảo có tên và URL HTTP/HTTPS hợp lệ.');
@@ -202,6 +346,33 @@ async function route(request, response) {
   const url = new URL(request.url, 'http://localhost');
   const { pathname } = url;
 
+  if (request.method === 'GET' && pathname.startsWith('/media/')) {
+    await sendMedia(request, response, pathname);
+    return;
+  }
+
+  if (request.method === 'POST' && pathname === '/api/admin/media') {
+    await requireUser(request, 'admin');
+    const { file, mimeType, extension, kind } = await readUpload(request);
+    const acceptedTypes = {
+      image: ['image/jpeg', 'image/png', 'image/webp'],
+      animatedImage: ['image/gif', 'image/webp', 'image/apng', 'image/png'],
+      video: ['video/mp4', 'video/webm'],
+    };
+    if (!acceptedTypes[kind]?.includes(mimeType)) {
+      throw new HttpError(415, 'Chọn đúng loại file cho ảnh tĩnh, ảnh động hoặc video.');
+    }
+    await mkdir(mediaDirectory, { recursive: true });
+    const filename = `${randomBytes(12).toString('hex')}.${extension}`;
+    await writeFile(new URL(filename, mediaDirectory), file, { flag: 'wx' });
+    send(response, 201, {
+      url: `/media/${filename}`,
+      mimeType: mimeType === 'image/apng' ? 'image/png' : mimeType,
+      size: file.length,
+    });
+    return;
+  }
+
   if (request.method === 'GET' && pathname === '/api/health') {
     await pool.query('SELECT 1');
     send(response, 200, { status: 'ok', service: 'aqua-atlas-backend', database: 'connected' });
@@ -249,11 +420,12 @@ async function route(request, response) {
   }
 
   if (request.method === 'POST' && pathname === '/api/auth/register') {
+    enforceRateLimit(request, 'register', 5, 60 * 60 * 1000);
     const body = await readBody(request);
     const email = String(body.email || '').trim().toLocaleLowerCase('vi');
     const name = String(body.name || '').trim();
     const password = String(body.password || '');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new HttpError(400, 'Vui lòng nhập email hợp lệ.');
+    if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new HttpError(400, 'Vui lòng nhập email hợp lệ.');
     if (email === adminEmail) throw new HttpError(409, 'Email này không thể dùng để đăng ký khách.');
     if (!name || name.length > 100) throw new HttpError(400, 'Tên cần có từ 1 đến 100 ký tự.');
     if (password.length < 8 || password.length > 128) throw new HttpError(400, 'Mật khẩu cần có từ 8 đến 128 ký tự.');
@@ -275,9 +447,13 @@ async function route(request, response) {
   }
 
   if (request.method === 'POST' && pathname === '/api/auth/login') {
+    enforceRateLimit(request, 'login', 12, 15 * 60 * 1000);
     const body = await readBody(request);
     const login = String(body.email || '').trim().toLocaleLowerCase('vi');
     const password = String(body.password || '');
+    if (login.length > 254 || password.length > 128) {
+      throw new HttpError(401, 'Email hoặc mật khẩu chưa đúng.');
+    }
     const email = login === adminUsername ? adminEmail : login;
     const result = await pool.query(
       'SELECT id, email, display_name, role, password_hash FROM users WHERE email = $1',
@@ -460,6 +636,7 @@ async function route(request, response) {
 
   if (request.method === 'POST' && pathname === '/api/reports') {
     const user = await requireUser(request, 'customer');
+    enforceRateLimit(request, 'report', 20, 60 * 60 * 1000);
     const body = await readBody(request);
     const targetType = String(body.targetType || '');
     const targetId = String(body.targetId || '').trim();
@@ -550,7 +727,12 @@ const server = createServer(async (request, response) => {
   }
 });
 
+server.requestTimeout = 30_000;
+server.headersTimeout = 10_000;
+server.keepAliveTimeout = 5_000;
+
 async function start() {
+  validateDeploymentConfig();
   await pool.query('SELECT 1');
   const migration = await readFile(new URL('./db/migrations/002_create_app_data.sql', import.meta.url), 'utf8');
   await pool.query(migration);
@@ -667,12 +849,22 @@ async function start() {
     [adminEmail, adminHash],
   );
 
-  setInterval(() => pool.query('DELETE FROM auth_sessions WHERE expires_at <= NOW()').catch(console.error), 60 * 60 * 1000).unref();
+  setInterval(() => {
+    pool.query('DELETE FROM auth_sessions WHERE expires_at <= NOW()').catch(console.error);
+    const now = Date.now();
+    for (const [key, limit] of rateLimits) {
+      if (limit.expiresAt <= now) rateLimits.delete(key);
+    }
+  }, 60 * 60 * 1000).unref();
   server.listen(port, '0.0.0.0', () => {
     console.log(`AquaAtlas API đang chạy tại cổng ${port}; PostgreSQL đã kết nối.`);
     if (!process.env.ADMIN_PASSWORD) console.warn('Đang dùng mật khẩu admin demo. Hãy đặt ADMIN_PASSWORD trước khi triển khai công khai.');
   });
 }
+
+process.on('SIGTERM', () => {
+  server.close(() => pool.end().finally(() => process.exit(0)));
+});
 
 start().catch((error) => {
   console.error('Không thể khởi động backend:', error);

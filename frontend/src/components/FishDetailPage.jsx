@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import ContentReportButton from './ContentReportButton.jsx';
@@ -8,7 +8,9 @@ function Fact({ label, value }) {
 }
 
 export default function FishDetailPage({ fish, onBack, user }) {
-  const [isAnimated, setIsAnimated] = useState(Boolean(fish.video));
+  const hasMotionMedia = Boolean(fish.video || fish.animatedImage);
+  const [isAnimated, setIsAnimated] = useState(hasMotionMedia);
+  useEffect(() => setIsAnimated(hasMotionMedia), [fish.id]);
 
   return (
     <section className="fish-detail">
@@ -16,7 +18,7 @@ export default function FishDetailPage({ fish, onBack, user }) {
 
       <div className="detail-hero">
         <div className="detail-media">
-          <img className="detail-poster" src={fish.image} alt={fish.name} onError={(event) => { event.currentTarget.src = '/images/fish-placeholder.svg'; }} />
+          <img className="detail-poster" src={isAnimated && !fish.video && fish.animatedImage ? fish.animatedImage : fish.image} alt={fish.name} onError={(event) => { event.currentTarget.src = '/images/fish-placeholder.svg'; }} />
           {fish.video && isAnimated && <video
             className="detail-video"
             autoPlay
@@ -30,7 +32,7 @@ export default function FishDetailPage({ fish, onBack, user }) {
           >
             <source src={fish.video} type={fish.videoType || 'video/mp4'} />
           </video>}
-          {fish.video && <Button
+          {hasMotionMedia && <Button
             className="detail-media-toggle"
             size="small"
             aria-pressed={isAnimated}
@@ -38,12 +40,15 @@ export default function FishDetailPage({ fish, onBack, user }) {
           >
             {isAnimated ? 'Ảnh động · Chuyển sang ảnh tĩnh' : 'Ảnh tĩnh · Chuyển sang ảnh động'}
           </Button>}
-          {isAnimated && fish.videoSource && <a className="detail-video-credit" href={fish.videoSource} target="_blank" rel="noreferrer">
-            Video: {fish.videoCredit || 'Nguồn video'} ↗
-          </a>}
-          {(!isAnimated || !fish.videoSource) && fish.imageSource && <a className="detail-video-credit" href={fish.imageSource} target="_blank" rel="noreferrer">
-            Ảnh: {fish.imageCredit || 'Nguồn ảnh'} ↗
-          </a>}
+          {isAnimated && fish.video && (fish.videoSource
+            ? <a className="detail-video-credit" href={fish.videoSource} target="_blank" rel="noreferrer">Video: {fish.videoCredit || 'Nguồn video'} ↗</a>
+            : <span className="detail-video-credit">Video: {fish.videoCredit}</span>)}
+          {isAnimated && !fish.video && fish.animatedImage && (fish.animatedImageSource
+            ? <a className="detail-video-credit" href={fish.animatedImageSource} target="_blank" rel="noreferrer">Ảnh động: {fish.animatedImageCredit || 'Nguồn ảnh'} ↗</a>
+            : <span className="detail-video-credit">Ảnh động: {fish.animatedImageCredit}</span>)}
+          {(!isAnimated || !hasMotionMedia) && fish.imageCredit && (fish.imageSource
+            ? <a className="detail-video-credit" href={fish.imageSource} target="_blank" rel="noreferrer">Ảnh: {fish.imageCredit} ↗</a>
+            : <span className="detail-video-credit">Ảnh: {fish.imageCredit}</span>)}
         </div>
         <div className="detail-intro">
           <div className="eyebrow"><span /> {fish.category}</div>
