@@ -6,6 +6,12 @@
   --paper: #f5f8f4;
   --muted: #73827b;
   --line: #dfe7df;
+  --content-width: 1440px;
+  --font-body: 'Be Vietnam Pro', sans-serif;
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-base: 15px;
+  --space-section: clamp(64px, 7vw, 92px);
 }
 
 html {
@@ -17,8 +23,18 @@ body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
-  font-family: 'Be Vietnam Pro', sans-serif;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  letter-spacing: 0;
   -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
 
 a {
@@ -1947,4 +1963,164 @@ p {
   .detail-sources ul {
     display: grid;
   }
+}
+
+/* Consistent type scale and spacing for the Vietnamese interface. */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  letter-spacing: 0;
+}
+
+.site-header.MuiAppBar-root { height: 74px; }
+.header-inner { max-width: var(--content-width); margin: 0 auto; padding-right: clamp(24px, 6vw, 88px); padding-left: clamp(24px, 6vw, 88px); }
+.main-nav { gap: clamp(18px, 2.3vw, 34px); }
+.main-nav a,
+.footer-links a { font-size: 13px; letter-spacing: 0; }
+
+.hero { height: min(660px, 64vw); min-height: 530px; }
+.hero-content { max-width: 590px; }
+.hero h1 { font-size: clamp(50px, 5.2vw, 74px); line-height: 1.08; letter-spacing: -0.045em; }
+.hero h1 em,
+.section h2 em,
+.care-copy h2 em,
+.health-copy h2 em,
+.shop-copy h2 em,
+.newsletter h2 em { letter-spacing: -0.035em; }
+.hero-content > p { font-size: 15px; line-height: 1.75; }
+.eyebrow { font-size: 10px; letter-spacing: 0.12em; }
+.button.MuiButton-root { min-height: 48px; font-size: 13px; }
+.text-link { font-size: 13px; }
+
+.quick-search {
+  width: min(1120px, 90%);
+  padding: 20px 24px;
+  gap: 16px;
+}
+.search-intro strong { font-size: 14px; }
+.search-intro small { font-size: 12px; }
+.search-field .MuiOutlinedInput-root,
+.search-field .MuiInputLabel-root { font-size: 13px; }
+
+.section {
+  box-sizing: border-box;
+  width: min(var(--content-width), 100%);
+  margin: 0 auto;
+  padding: var(--space-section) clamp(28px, 7vw, 96px);
+}
+.section h2,
+.care-copy h2,
+.health-copy h2,
+.shop-copy h2,
+.newsletter h2 {
+  font-size: clamp(34px, 3.4vw, 44px);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+.section-heading { gap: 32px; margin-bottom: 30px; }
+.section-heading > p,
+.species-actions > p { font-size: 14px; line-height: 1.7; }
+.species-actions { max-width: 380px; }
+.species-grid { gap: 18px; }
+.fish-image { height: 215px; }
+.card-tag { font-size: 10px; letter-spacing: 0.04em; }
+.fish-info { padding: 16px 18px 13px; }
+.fish-name { font-size: 16px; line-height: 1.45; letter-spacing: 0; }
+.fish-info p { font-size: 12px; line-height: 1.65; }
+.difficulty.MuiChip-root { font-size: 11px; }
+.fish-meta { padding: 12px 18px 0; gap: 9px 12px; font-size: 11px; line-height: 1.5; }
+.fish-open.MuiButton-root,
+.compare-button.MuiButton-root { font-size: 11px; }
+.compare-area { margin-top: 28px; padding: 18px; }
+
+.care-copy { padding: 72px clamp(36px, 7vw, 96px) 34px; }
+.care-copy > p,
+.shop-copy > p,
+.health-copy > p { font-size: 14px; line-height: 1.75; }
+.care-foot { font-size: 10px; }
+.essentials { padding-top: 82px; padding-bottom: 88px; }
+.tip-card { min-height: 185px; }
+.tip-card h3 { font-size: 15px; }
+.tip-card p { font-size: 12px; line-height: 1.65; }
+.tip-card > a { font-size: 11px; }
+
+.health-section { padding: 68px clamp(36px, 9vw, 130px); }
+.health-copy small,
+.shop-copy small { font-size: 11px; line-height: 1.6; }
+.shop-copy { padding: 68px clamp(36px, 7vw, 100px); }
+.shop-search { max-width: 420px; }
+.shop-search label,
+.shop-details dt,
+.shop-details dd { font-size: 12px; }
+.shop-search-controls .MuiOutlinedInput-root,
+.shop-area-search .MuiInputBase-root { font-size: 13px; }
+.shop-results { padding: 34px clamp(28px, 7vw, 96px) 44px; }
+.shop-card-grid { gap: 16px; }
+.shop-card { padding: 18px; }
+.shop-card h3 { font-size: 16px; line-height: 1.45; }
+.shop-card-top span,
+.shop-card p,
+.shop-card small { font-size: 12px; line-height: 1.6; }
+.shop-card-links a,
+.health-source { font-size: 12px; }
+
+.newsletter { padding: 60px clamp(28px, 7vw, 96px); }
+.newsletter h2 { font-size: clamp(30px, 3vw, 38px); }
+.newsletter label,
+.newsletter form small { font-size: 12px; line-height: 1.6; }
+.site-footer { padding: 28px clamp(24px, 6vw, 88px); }
+.site-footer > p,
+.footer-links a,
+.copyright { font-size: 11px; }
+
+.fish-detail { max-width: 1200px; padding-top: 40px; }
+.detail-intro h1 { font-size: clamp(36px, 4.5vw, 54px); line-height: 1.15; letter-spacing: -0.035em; }
+.detail-intro p { font-size: 14px; line-height: 1.75; }
+.detail-panel { padding: 26px; }
+.detail-panel h2,
+.detail-sources h2 { line-height: 1.25; letter-spacing: -0.025em; }
+
+@media (max-width: 1000px) {
+  .section { padding-right: 6%; padding-left: 6%; }
+  .shop-copy { padding-right: 7%; padding-left: 7%; }
+  .health-section { padding-right: 7%; padding-left: 7%; }
+  .quick-search { width: 92%; }
+}
+
+@media (max-width: 720px) {
+  .site-header.MuiAppBar-root { height: 68px; }
+  .main-nav { gap: 0; }
+  .hero { height: 640px; }
+  .hero h1 { font-size: clamp(42px, 11vw, 56px); letter-spacing: -0.04em; }
+  .hero-content > p { font-size: 14px; }
+  .quick-search { width: 92%; padding: 18px; gap: 13px; }
+  .section { width: 100%; padding: 64px 6%; }
+  .section h2,
+  .care-copy h2,
+  .health-copy h2,
+  .shop-copy h2 { font-size: clamp(32px, 8vw, 38px); }
+  .section-heading { margin-bottom: 24px; }
+  .section-heading > p,
+  .species-actions > p { font-size: 13px; }
+  .species-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .fish-image { height: 180px; }
+  .fish-info { padding: 13px 14px 11px; }
+  .fish-meta { padding-right: 14px; padding-left: 14px; }
+  .care-copy { padding: 44px 7% 88px; }
+  .shop-copy { padding: 48px 7% 38px; }
+  .shop-results { padding: 28px 6% 36px; }
+  .health-section { padding: 42px 7% 52px; }
+  .newsletter { padding: 48px 7%; }
+}
+
+@media (max-width: 520px) {
+  .species-grid { grid-template-columns: 1fr; }
+  .fish-image { height: 220px; }
+  .fish-meta { font-size: 12px; }
+  .list-expand-button.MuiButton-root { width: 100%; }
+  .shop-card-grid { grid-template-columns: 1fr; }
+  .detail-media { height: 240px; }
 }
